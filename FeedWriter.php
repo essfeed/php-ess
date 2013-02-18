@@ -7,63 +7,91 @@
  * @author      Brice Pissard
  * @link        http://eventstandardsyndication.org
  */
-class FeedWriter
+final class FeedWriter
 {
- 	private $version   		= 0.91; 	// ESS Feed version 
- 	private $lang			= 'en';		// Default language
-	private $channel      	= array();  // Collection of channel elements
-	private $items         	= array();  // Collection of items as object of FeedItem class.
-	private $data          	= array();  // Store some other version wise data
-	private $CDATAEncoding 	= array();  // The tag names which have to encoded as CDATA
-	 
-	 
+	// --- [ EDITABLE ] --------------------------------------------------------
+	private $eventAggregators = array(
+		'http://api.hypecal.com/v1/ess/aggregator.json',
+		'http://...' // you can add any ESS aggregators where you want your event to be published or updated at any changes.
+	); 
+	// ------------------------------------------------------------------------- 
+	
+ 	private $version	= 0.91; 	// ESS Feed version 
+ 	private $lang		= 'en';		// Default language
+	private $channel 	= array();  // Collection of channel elements
+	private $items		= array();  // Collection of items as object of FeedItem class.
+	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA
+	private $DEBUG		= false;
+	
+	private $channelDTD = array(
+		'title'     	=> true,
+		'link'			=> true,
+		'published'		=> true,
+		'updated'		=> false,
+		'generator'		=> false,
+		'rights'		=> false
+	);
 	
 	/**
-	 * Constructor
+	 * FeedWriter Class Constructor
+	 * 
+	 * @access   public
+	 * @param    String [OPTIONAL] 2 chars language definition for the feed.
+	 * @param    Array 	[OPTIONAL] array of Event Feed tags definition.
+	 * @return   Void 
 	 */ 
-	function __construct()
-	{		
-		// Setting default value
-		$this->channel['title']        	= 'ESS Feed ' . $this->version;
-		$this->channel['link']         	= 'http://eventstandardsyndication.org';
-		$this->channel['id']         	= $this->uuid( $this->channel['link'], 'ESSID:' );
-		$this->channel['published']   	= $this->getDate();
-		$this->channel['updated']   	= $this->getDate();
-		$this->channel['generator']   	= 'ess:php:generator:version' . $this->version;
-		$this->channel['rights']   		= 'Copyright (c) ' . date( 'Y' ) . ', ESS Generator';
+	function __construct( $lang='en', $data_=null )
+	{
+		$this->lang = ( strlen($lang)==2 )? strtolower($lang) : $this->lang;
 		
-		//Tag names to encode in CDATA
-		$this->CDATAEncoding = array('description');
+		$this->setGenerator( 'ess:php:generator:version:' . $this->version );
+		
+		$mandatoryRequiredCount = 0;
+		$mandatoryCount 		= 0;
+		
+		if ( $data_ != null )
+		{
+			if ( @count( $data_ ) > 0 )
+			{
+				foreach ( $data_ as $key => $el ) 
+				{
+					switch ( $key ) 
+					{
+						case 'title':		$this->setTitle( 	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'link':		$this->setLink(  	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'published':	$this->setPublished(  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'updated':		$this->setUpdated(    $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'generator':	$this->setGenerator(  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'rights':		$this->setRights(     $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						
+						default: throw new Exception("Error: Channel element '".$el."' unauthorized", 1 ); break;
+					}
+				}
+				
+				foreach ( $this->channelDTD as $val ) 
+				{
+					if ( $val == true ) $mandatoryRequiredCount++;
+				}
+				
+				if ( $mandatoryRequiredCount != $mandatoryCount || $mandatoryCount == 0 )
+				{
+					throw new Exception( "Error: All Channel mandatory elements are required '".explode( $this->channelDTD )."'", 1 );
+				}
+			}
+		}
 	}
 
 	/**
 	 * Set a channel element
+	 * 
 	 * @access   public
-	 * @param    srting  name of the channel tag
-	 * @param    string  content of the channel tag
-	 * @return   void
+	 * @param    String  name of the channel tag
+	 * @param    String  content of the channel tag
+	 * @return   Void
 	 */
-	public function setChannelElement($elementName, $content)
+		private function setChannelElement( $elementName, $content )
 	{
-		$this->channel[$elementName] = $content ;
-	}
-	
-	/**
-	* Set multiple channel elements from an array. Array elements 
-	* should be 'channelName' => 'channelContent' format.
-	* 
-	* @access   public
-	* @param    array   array of channel
-	* @return   void
-	*/
-	public function setChannelElementsFromArray($elementArray)
-	{
-		if(! is_array($elementArray)) return;
-		
-		foreach ($elementArray as $elementName => $content) 
-		{
-			$this->setChannelElement($elementName, $content);
-		}
+		$this->channel[ $elementName ] = $content ;
 	}
 	
 	/**
@@ -74,36 +102,40 @@ class FeedWriter
 	 */ 
 	public function genarateFeed()
 	{
-		header( "Content-type: text/xml" );
+		if ( $this->DEBUG == false )
+		{
+			header( "Content-type: text/xml" );
+		}
 		
-		$this->printChannel();
-		$this->printItems();
-		$this->printTale();
+		echo $this->getHead();
+		echo $this->getChannel();
+		echo $this->getItems();
+		echo $this->getEndChannel();
 	}
 	
 	/**
-	 * Create a new FeedItem.
+	 * Create a new EventFeed.
 	 * 
 	 * @access   public
-	 * @return   object  instance of FeedItem class
+	 * @return   Object  instance of EventFeed class
 	 */
-	public function createNewItem()
+	public function newEventFeed()
 	{
-		$Item = new FeedItem();
-		return $Item;
+		return new EventFeed();
 	}
 	
 	/**
-	* Add a FeedItem to the main class
-	* 
-	* @access   public
-	* @param    object  instance of FeedItem class
-	* @return   void
-	*/
-	public function addItem( $feedItem )
+	 * Add a EventFeed to the main class
+	 * 
+	 * @access   public
+	 * @param    Object  instance of EventFeed class
+	 * @return   Void
+	 */
+	public function addItem( $eventFeed )
 	{
-		$this->items[] = $feedItem;    
+		$this->items[] = $eventFeed;    
 	}
+	
 	
 	
 	
@@ -135,7 +167,37 @@ class FeedWriter
 		if ( $el != NULL ) 
 		{
 			$this->setChannelElement( 'link', $el );
+			$this->setId( $el );
+		}
+	}
+	
+	/**
+	 * Set the 'id' channel element
+	 * 
+	 * @access   public
+	 * @param    String  value of 'id' channel tag
+	 * @return   Void
+	 */
+	public function setId( $el=NULL )
+	{
+		if ( $el != NULL ) 
+		{
 			$this->setChannelElement( 'id', $this->uuid( $el, 'ESSID:' ) );
+		}
+	}
+	
+	/**
+	 * Set the 'generator' channel element
+	 * 
+	 * @access   public
+	 * @param    String  value of 'generator' channel tag
+	 * @return   Void
+	 */
+	public function setGenerator( $el=NULL )
+	{
+		if ( $el != NULL ) 
+		{
+			$this->setChannelElement( 'generator', $el );
 		}
 	}
 	
@@ -178,6 +240,8 @@ class FeedWriter
 	
 	
 	
+	
+	
   	/**
   	 * Genarates an UUID
 	 * 
@@ -185,152 +249,180 @@ class FeedWriter
   	 * @param      string  an optional prefix
   	 * @return     string  the formated uuid
   	 */
-  	public function uuid($key = null, $prefix = '') 
+  	public static function uuid( $key = null, $prefix = '' ) 
 	{
-		$key = ($key == null)? uniqid(rand()) : $key;
-		$chars = md5($key);
-		$uuid  = substr($chars,0,8) . '-';
-		$uuid .= substr($chars,8,4) . '-';
-		$uuid .= substr($chars,12,4) . '-';
-		$uuid .= substr($chars,16,4) . '-';
-		$uuid .= substr($chars,20,12);
+		$key = ( $key == null )? uniqid( rand() ) : $key;
+		$chars = md5( $key );
+		$uuid  = substr( $chars, 0,8   ) . '-';
+		$uuid .= substr( $chars, 8,4   ) . '-';
+		$uuid .= substr( $chars, 12,4  ) . '-';
+		$uuid .= substr( $chars, 16,4  ) . '-';
+		$uuid .= substr( $chars, 20,12 );
 
 		return $prefix . $uuid;
  	}
 	
 	/**
-  	 * Genarate current Strind date in ISO standard format
+  	 * Genarate current String date in ISO standard format
 	 * 
 	 * @access   private
 	 * @return   String
 	 */ 
-	public function getDate()
+	public static function getISODate()
 	{
-		return urlEncode( date( "Y-m-d" ). "T" . date( "H:i:s" ) . "Z" );
+		return urldecode( date( "Y-m-d" ). "T" . date( "H:i:s" ) . "Z" );
 	}
 	
 	/**
-	* Prints the xml and ess namespace
-	* 
-	* @access   private
-	* @return   void
-	*/
-	private function printHead()
+	 * Prints the xml and ESS namespace
+	 * 
+	 * @access   private
+	 * @return   String
+	 */
+	private function getHead()
 	{
 		$out  = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-		$out .= '<ess xmlns="http://eventstandardsyndication.org/history/'.$this->version.'" version="'. $this->version .'" lang="'. $this->lang .'">' . PHP_EOL;
-		echo $out;
+		$out .= '<ess xmlns="http://eventstandardsyndication.org/history/'.$this->version.'" version="'. $this->version .'" lang="'. $this->lang .'">'; // . PHP_EOL;
+		
+		return $out;
 	}
 	
 	/**
-	* Closes the open tags at the end of file
-	* 
-	* @access   private
-	* @return   void
-	*/
-	private function printTale()
+	 * Closes the open tags at the end of file
+	 * 
+	 * @access   private
+	 * @return   String
+	 */
+	private function getEndChannel()
 	{
-		echo '</channel>' . PHP_EOL . '</ess>'; 
+		//echo '</channel>' . PHP_EOL . '</ess>';
+		return "</channel></ess>";
 	}
 
 	/**
-	* Creates a single node as xml format
-	* 
-	* @access   private
-	* @param    srting  name of the tag
-	* @param    mixed   tag value as string or array of nested tags in 'tagName' => 'tagValue' format
-	* @param    array   Attributes(if any) in 'attrName' => 'attrValue' format
-	* @return   string  formatted xml tag
-	*/
-	private function makeNode($tagName, $tagContent, $attributes = null)
+	 * Creates a single node as xml format
+	 * 
+	 * @access   private
+	 * @param    String  name of the tag
+	 * @param    Mixed   tag value as string or array of nested tags in 'tagName' => 'tagValue' format
+	 * @param    Array   Attributes(if any) in 'attrName' => 'attrValue' format
+	 * @return   String  formatted XML tag
+	 */
+	private function makeNode( $tagName, $tagContent, $attributes = null )
 	{        
 		$nodeText = '';
 		$attrText = '';
 
 		if ( is_array( $attributes ) )
 		{
-			foreach ($attributes as $key => $value) 
+			foreach ( $attributes as $key => $value ) 
 			{
 				$attrText .= " $key=\"$value\" ";
 			}
 		}
 		
-		$nodeText .= (in_array($tagName, $this->CDATAEncoding))? "<{$tagName}{$attrText}><![CDATA[" : "<{$tagName}{$attrText}>";
+		$nodeText .= (in_array($tagName, $this->CDATA))? "<{$tagName}{$attrText}><![CDATA[" : "<{$tagName}{$attrText}>";
 		 
 		if ( is_array( $tagContent ) )
 		{ 
 			foreach ($tagContent as $key => $value) 
 			{
-				$nodeText .= $this->makeNode($key, $value);
+				$nodeText .= $this->makeNode( $key, $value );
 			}
 		}
 		else
 		{
-			$nodeText .= (in_array($tagName, $this->CDATAEncoding))? $tagContent : htmlentities($tagContent);
+			$nodeText .= ( in_array( $tagName, $this->CDATA ) )? $tagContent : htmlentities( $tagContent );
 		}           
 			
-		$nodeText .= (in_array($tagName, $this->CDATAEncoding))? "]]></$tagName>" : "</$tagName>";
+		$nodeText .= ( in_array( $tagName, $this->CDATA ) )? "]]></$tagName>" : "</$tagName>";
 
-		return $nodeText . PHP_EOL;
+		return $nodeText;
 	}
 	
 	/**
-	* @desc     Print channel
-	* @access   private
-	* @return   void
-	*/
-	private function printChannel()
+	 * Get Channel XML content in String format
+	 * 
+	 * @access   private
+	 * @return   String
+	 */
+	private function getChannel()
 	{
-		echo '<channel>' . PHP_EOL;
+		$out = '<channel>';
 		
-		foreach( $this->channel as $key => $value ) 
+		foreach( $this->channel as $k => $v ) 
 		{
-			echo $this->makeNode( $key, $value );
+			$out .= $this->makeNode( $k, $v );
 		}
+		return $out;
 	}
 	
 	/**
-	* Prints formatted feed items
-	* 
-	* @access   private
-	* @return   void
-	*/
-	private function printItems()
-	{    
+	 * Get feed's items XML content in String format
+	 * 
+	 * @access   private
+	 * @return   String
+	 */
+	private function getItems()
+	{
+		$out = "";
+		
 		foreach ( $this->items as $item ) 
 		{
+			$thisRoots = $item->getRoots();
 			$thisItems = $item->getElements();
 			
-			echo $this->startFeed();
+			$out .= $this->startFeed();
 			
-			foreach ($thisItems as $feedItem ) 
+			//var_dump( $thisItems );
+			
+			if ( @count( $thisItems ) > 0 )
 			{
-				echo $this->makeNode($feedItem['name'], $feedItem['content'], $feedItem['attributes']); 
+				foreach ( $thisItems as $key => $val )
+				{
+					if ( @count( $thisItems[ $key ] ) > 0 )
+					{
+						$out .= "<{$key}>";
+						
+						foreach ( $thisItems[ $key ] as $feedItem ) 
+						{
+							//var_dump( $feedItem );
+							
+							$out .= $this->makeNode(
+								$feedItem[ 'name' ], 
+								$feedItem[ 'content' ], 
+								$feedItem[ 'attributes' ]
+							); 
+						}
+						$out .= "</{$key}>";
+					}
+				}
 			}
-			echo $this->endFeed();
+			$out .= $this->endFeed();
 		}
+		return $out;
 	}
 	
 	/**
-	* Make the starting tag of feed
-	* 
-	* @access   private
-	* @return   void
-	*/
+	 * Make the starting tag of feed
+	 * 
+	 * @access   private
+	 * @return   String
+	 */
 	private function startFeed()
 	{
-		echo '<feed>' . PHP_EOL; 
+		return '<feed>';
 	}
 	
 	/**
 	* Closes feed item tag
 	* 
 	* @access   private
-	* @return   void
+	* @return   String
 	*/
 	private function endFeed()
 	{
-		echo '</feed>' . PHP_EOL; 
+		return '</feed>';
 	}
 	
 	
