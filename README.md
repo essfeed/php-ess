@@ -6,8 +6,8 @@ This two classes allow to generate ESS feed with a simple instanciation.
 
 To use this Class a complete example is available in example_ess.php
 
-<?php
-	include("FeedWriter.php");
+<MTMarkdownOptions output='php'>
+   	include("FeedWriter.php");
   	
   	// Create the ESS Feed
   	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> 'http://example.com/feed/sample.ess','published'=> FeedWriter::getISODate(), 'rights'=> 'Copyright (c)'));
@@ -26,7 +26,7 @@ To use this Class a complete example is available in example_ess.php
 	
 	// Print on screen the ESS Feed
 	$essFeed->genarateFeed();
-?>
+</MTMarkdownOptions>
 
 ### list
 
