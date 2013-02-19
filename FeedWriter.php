@@ -107,10 +107,25 @@ final class FeedWriter
 			header( "Content-type: text/xml" );
 		}
 		
-		echo $this->getHead();
-		echo $this->getChannel();
-		echo $this->getItems();
-		echo $this->getEndChannel();
+		echo $this->getFeedData();
+	}
+	
+	/**
+	 * Get ESS Feed data in String format
+	 * 
+	 * @access   public
+	 * @return   String
+	 */ 
+	public function getFeedData()
+	{
+		$out = "";
+		
+		$out .= $this->getHead();
+		$out .= $this->getChannel();
+		$out .= $this->getItems();
+		$out .= $this->getEndChannel();
+		
+		return $out;
 	}
 	
 	/**
@@ -268,9 +283,9 @@ final class FeedWriter
 	 * @access   private
 	 * @return   String
 	 */ 
-	public static function getISODate()
+	public static function getISODate( $date=null )
 	{
-		return urldecode( date( "Y-m-d" ). "T" . date( "H:i:s" ) . "Z" );
+		return ( $date == null )? urldecode( date( "Y-m-d" ). "T" . date( "H:i:s" ) . "Z" ) : date( "Y-m-d\TH:i:s", $date ) . "Z";
 	}
 	
 	/**
@@ -325,7 +340,7 @@ final class FeedWriter
 		 
 		if ( is_array( $tagContent ) )
 		{ 
-			foreach ($tagContent as $key => $value) 
+			foreach ( $tagContent as $key => $value ) 
 			{
 				$nodeText .= $this->makeNode( $key, $value );
 			}
@@ -374,25 +389,50 @@ final class FeedWriter
 			
 			$out .= $this->startFeed();
 			
-			//var_dump( $thisItems );
+			if ( @count( $thisRoots ) > 0 )
+			{
+				foreach ( $thisRoots as $elm => $val )
+				{
+					if ( strlen( $elm ) > 0 && ( @strlen( $val ) > 0 || @count( $val ) > 0 ) )
+					{
+						if ( $elm != 'tags' )
+						{
+							$out .= $this->makeNode( $elm, $val );
+						}
+						else
+						{
+							$out .= "<tags>";
+							foreach( $val as $tag )
+							{
+								$out .= $this->makeNode( 'tag', $tag );
+							}
+							$out .= "</tags>";
+						}
+					}
+				}
+			}
 			
 			if ( @count( $thisItems ) > 0 )
 			{
 				foreach ( $thisItems as $key => $val )
 				{
-					if ( @count( $thisItems[ $key ] ) > 0 )
+					if ( @count( $thisItems[ $key ] ) > 0 && strlen( $key ) > 0 )
 					{
 						$out .= "<{$key}>";
 						
-						foreach ( $thisItems[ $key ] as $feedItem ) 
+						foreach ( $val as $position => $feedItem ) 
 						{
-							//var_dump( $feedItem );
+							$out .= "<item type='".$feedItem[ 'type' ]."'".
+								((isset($feedItem[ 'unit' ]))?	" unit='".		$feedItem[ 'unit' ]."'"		: '').
+								(($feedItem[ 'priority' ]>0)?	" priority='".	$feedItem[ 'priority' ]."'"	: " priority='".($position+1)."'").
+							">";
 							
-							$out .= $this->makeNode(
-								$feedItem[ 'name' ], 
-								$feedItem[ 'content' ], 
-								$feedItem[ 'attributes' ]
-							); 
+							foreach ( $feedItem['content'] as $elm => $feedElm ) 
+							{
+								$out .= $this->makeNode( $elm, $feedElm	);
+							}
+							
+							$out .= "</item>";
 						}
 						$out .= "</{$key}>";
 					}

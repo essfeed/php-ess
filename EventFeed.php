@@ -26,7 +26,7 @@ final class EventFeed
 	private $feedDTD = array( 
 		'categories' => array(
 			'mandatory' => true,
-			'types' 	=> array('competition','diner','conference','seminar','meeting','exhibition','networking','award','theme','family','festival','commemoration'),
+			'types' 	=> array('award','competition','commemoration','conference','concert','diner','exhibition','family','festival','meeting','networking','party','seminar','theme'),
 			'tags' 		=> array(
 				'name' 			=> true,
 				'id' 			=> false 
@@ -43,9 +43,11 @@ final class EventFeed
 				'organization'	=> false,
 				'address'		=> false,
 				'city'			=> false,
-				'state'			=> false,
 				'zip'			=> false,
-				'country'		=> false,
+				'state' 		=> false,
+				'state_code'	=> false,
+				'country' 		=> false,
+				'country_code' 	=> false,
 				'email'			=> false,
 				'phone'			=> false
 			)
@@ -69,7 +71,9 @@ final class EventFeed
 				'city' 			=> false,
 				'zip' 			=> false,
 				'state' 		=> false,
+				'state_code'	=> false,
 				'country' 		=> false,
+				'country_code' 	=> false,
 				'start' 		=> false,
 				'stop' 			=> false,
 				'medium' 		=> false,
@@ -81,8 +85,8 @@ final class EventFeed
 			'types' 	=> array('standalone','recurent'),
 			'tags' 		=> array(
 				'name' 			=> true,
-				'start' 		=> true,
-				'value' 		=> false,
+				'value' 		=> true,
+				'start' 		=> false,
 				'uri' 			=> false
 			)
 		),
@@ -110,7 +114,9 @@ final class EventFeed
 				'city' 			=> false,
 				'zip' 			=> false,
 				'state' 		=> false,
+				'state_code'	=> false,
 				'country' 		=> false,
+				'country_code' 	=> false,
 				'email' 		=> false,
 				'phone' 		=> false,
 				'minpeople' 	=> false,
@@ -122,9 +128,9 @@ final class EventFeed
 			'mandatory' => false,
 			'types' 	=> array('alternative','related','enclosure'),
 			'tags' 		=> array(
-				'id' 			=> true,
 				'name' 			=> true,
-				'uri'			=> true
+				'uri'			=> true,
+				'id' 			=> true
 			)
 		),
 	); 
@@ -192,6 +198,10 @@ final class EventFeed
 	{
 		$this->roots[ $elementName ] = $content ;
 	}
+	
+	
+	
+	// Root wrapper functions -------------------------------------------------------------------
 	
 	/**
 	 * Set the 'title' feed element
@@ -367,12 +377,15 @@ final class EventFeed
 				{
 					if ( $this->controlTags( $groupName, $data_ ) == true ) 
 					{
-						foreach ( $data_ as $tag => $value ) 
-						{
-							$this->elements[ $groupName ][ $tag ][ 'name' ]		= $tag;
-							$this->elements[ $groupName ][ $tag ][ 'content' ]	= $value;
-							$this->elements[ $groupName ][ $tag ][ 'unit' ]		= $unit;
-						}
+						array_push(
+							$this->elements[ $groupName ],
+							array(
+								'type' 		=> $type,
+								'unit' 		=> $unit,
+								'priority'	=> $priority,
+								'content'	=> $data_
+							)
+						);
 					}
 					else 
 					{
@@ -419,26 +432,10 @@ final class EventFeed
 	public function addDates( 		$type, $unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'dates', 	 	$type, $unit, $data_, $priority ); }
 	public function addPlaces( 		$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'places', 		$type, null,  $data_, $priority ); }
 	public function addPrices( 		$type, $unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'prices', 	 	$type, $unit, $data_, $priority ); }
-	
-	public function addPeople()
-	{
-		
-	}
-	
-	public function addMedias()
-	{
-		
-	}
-	
-	public function addRelations()
-	{
-		
-	}
-	
-	public function addAuthors()
-	{
-		
-	}
+	public function addPeople( 		$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'people', 		$type, null,  $data_, $priority ); }
+	public function addMedias( 		$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'medias', 		$type, null,  $data_, $priority ); }
+	public function addRelations( 	$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'relations', 	$type, null,  $data_, $priority ); }
+	public function addAuthors( 	$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'authors', 		$type, null,  $data_, $priority ); }
 	
 	
 	
