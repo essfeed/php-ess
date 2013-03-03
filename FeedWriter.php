@@ -1,36 +1,31 @@
 <?php
+require_once( 'EssDTD.php' );
+
  /**
- * Univarsal ESS Feed Writer class
- * Genarate ESS 0.91 Feed
- *                             
- * @package     ESSFeedWriter
- * @author      Brice Pissard
- * @link        http://eventstandardsyndication.org
- */
+  * Universal ESS Feed Writer class
+  * Generate ESS Feed v0.9
+  *                             
+  * @package     ESSFeedWriter
+  * @author      Brice Pissard
+  * @link        http://eventstandardsyndication.org
+  */ 
 final class FeedWriter
 {
 	// --- [ EDITABLE ] --------------------------------------------------------
 	private $eventAggregators = array(
-		'http://api.hypecal.com/v1/ess/aggregator.json',
+		'http://api.hypecal.com/v1/ess/aggregator.json?feed=',
 		'http://...' // you can add any ESS aggregators where you want your event to be published or updated at any changes.
 	); 
 	// ------------------------------------------------------------------------- 
 	
- 	private $version	= 0.91; 	// ESS Feed version 
+ 	private $version	= 0.9; 		// ESS Feed version 
  	private $lang		= 'en';		// Default language
 	private $channel 	= array();  // Collection of channel elements
 	private $items		= array();  // Collection of items as object of FeedItem class.
+	private $channelDTD	= array();	// DTD Array of Channel first XML child elements 
 	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA
-	private $DEBUG		= false;
-	
-	private $channelDTD = array(
-		'title'     	=> true,
-		'link'			=> true,
-		'published'		=> true,
-		'updated'		=> false,
-		'generator'		=> false,
-		'rights'		=> false
-	);
+	private $DEBUG		= false;	// output debug information
+	private $autoPush	= true; 	// Auto-push changes to ESS Feed Aggregators.
 	
 	/**
 	 * FeedWriter Class Constructor
@@ -42,6 +37,8 @@ final class FeedWriter
 	 */ 
 	function __construct( $lang='en', $data_=null )
 	{
+		$this->channelDTD = EssDTD::getChannelDTD();
+		
 		$this->lang = ( strlen($lang)==2 )? strtolower($lang) : $this->lang;
 		
 		$this->setGenerator( 'ess:php:generator:version:' . $this->version );
@@ -58,24 +55,29 @@ final class FeedWriter
 					switch ( $key ) 
 					{
 						case 'title':		$this->setTitle( 	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
-						case 'link':		$this->setLink(  	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'link':		$this->setLink(  	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++;$mandatoryCount++; break; // + element ID
 						case 'published':	$this->setPublished(  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
 						case 'updated':		$this->setUpdated(    $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
 						case 'generator':	$this->setGenerator(  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
 						case 'rights':		$this->setRights(     $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
 						
-						default: throw new Exception("Error: Channel element '".$el."' unauthorized", 1 ); break;
+						default: throw new Exception("Error: XML Channel element <".$key."> is not defined within ESS DTD." ); break;
 					}
 				}
 				
-				foreach ( $this->channelDTD as $val ) 
+				foreach ( $this->channelDTD as $kk => $val ) 
 				{
-					if ( $val == true ) $mandatoryRequiredCount++;
+					if ( $val == true && $kk != 'feed' ) $mandatoryRequiredCount++;
 				}
 				
 				if ( $mandatoryRequiredCount != $mandatoryCount || $mandatoryCount == 0 )
 				{
-					throw new Exception( "Error: All Channel mandatory elements are required '".explode( $this->channelDTD )."'", 1 );
+					$out = '';
+					foreach ( $this->channelDTD as $key => $m) 
+					{
+						if ( $m == true ) $out .= "<$key>, ";
+					}
+					throw new Exception( "Error: All XML Channel's mandatory elements are required: ". $out );
 				}
 			}
 		}
@@ -89,16 +91,16 @@ final class FeedWriter
 	 * @param    String  content of the channel tag
 	 * @return   Void
 	 */
-		private function setChannelElement( $elementName, $content )
+	private function setChannelElement( $elementName, $content )
 	{
 		$this->channel[ $elementName ] = $content ;
 	}
 	
 	/**
-	 * Genarate the ESS file
+	 * Genarate the ESS Feed
 	 * 
 	 * @access   public
-	 * @return   void
+	 * @return   Void
 	 */ 
 	public function genarateFeed()
 	{
@@ -111,12 +113,37 @@ final class FeedWriter
 	}
 	
 	/**
-	 * Get ESS Feed data in String format
+	 * Genarate the ESS File
 	 * 
 	 * @access   public
+	 * @return   Void
+	 */ 
+	public function genarateFeedFile( $filePath, $feedURL )
+	{
+		$this->setLink( $feedURL );
+		
+		try
+		{
+			$fp = fopen( $filePath, 'w' );
+			fwrite( $fp, $this->getFeedData() );
+			fclose( $fp );
+		}
+		catch( ErrorException $error )
+		{
+			throw new Exception("Error: Impossible to generate file in local disk: " . $error );
+			return;
+		}
+		
+		$this->pushToAggregators( $feedURL );
+	}
+	
+	/**
+	 * Get ESS Feed data in String format
+	 * 
+	 * @access   private
 	 * @return   String
 	 */ 
-	public function getFeedData()
+	private function getFeedData()
 	{
 		$out = "";
 		
@@ -195,7 +222,7 @@ final class FeedWriter
 	 */
 	public function setId( $el=NULL )
 	{
-		if ( $el != NULL ) 
+		if ( $el != NULL )
 		{
 			$this->setChannelElement( 'id', $this->uuid( $el, 'ESSID:' ) );
 		}
@@ -258,11 +285,12 @@ final class FeedWriter
 	
 	
   	/**
-  	 * Genarates an UUID
+  	 * Generates an UUID
 	 * 
-   	 * @author     Anis uddin Ahmad <admin@ajaxray.com>
-  	 * @param      string  an optional prefix
-  	 * @return     string  the formated uuid
+   	 * @author 	Anis uddin Ahmad <admin@ajaxray.com>
+	 * @access	public
+  	 * @param 	String  [OPTIONAL] String prefix
+  	 * @return 	String  the formated uuid
   	 */
   	public static function uuid( $key = null, $prefix = '' ) 
 	{
@@ -278,9 +306,9 @@ final class FeedWriter
  	}
 	
 	/**
-  	 * Genarate current String date in ISO standard format
+  	 * Generate current String date in ISO standard format
 	 * 
-	 * @access   private
+	 * @access   public
 	 * @return   String
 	 */ 
 	public static function getISODate( $date=null )
@@ -422,8 +450,9 @@ final class FeedWriter
 						
 						foreach ( $val as $position => $feedItem ) 
 						{
-							$out .= "<item type='".$feedItem[ 'type' ]."'".
-								((isset($feedItem[ 'unit' ]))?	" unit='".		$feedItem[ 'unit' ]."'"		: '').
+							$out .= "<item type='".strtolower($feedItem[ 'type' ])."'".
+								((isset($feedItem[ 'unit' ]))?	" unit='".		strtolower($feedItem[ 'unit' ])."'"		: '').
+								((isset($feedItem[ 'mode' ]))?	" mode='".		strtolower($feedItem[ 'mode' ])."'"		: '').
 								(($feedItem[ 'priority' ]>0)?	" priority='".	$feedItem[ 'priority' ]."'"	: " priority='".($position+1)."'").
 							">";
 							
@@ -465,7 +494,37 @@ final class FeedWriter
 		return '</feed>';
 	}
 	
+	private function isValidURL( $url )
+	{
+	    return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url );
+	}
 	
+	private function pushToAggregators( $feedURL )
+	{
+		if ( $this->autoPush == true && isset( $this->eventAggregators ) )
+		{
+			if ( @count( $this->eventAggregators ) > 0 )
+			{
+				foreach ( $this->eventAggregators as $url ) 
+				{
+					if ( $this->isValidURL( $url ) )
+					{
+						$outputfile = "result.json";
+						exec( "wget -q \"".$url.$feedURL."\" -O $outputfile" );
+						
+						if ( $this->DEBUG == true )
+						{
+							echo "Push URL: " . $url.$feedURL . "<br>";
+							$json = file_get_contents( $outputfile );
+							var_dump( $json );
+						}
+						
+						exec( "rm $outputfile" );
+					}
+				}
+			}
+		}
+	}
 }
 
 function __autoload( $class_name ) 

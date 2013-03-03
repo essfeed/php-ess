@@ -1,146 +1,26 @@
 <?php
-/**
- * Universal ESS EventFeed Entry Writer
- * FeedItem class - Used as feed element in FeedWriter class
- *
- * @package         ESSFeedWriter
- * @author          Brice Pissard
- * @link            http://eventstandardsyndication.org/index.php/ESS_structure
- */
+require_once( 'EssDTD.php' );
+ /**
+   * Universal ESS EventFeed Entry Writer
+   * FeedItem class - Used as feed element in FeedWriter class
+   *
+   * @package ESSFeedWriter
+   * @author  Brice Pissard
+   * @link	http://eventstandardsyndication.org/index.php/ESS_structure
+   */
 final class EventFeed
 {
 	private $roots 		= array();
 	private $elements 	= array();
-	
-	// ESS Feed DTD version 0.91 (to check if tag exists and is mandatory)
-	private $rootDTD = array(
-		'title' 		=> true,
-        'id'			=> true,
-        'access'		=> true,
-        'description'	=> true,
-        'tags'			=> false,
-        'published'		=> true,
-        'updated'		=> false,
-	);
-	
-	private $feedDTD = array( 
-		'categories' => array(
-			'mandatory' => true,
-			'types' 	=> array('award','competition','commemoration','conference','concert','diner','exhibition','family','festival','meeting','networking','party','seminar','theme'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'id' 			=> false 
-			)
-		),
-		'authors' => array(
-			'mandatory'	=> false,
-			'types' 	=> array('author','contributor'),
-			'tags' 		=> array(
-				'name'			=> true,
-				'uri'			=> true,
-				'firstname' 	=> false,
-				'lastname'		=> false,
-				'organization'	=> false,
-				'address'		=> false,
-				'city'			=> false,
-				'zip'			=> false,
-				'state' 		=> false,
-				'state_code'	=> false,
-				'country' 		=> false,
-				'country_code' 	=> false,
-				'email'			=> false,
-				'phone'			=> false
-			)
-		), 
-		'dates' => array(
-			'types' 	=> array('standalone','recurent'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'start' 		=> true,
-				'duration' 		=> false
-			)
-		),
-		'places' => array(
-			'mandatory' => true,
-			'types' 	=> array('fix','area','moving','virtual'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'latitude' 		=> true,
-				'longitude' 	=> true,
-				'address' 		=> false,
-				'city' 			=> false,
-				'zip' 			=> false,
-				'state' 		=> false,
-				'state_code'	=> false,
-				'country' 		=> false,
-				'country_code' 	=> false,
-				'start' 		=> false,
-				'stop' 			=> false,
-				'medium' 		=> false,
-				'kml' 			=> false
-			)	
-		),
-		'prices' => array(
-			'mandatory' => true,
-			'types' 	=> array('standalone','recurent'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'value' 		=> true,
-				'start' 		=> false,
-				'uri' 			=> false
-			)
-		),
-		'medias' => array(
-			'mandatory' => false,
-			'types' 	=> array('image','sound','video','website'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'uri' 			=> true
-			)
-		),
-		'people' => array(
-			'mandatory' => false,
-			'types' 	=> array('organizer','performer','visitor'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'id' 			=> false,
-				'firstname' 	=> false,
-				'lastname' 		=> false,
-				'organization' 	=> false,
-				'logo' 			=> false,
-				'icon' 			=> false,
-				'uri' 			=> false,
-				'address' 		=> false,
-				'city' 			=> false,
-				'zip' 			=> false,
-				'state' 		=> false,
-				'state_code'	=> false,
-				'country' 		=> false,
-				'country_code' 	=> false,
-				'email' 		=> false,
-				'phone' 		=> false,
-				'minpeople' 	=> false,
-				'maxpeople' 	=> false,
-				'minage' 		=> false
-			)
-		),
-		'relations' => array(
-			'mandatory' => false,
-			'types' 	=> array('alternative','related','enclosure'),
-			'tags' 		=> array(
-				'name' 			=> true,
-				'uri'			=> true,
-				'id' 			=> true
-			)
-		),
-	); 
-	 
-	
-	
+	private $rootDTD	= array();
+	private $feedDTD	= array();
 	
 	
 	function __construct( $data_=null )
 	{
+		$this->rootDTD = EssDTD::getRootDTD();
+		$this->feedDTD = EssDTD::getFeedDTD();
+		
 		foreach ( $this->feedDTD as $key => $value ) 
 		{
 			$this->elements[ $key ]	= array();
@@ -165,7 +45,7 @@ final class EventFeed
 				}
 				
 				if ( $isFound == false )
-					throw new Exception("Error: Event element ". $tagTest . " is not specified in ESS Feed DTD.", 1);
+					throw new Exception("Error: Event XML element <". $tagTest . "> is not specified within ESS Feed DTD." );
 			}
 			
 			foreach ( $data_ as $tag => $value ) 
@@ -180,7 +60,7 @@ final class EventFeed
 					{
 						$this->roots[ $tag ] = $value;
 					}
-					else throw new Exception("Error: Element 'tag' must be of 'Array'type.", 1);
+					else throw new Exception("Error: Element <tag> must be of 'Array' type." );
 				}
 			}
 		}
@@ -216,13 +96,36 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'title', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'title' element is mandatory.", 1);
+				throw new Exception( "Error: '<title>' element is mandatory." );
 				return;
 			}
 			$this->setRootElement( 'title', $el );
 			$this->setId( $el );
 		}
 	}
+	
+	/**
+	 * Set the 'uri' feed element
+	 * 
+	 * @access   public
+	 * @param    String  value of 'uri' feed tag
+	 * @return   void
+	 */
+	public function setUri( $el=NULL )
+	{
+		if ( $el != NULL ) 
+		{
+			if ( $this->controlRoot( 'uri', $el ) == false ) 
+			{
+				throw new Exception( "Error: '<uri>' element is mandatory." );
+				return;
+			}
+			$this->setRootElement( 'uri', $el );
+			$this->setId( $el );
+		}
+	}
+	
+	
 	
 	/**
 	 * Set the 'id' feed element
@@ -237,10 +140,10 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'id', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'id' element is mandatory.", 1);
+				throw new Exception( "Error: '<id>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'id', FeedWriter::uuid( $el, 'FEEDID:' ) );
+			$this->setRootElement( 'id', FeedWriter::uuid( $el, 'EVENTID:' ) );
 		}
 	}
 	
@@ -257,7 +160,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'published', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'published' element is mandatory.", 1);
+				throw new Exception( "Error: '<published>' element is mandatory." );
 				return;
 			}
 			
@@ -278,7 +181,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'updated', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'updated' element is mandatory.", 1);
+				throw new Exception( "Error: '<updated>' element is mandatory." );
 				return;
 			}
 			
@@ -299,7 +202,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'access', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'access' element is mandatory.", 1);
+				throw new Exception( "Error: '<access>' element is mandatory." );
 				return;
 			}
 			
@@ -320,7 +223,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'description', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'description' element is mandatory.", 1);
+				throw new Exception( "Error: '<description>' element is mandatory." );
 				return;
 			}
 			
@@ -341,7 +244,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'tags', $el ) == false ) 
 			{
-				throw new Exception( "Error: 'tags' element is mandatory.", 1);
+				throw new Exception( "Error: '<tags>' element is mandatory." );
 				return;
 			}
 			
@@ -358,12 +261,14 @@ final class EventFeed
 	 * 
 	 * @access  private
 	 * @param	String	Name of the group of tag
-	 * @param 	String  The tag name of an element
-	 * @param 	String  The content of tag
-	 * @param	Array   Attributes(if any) in 'attrName' => 'attrValue' format
+	 * @param 	String  'type' attibute for this tag
+	 * @param 	String  'mode' attibute for this tag
+	 * @param 	String  'unit' attibute for this tag
+	 * @param	Array   Array of data for this tag element
+	 * @param 	String  'priority' attibute for this tag
 	 * @return	Void
 	 */
-	private function addElement( $groupName, $type = '', $unit = null, Array $data_ = null, $priority = 0 )
+	private function addElement( $groupName, $type = '', $mode = '', $unit = null, Array $data_ = null, $priority = 0 )
 	{
 		$groupName = strtolower( $groupName );
 		
@@ -373,35 +278,50 @@ final class EventFeed
 		{
 			if ( @count( $data_ ) > 0 )	
 			{
-				if ( $this->controlType( $groupName, $type ) == true ) 
+				if ( $this->controlType( $groupName, $type ) == true )
 				{
-					if ( $this->controlTags( $groupName, $data_ ) == true ) 
+					if ( $this->controlMode( $groupName, $mode ) == true )
 					{
-						array_push(
-							$this->elements[ $groupName ],
-							array(
-								'type' 		=> $type,
-								'unit' 		=> $unit,
-								'priority'	=> $priority,
-								'content'	=> $data_
-							)
-						);
-					}
-					else 
-					{
-						$mandatories = "";
-						foreach ( $this->feedDTD[ $groupName ][ 'tags' ] as $tag => $mandatory )
+						if ( $this->controlTags( $groupName, $data_ ) == true ) 
 						{
-							if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) $mandatories .= "<" .$tag."> ";
+							foreach ( $data_ as $tag => $value ) 
+							{
+								//echo $tag."=> " . $value."<br>";
+								if ( $this->controlNodeContent( $tag, $value ) == false )
+								{
+									throw new Exception( $errorType . "The XML element <$tag> have an invalid content: '$value', please control the correct syntax in ESS DTD." );
+									break;
+								}
+							}
+							
+							array_push(
+								$this->elements[ $groupName ],
+								array(
+									'type' 		=> $type,
+									'mode'		=> $mode,
+									'unit' 		=> $unit,
+									'priority'	=> $priority,
+									'content'	=> $data_
+								)
+							);
 						}
-						throw new Exception( $errorType . "All mandatory element are not provided (".$mandatories.").", 1);
+						else 
+						{
+							$mandatories = "";
+							foreach ( $this->feedDTD[ $groupName ][ 'tags' ] as $tag => $mandatory )
+							{
+								if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) $mandatories .= "<" .$tag."> ";
+							}
+							throw new Exception( $errorType . "All XML mandatories elements are not provided (".$mandatories.")." );
+						}
 					}
+					else throw new Exception( $errorType . "Attribute 'mode=".$mode."' is not available within ESS DTD." );
 				}
-				else throw new Exception( $errorType . "Attribute 'type':".$type." is not available in ESS DTD.", 1);
+				else throw new Exception( $errorType . "Attribute 'type=".$type."' is not available within ESS DTD." );
 			}
-			else throw new Exception( $errorType . "Element could not be empty.", 1);
+			else throw new Exception( $errorType . "Element could not be empty." );
 		}
-		else throw new Exception( $errorType . "The 'type' attribute is required.", 1);
+		else throw new Exception( $errorType . "The 'type' attribute is required." );
 	}
 	
 	/**
@@ -428,14 +348,14 @@ final class EventFeed
 	
 	
 	
-	public function addCategories( 	$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'categories', 	$type, null,  $data_, $priority ); }
-	public function addDates( 		$type, $unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'dates', 	 	$type, $unit, $data_, $priority ); }
-	public function addPlaces( 		$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'places', 		$type, null,  $data_, $priority ); }
-	public function addPrices( 		$type, $unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'prices', 	 	$type, $unit, $data_, $priority ); }
-	public function addPeople( 		$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'people', 		$type, null,  $data_, $priority ); }
-	public function addMedias( 		$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'medias', 		$type, null,  $data_, $priority ); }
-	public function addRelations( 	$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'relations', 	$type, null,  $data_, $priority ); }
-	public function addAuthors( 	$type, 			Array $data_ = null, $priority=0 ) { $this->addElement( 'authors', 		$type, null,  $data_, $priority ); }
+	public function addCategories( 	$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'categories', 	$type, null, null,   $data_, $priority ); }
+	public function addDates( 		$type, 			$unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'dates', 	 	$type, null, $unit,  $data_, $priority ); }
+	public function addPlaces( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'places', 		$type, null, null,   $data_, $priority ); }
+	public function addPrices( 		$type, $mode, 	$unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'prices', 	 	$type, $mode, $unit, $data_, $priority ); }
+	public function addPeople( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'people', 		$type, null, null,   $data_, $priority ); }
+	public function addMedias( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'medias', 		$type, null, null,   $data_, $priority ); }
+	public function addRelations( 	$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'relations', 	$type, null, null,   $data_, $priority ); }
+	public function addAuthors( 	$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'authors', 		$type, null, null,   $data_, $priority ); }
 	
 	
 	
@@ -495,7 +415,95 @@ final class EventFeed
 		return false;
 	}
 	
+	private function controlMode( $elmName='', $modeToControl='' )
+	{
+		if ( isset( $this->feedDTD[ $elmName ][ 'modes' ] ) )
+		{
+			foreach ( $this->feedDTD[ $elmName ][ 'modes' ] as $mode ) 
+			{
+				if ( strtolower( $modeToControl ) == $mode ) return true;
+			}
+		}
+		else return true;	
+		return false;
+	}
 	
+	private function controlNodeContent( $name, $value )
+	{
+		switch ( strtolower( $name ) ) 
+		{
+			case 'published' 		:
+			case 'updated' 			: return $this->validUTCDate( $value ); break;	
+			case 'name' 			: return ( strlen( $value ) > 0 )? true : false; break;
+			case 'email' 			: return $this->validEmail( $value ); break;
+			case 'uri' 				: return $this->validateURL( $value ); break;
+			case 'latitude'			: break;
+			case 'longitude'		: break;
+			case 'country_code' 	: if ( strlen( $value ) > 0 ) { return ( strlen( $value ) == 2 )? true : false; } break;
+			case 'currency' 		: if ( strlen( $value ) > 0 ) { return ( strlen( $value ) == 3 )? true : false; } break;
+			default					: return true; break;
+		}
+		return true; // Be indulgent, consider the node content as valid if it didn't failed in one of the previous cases.
+	}
+	
+	private function validateURL( $url )
+	{
+		$urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+		
+		return ( @eregi( $urlregex, $url ) == true && strlen( $url ) > 10 )? true : false;  
+	}
+	
+	private function validEmail( $email ) 
+	{
+		if ( preg_match( '/^\w[-.\w]*@(\w[-._\w]*\.[a-zA-Z]{2,}.*)$/', $email, $matches ) )
+        {
+        	$hostName = $matches[ 1 ];
+			
+			if ( @strlen( $hostName ) > 5 )
+			{
+	         	if ( function_exists('checkdnsrr') )
+				{
+					if ( checkdnsrr( $hostName . '.', 'MX' ) ) return true;
+					if ( checkdnsrr( $hostName . '.', 'A'  ) ) return true;
+				}
+				else
+				{
+					@exec( "nslookup -type=MX ".$hostName, $r );
+					
+					if ( @count( $r ) > 0 )
+					{
+						foreach ( $r as $line )
+						{
+							if ( @eregi( "^$hostName", $line ) ) return true;
+						}
+						return false;
+					}
+					else return true; // if a problem occured while resolving the MX consider the email as valid
+				}
+			}
+        }
+		else 
+		{
+			if ( eregi( "^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$", $email, $check ) )
+				return true; 
+		}
+		return false;
+	}
+	
+	/**
+	 * Control the correct syntax of the date in UTC format (ISO)
+	 * 
+	 * @access	private
+	 * @param	String	stringDate is the string formated UTC date (e.g. 2013-10-31T15:30:59Z)
+	 * @return	Boolean
+	 */
+	private function validUTCDate( $stringDate )
+	{
+		date_default_timezone_set(@date_default_timezone_get());
+		
+		// is 'T'
+		// is 2 x '-'
+	}
 	
 	
  }
