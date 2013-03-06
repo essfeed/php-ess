@@ -353,7 +353,7 @@ final class EventFeed
 	public function addPlaces( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'places', 		$type, null, null,   $data_, $priority ); }
 	public function addPrices( 		$type, $mode, 	$unit, 	Array $data_ = null, $priority=0 ) { $this->addElement( 'prices', 	 	$type, $mode, $unit, $data_, $priority ); }
 	public function addPeople( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'people', 		$type, null, null,   $data_, $priority ); }
-	public function addMedias( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'medias', 		$type, null, null,   $data_, $priority ); }
+	public function addMedia( 		$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'media', 		$type, null, null,   $data_, $priority ); }
 	public function addRelations( 	$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'relations', 	$type, null, null,   $data_, $priority ); }
 	public function addAuthors( 	$type, 					Array $data_ = null, $priority=0 ) { $this->addElement( 'authors', 		$type, null, null,   $data_, $priority ); }
 	

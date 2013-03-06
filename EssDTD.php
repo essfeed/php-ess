@@ -70,7 +70,7 @@ final class EssDTD
 			),
 			'dates' => array(
 				'mandatory'	=> true,
-				'types' 	=> array('standalone','recurent'),
+				'types' 	=> array('standalone','recurrent','permanent'),
 				'units'		=> array('hour','day','week','month','year'),
 				'tags' 		=> array(
 					'name' 			=> true,
@@ -80,7 +80,7 @@ final class EssDTD
 			),
 			'places' => array(
 				'mandatory' => true,
-				'types' 	=> array('fix','area','moving','virtual'),
+				'types' 	=> array('fixed','area','moving','virtual'),
 				'tags' 		=> array(
 					'name' 			=> true,
 					'country' 		=> true,
@@ -101,18 +101,19 @@ final class EssDTD
 			),
 			'prices' => array(
 				'mandatory' => true,
-				'types' 	=> array('standalone','recurent'),
-				'modes'		=> array('fix','free','invitation','bepayed'),
+				'types' 	=> array('standalone','recurrent'),
+				'modes'		=> array('fixed','free','invitation','renumerated','prepaid'),
 				'units'		=> array('hour','day','week','month','year'),
 				'tags' 		=> array(
 					'name' 			=> true,
 					'value' 		=> true,
 					'currency'		=> false,
 					'start' 		=> false,
+					'duration'		=> false,
 					'uri' 			=> false
 				)
 			),
-			'medias' => array(
+			'media' => array(
 				'mandatory' => false,
 				'types' 	=> array('image','sound','video','website'),
 				'tags' 		=> array(
@@ -122,7 +123,7 @@ final class EssDTD
 			),
 			'people' => array(
 				'mandatory' => false,
-				'types' 	=> array('organizer','performer','visitor'),
+				'types' 	=> array('organizer','performer','attendee'),
 				'tags' 		=> array(
 					'name' 			=> true,
 					'id' 			=> false,
@@ -143,7 +144,8 @@ final class EssDTD
 					'phone' 		=> false,
 					'minpeople' 	=> false,
 					'maxpeople' 	=> false,
-					'minage' 		=> false
+					'minage' 		=> false,
+					'restriction'	=> false,
 				)
 			),
 			'authors' => array(
