@@ -24,7 +24,7 @@ final class FeedWriter
 	private $items		= array();  // Collection of items as object of FeedItem class.
 	private $channelDTD	= array();	// DTD Array of Channel first XML child elements 
 	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA
-	private $DEBUG		= false;	// output debug information
+	private $DEBUG		= true;	// output debug information
 	private $autoPush	= true; 	// Auto-push changes to ESS Feed Aggregators.
 	
 	/**
@@ -100,7 +100,7 @@ final class FeedWriter
 	 * Genarate the ESS Feed
 	 * 
 	 * @access   public
-	 * @return   Void
+	 * @return   void
 	 */ 
 	public function genarateFeed()
 	{
@@ -116,7 +116,7 @@ final class FeedWriter
 	 * Genarate the ESS File
 	 * 
 	 * @access   public
-	 * @return   Void
+	 * @return   void
 	 */ 
 	public function genarateFeedFile( $filePath, $feedURL )
 	{
@@ -130,7 +130,7 @@ final class FeedWriter
 		}
 		catch( ErrorException $error )
 		{
-			throw new Exception("Error: Impossible to generate file in local disk: " . $error );
+			throw new Exception( "Error: Impossible to generate file in local disk: " . $error );
 			return;
 		}
 		
@@ -171,7 +171,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    Object  instance of EventFeed class
-	 * @return   Void
+	 * @return   void
 	 */
 	public function addItem( $eventFeed )
 	{
@@ -190,7 +190,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'title' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setTitle( $el=NULL )
 	{
@@ -202,7 +202,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'link' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setLink( $el=NULL )
 	{
@@ -218,7 +218,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'id' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setId( $el=NULL )
 	{
@@ -233,7 +233,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'generator' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setGenerator( $el=NULL )
 	{
@@ -248,7 +248,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'published' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setPublished( $el=NULL )
 	{
@@ -260,7 +260,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'updated' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setUpdated( $el=NULL )
 	{
@@ -272,7 +272,7 @@ final class FeedWriter
 	 * 
 	 * @access   public
 	 * @param    String  value of 'rights' channel tag
-	 * @return   Void
+	 * @return   void
 	 */
 	public function setRights( $el=NULL )
 	{

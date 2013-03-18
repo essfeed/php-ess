@@ -1,12 +1,13 @@
 <?php
 require_once( 'EssDTD.php' );
+require_once( 'FeedValidator.php' );
  /**
    * Universal ESS EventFeed Entry Writer
    * FeedItem class - Used as feed element in FeedWriter class
    *
-   * @package ESSFeedWriter
-   * @author  Brice Pissard
-   * @link	http://eventstandardsyndication.org/index.php/ESS_structure
+   * @package 	ESSFeedWriter
+   * @author  	Brice Pissard
+   * @link		http://eventstandardsyndication.org/index.php/ESS_structure
    */
 final class EventFeed
 {
@@ -432,77 +433,21 @@ final class EventFeed
 	{
 		switch ( strtolower( $name ) ) 
 		{
+			case 'start'			:	
 			case 'published' 		:
-			case 'updated' 			: return $this->validUTCDate( $value ); break;	
-			case 'name' 			: return ( strlen( $value ) > 0 )? true : false; break;
-			case 'email' 			: return $this->validEmail( $value ); break;
-			case 'uri' 				: return $this->validateURL( $value ); break;
-			case 'latitude'			: break;
-			case 'longitude'		: break;
-			case 'country_code' 	: if ( strlen( $value ) > 0 ) { return ( strlen( $value ) == 2 )? true : false; } break;
-			case 'currency' 		: if ( strlen( $value ) > 0 ) { return ( strlen( $value ) == 3 )? true : false; } break;
+			case 'updated' 			: return FeedValidator::isValidDate( 		$value ); break;	
+			case 'name' 			: return ( FeedValidator::isNull( 			$value ) == false )? true : false; break;
+			case 'email' 			: return FeedValidator::isValidEmail( 		$value ); break;
+			case 'logo' 			:
+			case 'icon' 			:
+			case 'uri' 				: return FeedValidator::isValidURL( 		$value ); break;
+			case 'latitude'			: return FeedValidator::isValidLatitude(	$value ); break;
+			case 'longitude'		: return FeedValidator::isValidLongitude(	$value ); break;
+			case 'country_code' 	: return FeedValidator::isValidCountryCode( $value ); break;
+			case 'currency' 		: return FeedValidator::isValidCurrency(	$value ); break;
 			default					: return true; break;
 		}
-		return true; // Be indulgent, consider the node content as valid if it didn't failed in one of the previous cases.
-	}
-	
-	private function validateURL( $url )
-	{
-		$urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
-		
-		return ( @eregi( $urlregex, $url ) == true && strlen( $url ) > 10 )? true : false;  
-	}
-	
-	private function validEmail( $email ) 
-	{
-		if ( preg_match( '/^\w[-.\w]*@(\w[-._\w]*\.[a-zA-Z]{2,}.*)$/', $email, $matches ) )
-        {
-        	$hostName = $matches[ 1 ];
-			
-			if ( @strlen( $hostName ) > 5 )
-			{
-	         	if ( function_exists('checkdnsrr') )
-				{
-					if ( checkdnsrr( $hostName . '.', 'MX' ) ) return true;
-					if ( checkdnsrr( $hostName . '.', 'A'  ) ) return true;
-				}
-				else
-				{
-					@exec( "nslookup -type=MX ".$hostName, $r );
-					
-					if ( @count( $r ) > 0 )
-					{
-						foreach ( $r as $line )
-						{
-							if ( @eregi( "^$hostName", $line ) ) return true;
-						}
-						return false;
-					}
-					else return true; // if a problem occured while resolving the MX consider the email as valid
-				}
-			}
-        }
-		else 
-		{
-			if ( eregi( "^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$", $email, $check ) )
-				return true; 
-		}
-		return false;
-	}
-	
-	/**
-	 * Control the correct syntax of the date in UTC format (ISO)
-	 * 
-	 * @access	private
-	 * @param	String	stringDate is the string formated UTC date (e.g. 2013-10-31T15:30:59Z)
-	 * @return	Boolean
-	 */
-	private function validUTCDate( $stringDate )
-	{
-		date_default_timezone_set(@date_default_timezone_get());
-		
-		// is 'T'
-		// is 2 x '-'
+		return true;
 	}
 	
 	

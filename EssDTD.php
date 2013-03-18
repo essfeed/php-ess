@@ -10,12 +10,26 @@ final class EssDTD
 {
 	public function __construct() {}
 	
+	/**
+	 *  Get ESS XML element attributes
+	 * 
+	 * 	@access public
+	 * 	@return Array	Return an Array of the <ess> XML element attributes with mandatory Boolean value DTD
+	 */
+	public static function getESSAttributeDTD()
+	{
+		return array(
+			'xmlns' 	=> true,
+			'version'	=> true,
+			'lang'		=> true
+		);	
+	}
 	
 	/**
 	 *  Get Channel's first available XML child
 	 * 
 	 * 	@access public
-	 * 	@return Array	Return an Array of the DTD
+	 * 	@return Array	Return an Array of the <channel> first XML childs with mandatory Boolean value DTD
 	 */
 	public static function getChannelDTD()
 	{
@@ -83,8 +97,8 @@ final class EssDTD
 				'types' 	=> array('fixed','area','moving','virtual'),
 				'tags' 		=> array(
 					'name' 			=> true,
-					'country' 		=> true,
 					'country_code' 	=> true,
+					'country' 		=> false,
 					'latitude' 		=> false,
 					'longitude' 	=> false,
 					'address' 		=> false,
@@ -92,8 +106,8 @@ final class EssDTD
 					'zip' 			=> false,
 					'state' 		=> false,
 					'state_code'	=> false,
-					'start' 		=> false,
-					'stop' 			=> false,
+					'begining' 		=> false,
+					'ending' 		=> false,
 					'medium_name' 	=> false,
 					'medium_type'	=> false,
 					'kml' 			=> false

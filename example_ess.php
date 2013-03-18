@@ -85,7 +85,7 @@
   	// --- Create and add another Event Feed within current ESS Channel
   	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategories( 	'concert', 						array('name'=> 'Rock Music', 'id'=> 'M22'));
-		$newEvent->addDates( 		'recurrent', 	'year', 		array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:30:00Z', 'duration'=> '7200' ) );
+		$newEvent->addDates( 		'recurrent', 	'year', 		array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:90:00Z', 'duration'=> '7200' ) );
 		$newEvent->addPlaces( 		'fixed', 						array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 		$newEvent->addPrices(		'standalone', 	'fixed', null,	array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
 		$newEvent->addPeople(		'performer',					array('name' => 'Madonna' ) );
@@ -96,11 +96,11 @@
   
   
   
- 	// Genarate the ESS feed on screen only.
+ 	// Genarate the ESS feed on screen only. 
 	$essFeed->genarateFeed();
 	
 	// OR
 	
-	// Generate the ESS Feed file on server [ and push results to Feed aggregators ]
+	// Generate the ESS Feed file on server and push ESS Feed URL to aggregator's list.
 	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', 'http://example.com/feeds/events.ess' );
 	
