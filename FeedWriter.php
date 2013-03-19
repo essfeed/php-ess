@@ -161,9 +161,24 @@ final class FeedWriter
 	 * @access   public
 	 * @return   Object  instance of EventFeed class
 	 */
-	public function newEventFeed()
+	public function newEventFeed( Array $arr_= null )
 	{
-		return new EventFeed();
+		$newEvent = new EventFeed();
+		
+		if ( $arr_ )
+		{
+			if ( @count( $arr_ ) > 0 )
+			{
+				if ( FeedValidator::isNull( $arr_['title'] 			) == false ) { $newEvent->setTitle( 		$arr_['title'] 			); }
+				if ( FeedValidator::isNull( $arr_['uri'] 			) == false ) { $newEvent->setUri( 			$arr_['uri'] 			); }
+				if ( FeedValidator::isValidDate( $arr_['published'] ) == true  ) { $newEvent->setPublished( 	$arr_['published'] 		); } else { $newEvent->setPublished(FeedWriter::getISODate() 	); }
+				if ( FeedValidator::isValidDate( $arr_['updated'] 	) == true  ) { $newEvent->setUpdated( 		$arr_['updated'] 		); } else { $newEvent->setUpdated(	FeedWriter::getISODate() 	); }
+				if ( FeedValidator::isNull( $arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( 	'PUBLIC' 					); }
+				if ( FeedValidator::isNull( $arr_['description']	) == false ) { $newEvent->setDescription(	$arr_['description'] 	); }
+				if ( @count( $arr_['tags'] ) > 0 ) 								 { $newEvent->setTags(			$arr_['tags'] 			); }
+			}
+		}
+		return $newEvent;
 	}
 	
 	/**

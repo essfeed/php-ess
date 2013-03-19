@@ -97,10 +97,12 @@
   
   
  	// Genarate the ESS feed on screen only. 
-	$essFeed->genarateFeed();
+	//$essFeed->genarateFeed();
 	
 	// OR
 	
 	// Generate the ESS Feed file on server and push ESS Feed URL to aggregator's list.
 	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', 'http://example.com/feeds/events.ess' );
+	$essFeed->genarateFeedFile( '/home/bibi/www/ess.hypecal.com/php-ess/events.ess', 'http://ess.hypecal.com/php-ess/events.ess' );
+	
 	
