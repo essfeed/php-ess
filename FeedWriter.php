@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE);
 require_once( 'EssDTD.php' );
 
  /**
@@ -7,33 +8,26 @@ require_once( 'EssDTD.php' );
   *                             
   * @package     ESSFeedWriter
   * @author      Brice Pissard
-  * @link        http://eventstandardsyndication.org
+  * @link        http://essfeed.org
   */ 
 final class FeedWriter
 {
-	// --- [ EDITABLE ] --------------------------------------------------------
-	private $eventAggregators = array(
-		'http://api.hypecal.com/v1/ess/aggregator.json?feed=',
-		'http://...' // you can add any ESS aggregators where you want your event to be published or updated at any changes.
-	); 
-	// ------------------------------------------------------------------------- 
-	
- 	private $version	= 0.9; 		// ESS Feed version 
- 	private $lang		= 'en';		// Default language
-	private $channel 	= array();  // Collection of channel elements
-	private $items		= array();  // Collection of items as object of FeedItem class.
-	private $channelDTD	= array();	// DTD Array of Channel first XML child elements 
+	private $version	= 0.9; 						// ESS Feed version 
+ 	private $lang		= 'en';						// Default language
+	private $channel 	= array();  				// Collection of channel elements
+	private $items		= array();  				// Collection of items as object of FeedItem class.
+	private $channelDTD	= array();					// DTD Array of Channel first XML child elements 
 	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA
-	private $DEBUG		= true;	// output debug information
-	private $autoPush	= true; 	// Auto-push changes to ESS Feed Aggregators.
+	private $DEBUG		= false;					// output debug information
+	private $autoPush	= true; 					// Auto-push changes to ESS Feed Aggregators.
 	
 	/**
 	 * FeedWriter Class Constructor
 	 * 
-	 * @access   public
-	 * @param    String [OPTIONAL] 2 chars language definition for the feed.
-	 * @param    Array 	[OPTIONAL] array of Event Feed tags definition.
-	 * @return   Void 
+	 * @access 	public
+	 * @param  	String 	[OPTIONAL] 2 chars language definition for the current feed.
+	 * @param  	Array 	[OPTIONAL] array of event's feed tags definition.
+	 * @return 	void 
 	 */ 
 	function __construct( $lang='en', $data_=null )
 	{
@@ -86,10 +80,12 @@ final class FeedWriter
 	/**
 	 * Set a channel element
 	 * 
-	 * @access   public
-	 * @param    String  name of the channel tag
-	 * @param    String  content of the channel tag
-	 * @return   Void
+	 * @access  public
+	 * @see		http://essfeed.org/index.php/ESS_structure
+	 * 
+	 * @param   String  name of the channel tag.
+	 * @param   String  content of the channel tag.
+	 * @return  void
 	 */
 	private function setChannelElement( $elementName, $content )
 	{
@@ -99,8 +95,8 @@ final class FeedWriter
 	/**
 	 * Genarate the ESS Feed
 	 * 
-	 * @access   public
-	 * @return   void
+	 * @access 	public
+	 * @return 	void
 	 */ 
 	public function genarateFeed()
 	{
@@ -115,8 +111,10 @@ final class FeedWriter
 	/**
 	 * Genarate the ESS File
 	 * 
-	 * @access   public
-	 * @return   void
+	 * @access 	public
+	 * @param	String	Local server path where the feed will be stored.
+	 * @param	URL		URL of the same feed but available online. this URL will be used to broadcast your event to events search engines.
+	 * @return	void
 	 */ 
 	public function genarateFeedFile( $filePath, $feedURL )
 	{
@@ -138,10 +136,10 @@ final class FeedWriter
 	}
 	
 	/**
-	 * Get ESS Feed data in String format
+	 * Get ESS Feed data in String format.
 	 * 
-	 * @access   private
-	 * @return   String
+	 * @access  private
+	 * @return  String
 	 */ 
 	private function getFeedData()
 	{
@@ -152,14 +150,16 @@ final class FeedWriter
 		$out .= $this->getItems();
 		$out .= $this->getEndChannel();
 		
+		$this->pushToAggregators('',$out);
+		
 		return $out;
 	}
 	
 	/**
 	 * Create a new EventFeed.
 	 * 
-	 * @access   public
-	 * @return   Object  instance of EventFeed class
+	 * @access  public
+	 * @return 	Object  instance of EventFeed class
 	 */
 	public function newEventFeed( Array $arr_= null )
 	{
@@ -184,9 +184,9 @@ final class FeedWriter
 	/**
 	 * Add a EventFeed to the main class
 	 * 
-	 * @access   public
-	 * @param    Object  instance of EventFeed class
-	 * @return   void
+	 * @access 	public
+	 * @param  	Object  instance of EventFeed class
+	 * @return 	void
 	 */
 	public function addItem( $eventFeed )
 	{
@@ -203,9 +203,13 @@ final class FeedWriter
 	/**
 	 * Set the 'title' channel element
 	 * 
-	 * @access   public
-	 * @param    String  value of 'title' channel tag
-	 * @return   void
+	 * @access 	public
+	 * @see		http://essfeed.org/index.php/ESS_structure
+	 * 
+	 * @param  	String  value of 'title' channel tag.
+	 * 					Define the language-sensitive feed title. 
+	 * 					Should not be longer then 128 characters.
+	 * @return  void
 	 */
 	public function setTitle( $el=NULL )
 	{
@@ -215,9 +219,12 @@ final class FeedWriter
 	/**
 	 * Set the 'link' channel element
 	 * 
-	 * @access   public
-	 * @param    String  value of 'link' channel tag
-	 * @return   void
+	 * @access  public
+	 * @see		http://essfeed.org/index.php/ESS_structure
+	 * 
+	 * @param   String  value of 'link' channel tag.
+	 * 					Define the feed URL. 
+	 * @return  void
 	 */
 	public function setLink( $el=NULL )
 	{
@@ -261,9 +268,14 @@ final class FeedWriter
 	/**
 	 * Set the 'published' channel element
 	 * 
-	 * @access   public
-	 * @param    String  value of 'published' channel tag
-	 * @return   void
+	 * @access 	public
+	 * @see		http://essfeed.org/index.php/ESS_structure
+	 * 
+	 * @param   String  Value of 'published' channel tag.
+	 * 					Must be an UTC Date format (ISO 8601).
+	 * 					e.g. 2013-10-31T15:30:59Z in Paris or 2013-10-31T15:30:59+0800 in San Francisco
+	 * 
+	 * @return  void
 	 */
 	public function setPublished( $el=NULL )
 	{
@@ -273,9 +285,13 @@ final class FeedWriter
 	/**
 	 * Set the 'updated' channel element
 	 * 
-	 * @access   public
-	 * @param    String  value of 'updated' channel tag
-	 * @return   void
+	 * @access  public
+	 * @see		http://essfeed.org/index.php/ESS_structure
+	 * 
+	 * @param 	String  Value of 'updated' channel tag.
+	 * 					Must be an UTC Date format (ISO 8601).
+	 * 					e.g. 2013-10-31T15:30:59Z in Paris or 2013-10-31T15:30:59+0800 in San Francisco
+	 * @return  void
 	 */
 	public function setUpdated( $el=NULL )
 	{
@@ -285,9 +301,14 @@ final class FeedWriter
 	/**
 	 * Set the 'rights' channel element
 	 * 
-	 * @access   public
-	 * @param    String  value of 'rights' channel tag
-	 * @return   void
+	 * @access  public
+	 * @see		http://essfeed.org/index.php/ESS_structure
+	 * 
+	 * @param 	String  value of 'rights' channel tag.
+	 * 					Define the Feed proprietary rights. 
+	 * 					Should not be longer then 512 chars.
+	 * 
+	 * @return void
 	 */
 	public function setRights( $el=NULL )
 	{
@@ -307,7 +328,7 @@ final class FeedWriter
   	 * @param 	String  [OPTIONAL] String prefix
   	 * @return 	String  the formated uuid
   	 */
-  	public static function uuid( $key = null, $prefix = '' ) 
+  	public static function uuid( $key = null, $prefix = 'ESSID:' ) 
 	{
 		$key = ( $key == null )? uniqid( rand() ) : $key;
 		$chars = md5( $key );
@@ -340,7 +361,7 @@ final class FeedWriter
 	private function getHead()
 	{
 		$out  = '<?xml version="1.0" encoding="utf-8"?>' . "\n";
-		$out .= '<ess xmlns="http://eventstandardsyndication.org/history/'.$this->version.'" version="'. $this->version .'" lang="'. $this->lang .'">'; // . PHP_EOL;
+		$out .= '<ess xmlns="http://essfeed.org/history/'.$this->version.'" version="'. $this->version .'" lang="'. $this->lang .'">'; // . PHP_EOL;
 		
 		return $out;
 	}
@@ -465,10 +486,14 @@ final class FeedWriter
 						
 						foreach ( $val as $position => $feedItem ) 
 						{
-							$out .= "<item type='".strtolower($feedItem[ 'type' ])."'".
-								((isset($feedItem[ 'unit' ]))?	" unit='".		strtolower($feedItem[ 'unit' ])."'"		: '').
-								((isset($feedItem[ 'mode' ]))?	" mode='".		strtolower($feedItem[ 'mode' ])."'"		: '').
-								(($feedItem[ 'priority' ]>0)?	" priority='".	$feedItem[ 'priority' ]."'"	: " priority='".($position+1)."'").
+							$out .= "<item type='". strtolower( $feedItem[ 'type' ] ) ."'".
+								( ( isset( $feedItem[ 'unit' ]			) )? " unit='".			strtolower( $feedItem[ 'unit' ]			) . "'" : '' ) .
+								( ( isset( $feedItem[ 'mode' ]			) )? " mode='".			strtolower( $feedItem[ 'mode' ]			) . "'" : '' ) .
+								( ( isset( $feedItem[ 'padding_day' ]	) )? " padding_day='".	strtolower( $feedItem[ 'padding_day' ]	) . "'" : '' ) .
+								( ( isset( $feedItem[ 'padding_week' ]	) )? " padding_week='".	strtolower( $feedItem[ 'padding_week' ]	) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'padding' ]	) > 1 )? " padding='".		intval( 	$feedItem[ 'padding' ]		) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'limit' ] 	) > 0 )? " limit='".		intval( 	$feedItem[ 'limit' ]		) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'priority' ]) > 0 )? " priority='".		intval( 	$feedItem[ 'priority' ] 	) . "'" : " priority='".( $position + 1 ) . "'" ).
 							">";
 							
 							foreach ( $feedItem['content'] as $elm => $feedElm ) 
@@ -511,33 +536,43 @@ final class FeedWriter
 	
 	private function isValidURL( $url )
 	{
-	    return preg_match('|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url );
+	    return preg_match( '|^http(s)?://[a-z0-9-]+(.[a-z0-9-]+)*(:[0-9]+)?(/.*)?$|i', $url );
 	}
 	
-	private function pushToAggregators( $feedURL )
+	private function pushToAggregators( $feedURL, $feedData=null )
 	{
-		if ( $this->autoPush == true && isset( $this->eventAggregators ) )
+		if ( $this->autoPush == true )
 		{
-			if ( @count( $this->eventAggregators ) > 0 )
+			$ch = @curl_init();
+			if ( $ch )
 			{
-				foreach ( $this->eventAggregators as $url ) 
+				$post_data = array( 'ip' => $_SERVER[ 'REMOTE_ADDR' ] );
+				
+				if ( $feedData == null && $this->isValidURL( $feedURL ) )
+					$post_data['feed'] = $feedURL;
+				else 
+					$post_data['feed_file'] = $feedData; 
+				
+				curl_setopt($ch, CURLOPT_URL, 				"http://api.hypecal.com/v1/ess/aggregator.json");
+				curl_setopt($ch, CURLOPT_POSTFIELDS,  		$post_data );
+				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 	1 );
+				curl_setopt($ch, CURLOPT_VERBOSE, 			1 );
+				
+				$response = json_decode( curl_exec( $ch ), true );
+				
+				if ( $this->DEBUG == true)
 				{
-					if ( $this->isValidURL( $url ) )
-					{
-						$outputfile = "result.json";
-						exec( "wget -q \"".$url.$feedURL."\" -O $outputfile" );
-						
-						if ( $this->DEBUG == true )
-						{
-							echo "Push URL: " . $url.$feedURL . "<br>";
-							$json = file_get_contents( $outputfile );
-							var_dump( $json );
-						}
-						
-						exec( "rm $outputfile" );
-					}
+					var_dump( $response );
+				}
+			} 
+			else 
+			{
+				if ( $feedData == null && $this->isValidURL( $feedURL ) )
+				{
+					@exec( "wget -q \"".$url.$feedURL."?feed=".$feedURL."\"" );
 				}
 			}
+			
 		}
 	}
 }
