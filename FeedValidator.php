@@ -989,20 +989,18 @@ final class FeedValidator
 		$text_charset_detected = FeedValidator::resolveUnicode(
 			mb_convert_encoding(
 				htmlspecialchars( 
-					simplifyText( $text )
+					FeedValidator::unhtmlentities(
+						FeedValidator::simplifyText( $text )
+					)
 				,ENT_DISALLOWED, $charset )
 			,$charset, "auto" )
 		);
-		return ( strlen( $text_charset_detected ) > 0 )? $text_charset_detected : simplifyText( $text );
+		return ( strlen( trim( $text_charset_detected ) ) > 0 )? $text_charset_detected : FeedValidator::simplifyText( $text );
 	}
 	
-	private function simplifyText( $text )
+	private static function simplifyText( $text )
 	{
-		return FeedValidator::unhtmlentities( 
-			urldecode( 
-				stripslashes( $text ) 
-			) 
-		);
+		return urldecode( stripslashes( $text ) );
 	}
 	
 	public static function stripSpecificHTMLtags( $text )
