@@ -166,5 +166,3 @@ Our team meets the main competitor of our league." );
 	// #> chown www-data:www-data /var/local/www/site/
 	// #> chmod 0755 /var/local/www/site/
 	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', 'http://example.com/feeds/events.ess' );
-	//$essFeed->genarateFeedFile( '/home/bibi/www/ess.hypecal.com/php-ess/event.ess', 'http://ess.hypecal.com/php-ess/event.ess' );
-	
