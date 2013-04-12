@@ -11,6 +11,7 @@ require_once( 'FeedValidator.php' );
    */
 final class EventFeed
 {
+	private $CHARSET	= 'UTF-8';
 	private $roots 		= array();
 	private $elements 	= array();
 	private $rootDTD	= array();
@@ -25,8 +26,9 @@ final class EventFeed
 	 * 		
 	 * 	@return void;
 	 */
-	function __construct( $data_=null )
+	function __construct( $data_=null, $CHARSET='UTF-8' )
 	{
+		$this->CHARSET = $CHARSET; 
 		$this->rootDTD = EssDTD::getRootDTD();
 		$this->feedDTD = EssDTD::getFeedDTD();
 		
@@ -114,7 +116,7 @@ final class EventFeed
 				throw new Exception( "Error: '<title>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'title', $el );
+			$this->setRootElement( 'title', FeedValidator::charsetString( $el, $this->CHARSET ) );
 			$this->setId( $el );
 		}
 	}
@@ -139,7 +141,7 @@ final class EventFeed
 				throw new Exception( "Error: '<uri>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'uri', $el );
+			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
 			$this->setId( $el );
 		}
 	}
@@ -241,7 +243,7 @@ final class EventFeed
 				return;
 			}
 			
-			$this->setRootElement( 'access', $el );
+			$this->setRootElement( 'access', FeedValidator::charsetString( $el, $this->CHARSET ) );
 		}
 	}
 	
@@ -268,7 +270,7 @@ final class EventFeed
 				return;
 			}
 			
-			$this->setRootElement( 'description', $el );
+			$this->setRootElement( 'description', FeedValidator::stripSpecificHTMLtags( $el ) );
 		}
 	}
 	
@@ -350,7 +352,6 @@ final class EventFeed
 								{
 									foreach ( $data_ as $tag => $value ) 
 									{
-										//echo $tag."=> " . $value."<br>";
 										if ( $this->controlNodeContent( $tag, $value ) == false )
 										{
 											throw new Exception( $errorType . "The XML element <$tag> have an invalid content: '$value', please control the correct syntax in ESS DTD." );
@@ -361,14 +362,14 @@ final class EventFeed
 									array_push(
 										$this->elements[ $groupName ],
 										array(
-											'type' 			=> $type,
-											'mode'			=> $mode,
-											'unit' 			=> $unit,
-											'priority'		=> $priority,
-											'limit'			=> $limit,
-											'padding'		=> $padding,
-											'padding_day'	=> $padding_day,
-											'padding_week'	=> $padding_week,
+											'type' 			=> FeedValidator::charsetString( $type, 		$this->CHARSET ),
+											'mode'			=> FeedValidator::charsetString( $mode,			$this->CHARSET ),
+											'unit' 			=> FeedValidator::charsetString( $unit,			$this->CHARSET ),
+											'priority'		=> FeedValidator::charsetString( $priority,		$this->CHARSET ),
+											'limit'			=> FeedValidator::charsetString( $limit,		$this->CHARSET ),
+											'padding'		=> FeedValidator::charsetString( $padding,		$this->CHARSET ),
+											'padding_day'	=> FeedValidator::charsetString( $padding_day,	$this->CHARSET ),
+											'padding_week'	=> FeedValidator::charsetString( $padding_week,	$this->CHARSET ),
 											
 											'content'		=> $data_
 										)
@@ -427,9 +428,22 @@ final class EventFeed
 	 * @access  public
 	 * @see 	http://essfeed.org/index.php/ESS:Categories
 	 * 
-	 * @param	String	Define the purpose ot the current event. 
-	 * 					Can take the values: 'award', 'commemoration', 'competition', 'conference', 'concert', 
-	 * 					'diner', 'exhibition', 'family', 'festival', 'meeting', 'networking', 'party', 'seminar' or 'theme'.
+	 * @param	String	Define the purpose ot the event. 
+	 * 					Can take the values: 
+	 * 						'award', 
+	 * 						'commemoration', 
+	 * 						'competition', 
+	 * 						'conference', 
+	 * 						'concert', 
+	 * 						'diner', 
+	 * 						'exhibition', 
+	 * 						'family', 
+	 * 						'festival', 
+	 * 						'meeting', 
+	 * 						'networking', 
+	 * 						'party', 
+	 * 						'seminar'
+	 * 						'theme'
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -461,15 +475,15 @@ final class EventFeed
 	 * 
 	 * @param	String	Define the type of date of this event. 
 	 * 					Can take the values ("standalone", "permanent" or "recurrent").
+	 * 					ESS Processors should consider that "standalone" is the default attribute if it is not specified.
 	 * 
-	 * @param 	String	The "unit" attribute only applied if type="recurrent" is specified. 
-	 * 					The "unit" attribute can take five values: "hour", "day", "week", "month" or "year". 
-	 * 					ESS processors should consider "hour" as the default "unit" attribute if it is not specified.
+	 * @param 	String	[OPTIONAL] 	The "unit" attribute only applied if type="recurrent" is specified. 
+	 * 								The "unit" attribute can take five values: "hour", "day", "week", "month" or "year". 
+	 * 								ESS processors should consider "hour" as the default "unit" attribute if it is not specified.
 	 * 
 	 * @param 	int		[OPTIONAL] 	The "limit" attribute only applies if type="recurrent" is specified. 
 	 * 								The "limit" attribute is optional and defines the number of times the recurrent event will happen. 
-	 * 								If the "limit" attribute is not specified or if limits equal zero ESS Processors should consider 
-	 * 								the current event as infinite.
+	 * 								If the "limit" attribute is not specified or if limits equal zero ESS Processors should consider the current event as infinite.
 	 * 
 	 * @param	int		[OPTIONAL] 	The "padding" attribute only applies if type="recurrent" is specified. 
 	 * 								The "padding" attribute is optional and defines the number of time the recurrent event has to be rescheduled "unit" attribute to happen again. 
@@ -497,8 +511,8 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addDate( 
-		$type, 
-		$unit, 	
+		$type			= "standalone", 
+		$unit			= "hour", 	
 		$limit			= 0,
 		$padding		= 1,
 		$padding_day	= "number", 
@@ -519,7 +533,8 @@ final class EventFeed
 	 * 
 	 * @param	String	Define the type of place of this event. 
 	 * 					Can take the values: "fixed", "area", "moving" or "virtual".
-	 * 
+	 * 					ESS Processors should consider that "fixed" is the default attribute if it is not specified.
+	 *
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
 	 * 					array(
@@ -545,7 +560,7 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addPlace( 
-		$type, 
+		$type		= "fixed", 
 		$data_ 		= null, 
 		$priority	= 0 
 	) 
@@ -561,15 +576,16 @@ final class EventFeed
 	 * @see		http://essfeed.org/index.php/ESS:Prices
 	 * 
 	 * @param	String	Define the type of Price of this event. 
-	 * 					Can take the values: "standalone" or "recurrent".
-	 * 
-	 * @param 	String	The "unit" attribute only applied in type="recurrent" is specified. 
-	 * 					The "unit" attribute can take five values: "hour", "day", "week", "month" or "year". 
-	 * 					ESS processors should consider "hour" as the default "unit" attribute. 
+	 * 					The "type" attribute can take two values: "standalone" or "recurrent".
+	 * 					ESS Processors should consider that "standalone" is the default attribute if it is not specified.
 	 * 
 	 * @param 	String	Reprensent the payment mode to assist to the event.
 	 * 					The "mode" attribute can take four values: "fixed", "free", "invitation", "renumerated" or "prepaid". 
 	 * 					ESS Processors should consider that "fixed" is the default attribute if it is not specified.
+	 * 
+	 * @param 	String	[OPTIONAL] 	The "unit" attribute only applied in type="recurrent" is specified. 
+	 * 								The "unit" attribute can take five values: "hour", "day", "week", "month" or "year". 
+	 * 								ESS processors should consider "hour" as the default "unit" attribute.  
 	 * 
 	 * @param 	int		[OPTIONAL] 	The "limit" attribute only applies if type="recurrent" is specified. 
 	 * 								The "limit" attribute is optional and defines the number of times the recurrent event will happen. 
@@ -605,12 +621,12 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addPrice( 
-		$type, 
-		$unit, 	
-		$mode,
+		$type			= "standalone",
+		$mode			= "fixed",
+		$unit			= "hour", 	
 		$limit			= 0,
 		$padding		= 1,
-		$padding_day	= "number", 
+		$padding_day	= "number",
 		$padding_week	= "first",	
 		$data_ 			= null, 
 		$priority		= 0 
@@ -628,6 +644,7 @@ final class EventFeed
 	 * 
 	 * @param	String	Define the type of persons involve in the event. 
 	 * 					Can take the values: "organizer", "performer" or "attendee".
+	 * 					ESS Processors should consider that "organizer" is the default attribute if it is not specified.
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -660,7 +677,7 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addPeople( 
-		$type, 
+		$type		= "organizer", 
 		$data_ 		= null, 
 		$priority	= 0 
 	) 
@@ -677,6 +694,7 @@ final class EventFeed
 	 * 
 	 * @param	String	Define the type of Media file that represent the event. 
 	 * 					Can take the values: "image", "sound", "video" or "website".
+	 * 					ESS Processors should consider that "image" is the default attribute if it is not specified.
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -690,7 +708,7 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addMedia( 
-		$type, 
+		$type		= "image", 
 		$data_ 		= null, 
 		$priority	= 0 
 	) 
@@ -706,6 +724,7 @@ final class EventFeed
 	 * 
 	 * @param	String	Define the type of event's relationanother event have with this event. 
 	 * 					Can take the values: "alternative", "related" or "enclosure".
+	 * 					ESS Processors should consider that "alternative" is the default attribute if it is not specified.
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -720,7 +739,7 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addRelation( 
-		$type, 
+		$type		= "alternative", 
 		$data_ 		= null, 
 		$priority	= 0 
 	) 
@@ -736,7 +755,8 @@ final class EventFeed
 	 * @see		http://essfeed.org/index.php/ESS:Relations
 	 * 
 	 * @param	String	Define the type of authorship the current person have with this event. 
-	 * 					Can take the values: "alternative", "related" or "enclosure".
+	 * 					Can take two values: "author", or "contributor".
+	 * 					ESS Processors should consider that "author" is the default attribute if it is not specified.
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -761,7 +781,7 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addAuthor( 
-		$type, 
+		$type		= "author", 
 		$data_ 		= null, 
 		$priority	= 0 
 	) 

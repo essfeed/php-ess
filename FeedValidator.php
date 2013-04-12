@@ -3,18 +3,18 @@
  * Universal ESS EventFeed Entry Writer
  * FeedValidator class - contain static method to validate specific ESS Fields
  * 
- * The feed can be validate in : http://eventstandardsyndication.org/index.php/ESS:Validator
+ * The feed can be validate in : http://essfeed.org/index.php/ESS:Validator
  * 
  *
  * @package FeedValidator
  * @author  Brice Pissard
- * @link	http://eventstandardsyndication.org/index.php/ESS:Validator
+ * @link	http://essfeed.org/index.php/ESS:Validator
  */
 final class FeedValidator
 {
 	function __construct(){}
-
 	
+
 	/**
 	 * Control the content of the data is null
 	 * 
@@ -876,6 +876,152 @@ final class FeedValidator
 		}
 		return false;
 	}
+	
+	
+	
+	private static function resolveUnicode( $text )
+	{
+		$special_chars = array(
+			'&Agrave;' 	=> 'À', 
+			'&agrave;' 	=> 'à', 
+			'&Aacute;' 	=> 'Á', 
+			'&aacute;' 	=> 'á', 
+			'&Acirc;' 	=> 'Â', 
+			'&acirc;' 	=> 'â', 
+			'&Atilde;' 	=> 'Ã', 
+			'&atilde;' 	=> 'ã', 
+			'&Auml;' 	=> 'Ä', 
+			'&auml;' 	=> 'ä', 
+			'&Aring;'	=> 'Å', 
+			'&aring;' 	=> 'å', 
+			'&AElig;' 	=> 'Æ', 
+			'&aelig;' 	=> 'æ', 
+			'&Ccedil;' 	=> 'Ç', 
+			'&ccedil;' 	=> 'ç',
+			'&ETH;' 	=> 'Ð', 
+			'&eth;' 	=> 'ð', 
+			'&Egrave;' 	=> 'È', 
+			'&egrave;' 	=> 'è', 
+			'&Eacute;' 	=> 'É', 
+			'&eacute;' 	=> 'é', 
+			'&Ecirc;' 	=> 'Ê', 
+			'&ecirc;' 	=> 'ê', 
+			'&Euml;' 	=> 'Ë', 
+			'&euml;' 	=> 'ë', 
+			'&Igrave;' 	=> 'Ì', 
+			'&igrave;' 	=> 'ì', 
+			'&Iacute;' 	=> 'Í', 
+			'&iacute;' 	=> 'í', 
+			'&Icirc;' 	=> 'Î', 
+			'&icirc;' 	=> 'î', 
+			'&Iuml;' 	=> 'Ï', 
+			'&iuml;' 	=> 'ï', 
+			'&Ntilde;' 	=> 'Ñ',
+			'&ntilde;' 	=> 'ñ',
+			'&Ograve;' 	=> 'Ò', 
+			'&ograve;' 	=> 'ò', 
+			'&Oacute;' 	=> 'Ó', 
+			'&oacute;' 	=> 'ó', 
+			'&Ocirc;' 	=> 'Ô', 
+			'&ocirc;' 	=> 'ô', 
+			'&Otilde;' 	=> 'Õ', 
+			'&otilde;' 	=> 'õ', 
+			'&Ouml;' 	=> 'Ö', 
+			'&ouml;' 	=> 'ö', 
+			'&Oslash;' 	=> 'Ø', 
+			'&oslash;' 	=> 'ø',
+			'&OElig;' 	=> 'Œ', 
+			'&oelig;' 	=> 'œ', 
+			'&szlig;' 	=> 'ß', 
+			'&THORN;' 	=> 'Þ', 
+			'&thorn;' 	=> 'þ', 
+			'&Ugrave;'	=> 'Ù', 
+			'&ugrave;' 	=> 'ù', 
+			'&Uacute;' 	=> 'Ú', 
+			'&uacute;' 	=> 'ú', 
+			'&Ucirc;' 	=> 'Û', 
+			'&ucirc;' 	=> 'û', 
+			'&Uuml;' 	=> 'Ü', 
+			'&uuml;' 	=> 'ü',
+			'&Yacute;' 	=> 'Ý',
+			'&yacute;' 	=> 'ý', 
+			'&Yuml;' 	=> 'Ÿ', 
+			'&yuml;' 	=> 'ÿ',
+			'&euro;'	=> '€',
+			'&plusmn;'	=> '±',
+			
+			'&sbquo;' 	=> chr(130), // Single Low-9 Quotation Mark 
+        	'&fnof;' 	=> chr(131), // Latin Small Letter F With Hook 
+			'&bdquo;' 	=> chr(132), // Double Low-9 Quotation Mark 
+			'&hellip;' 	=> chr(133), // Horizontal Ellipsis 
+			'&dagger;' 	=> chr(134), // Dagger 
+			'&Dagger;' 	=> chr(135), // Double Dagger 
+			'&circ;' 	=> chr(136), // Modifier Letter Circumflex Accent 
+			'&permil;' 	=> chr(137), // Per Mille Sign 
+			'&Scaron;' 	=> chr(138), // Latin Capital Letter S With Caron 
+			'&lsaquo;' 	=> chr(139), // Single Left-Pointing Angle Quotation Mark 
+			'&OElig;' 	=> chr(140), // Latin Capital Ligature OE 
+			'&lsquo;' 	=> chr(145), // Left Single Quotation Mark 
+			'&rsquo;' 	=> chr(146), // Right Single Quotation Mark 
+			'&ldquo;' 	=> chr(147), // Left Double Quotation Mark 
+			'&rdquo;' 	=> chr(148), // Right Double Quotation Mark 
+			'&bull;' 	=> chr(149), // Bullet 
+			'&ndash;' 	=> chr(150), // En Dash 
+			'&mdash;' 	=> chr(151), // Em Dash 
+			'&tilde;' 	=> chr(152), // Small Tilde 
+			'&trade;' 	=> chr(153), // Trade Mark Sign 
+			'&scaron;' 	=> chr(154), // Latin Small Letter S With Caron 
+			'&rsaquo;' 	=> chr(155), // Single Right-Pointing Angle Quotation Mark 
+			'&oelig;' 	=> chr(156), // Latin Small Ligature OE 
+			'&Yuml;' 	=> chr(159)  // Latin Capital Letter Y With Diaeresis 
+       	);
+		
+		foreach( $special_chars as $el => &$char )
+		{
+			$text = preg_replace( "/$el/i", $char, $text );
+		}
+		
+		return $text;
+	}
+	
+	public static function charsetString( $text, $charset='UTF-8' )
+	{
+		return FeedValidator::resolveUnicode(
+			mb_convert_encoding(
+				htmlspecialchars( 
+					FeedValidator::unhtmlentities( 
+						urldecode( 
+							stripslashes( $text ) 
+						) 
+					) 
+				,ENT_DISALLOWED, $charset )
+			,$charset, "auto" )
+		);
+	}
+	
+	public static function stripSpecificHTMLtags( $text )
+	{
+		return preg_replace( array(
+			'@<iframe[^>]*?>.*?</iframe>@si',  	// Strip out iframes
+			'@<script[^>]*?>.*?</script>@si',  	// Strip out javascript
+			'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+			'@<![\s\S]*?--[ \t\n\r]*>@'        	// Strip multi-line comments including CDATA
+		), '', $text);
+	}
+	
+	private static function unhtmlentities( $string )
+	{
+	   // replace numeric entities
+	   $string = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $string );
+	   $string = preg_replace('~&#([0-9]+);~e', 'chr(\\1)', $string );
+	   
+	   // replace literal entities
+	   $trans_tbl = get_html_translation_table( HTML_ENTITIES );
+	   $trans_tbl = array_flip( $trans_tbl );
+	   
+	   return strtr( $string, $trans_tbl );
+	}
+	
 	
 	
 }
