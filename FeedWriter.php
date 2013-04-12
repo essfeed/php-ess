@@ -13,7 +13,7 @@ require_once( "EssDTD.php" );
   */ 
 final class FeedWriter
 {
-	private $version	= 0.9; 						// ESS Feed version.
+	private $version	= '0.9'; 					// ESS Feed version.
  	private $lang		= 'en';						// Default 2 chars language (ISO 3166-1).
 	private $channel 	= array();  				// Collection of channel elements.
 	private $items		= array();  				// Collection of items as object of FeedItem class.
@@ -190,13 +190,13 @@ final class FeedWriter
 		{
 			if ( @count( $arr_ ) > 0 )
 			{
-				if ( FeedValidator::isNull( 		@$arr_['title'] 		) == false ) { $newEvent->setTitle( 		@$arr_['title'] 		); }
-				if ( FeedValidator::isNull( 		@$arr_['uri'] 			) == false ) { $newEvent->setUri( 			@$arr_['uri'] 			); }
-				if ( FeedValidator::isValidDate( 	@$arr_['published'] 	) == true  ) { $newEvent->setPublished( 	@$arr_['published'] 	); } else { $newEvent->setPublished(FeedWriter::getISODate() 	); }
-				if ( FeedValidator::isValidDate( 	@$arr_['updated'] 		) == true  ) { $newEvent->setUpdated( 		@$arr_['updated'] 		); } else { $newEvent->setUpdated(	FeedWriter::getISODate() 	); }
-				if ( FeedValidator::isNull( 		@$arr_['access'] 		) == false ) { $newEvent->setAccess( 		@$arr_['access'] 		); } else { $newEvent->setAccess( 	'PUBLIC' 					); }
-				if ( FeedValidator::isNull(	 		@$arr_['description']	) == false ) { $newEvent->setDescription(	@$arr_['description'] 	); }
-				if ( @count( $arr_['tags'] ) > 0 ) 								 		 { $newEvent->setTags(			@$arr_['tags'] 			); }
+				if ( FeedValidator::isNull( 	 $arr_['title'] 		) == false ) { $newEvent->setTitle( 		$arr_['title'] 			); }
+				if ( FeedValidator::isNull( 	 $arr_['uri'] 			) == false ) { $newEvent->setUri( 			$arr_['uri'] 			); }
+				if ( FeedValidator::isValidDate( $arr_['published'] 	) == true  ) { $newEvent->setPublished( 	$arr_['published'] 		); } else { $newEvent->setPublished( FeedWriter::getISODate() 	); }
+				if ( FeedValidator::isValidDate( $arr_['updated'] 		) == true  ) { $newEvent->setUpdated( 		$arr_['updated'] 		); } else { $newEvent->setUpdated( FeedWriter::getISODate() 	); }
+				if ( FeedValidator::isNull( 	 $arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( 'PUBLIC' 						); }
+				if ( FeedValidator::isNull(	 	 $arr_['description']	) == false ) { $newEvent->setDescription(	$arr_['description'] 	); }
+				if ( @count( $arr_['tags'] ) > 0 ) 								 	 { $newEvent->setTags(			$arr_['tags'] 			); }
 			}
 		}
 		return $newEvent;
@@ -251,7 +251,7 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'link', FeedValidator::charsetString( $el, $this->CHARSET ) );
+			$this->setChannelElement( 'link', $el, $this->CHARSET );
 			$this->setId( $el );
 		}
 	}
@@ -282,7 +282,7 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'generator', FeedValidator::charsetString( $el, $this->CHARSET ) );
+			$this->setChannelElement( 'generator', $el );
 		}
 	}
 	
@@ -300,7 +300,7 @@ final class FeedWriter
 	 */
 	public function setPublished( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'published', "2013-04-12T10:07:32+0200" );
+		if ( $el != NULL ) $this->setChannelElement( 'published', $el );
 	}
 	
 	/**
@@ -399,8 +399,8 @@ final class FeedWriter
 	private function getHead()
 	{
 		$out  = '<?xml version="1.0" encoding="'.$this->CHARSET.'"?>' . $this->ln;
-		$out  = '<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/0.9/index.dtd">' . $this->ln;
-		$out .= '<ess xmlns="http://essfeed.org/history/'.$this->version.'" version="'. $this->version .'" lang="'. $this->lang .'">' . $this->ln; // . PHP_EOL;
+		$out  = '<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/'.urlencode($this->version).'/index.dtd">' . $this->ln;
+		$out .= '<ess xmlns="http://essfeed.org/history/'.urlencode($this->version).'/" version="'. urlencode($this->version) .'" lang="'. $this->lang .'">' . $this->ln; // . PHP_EOL;
 		
 		return $out;
 	}

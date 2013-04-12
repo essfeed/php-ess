@@ -986,16 +986,22 @@ final class FeedValidator
 	
 	public static function charsetString( $text, $charset='UTF-8' )
 	{
-		return FeedValidator::resolveUnicode(
+		$text_charset_detected = FeedValidator::resolveUnicode(
 			mb_convert_encoding(
 				htmlspecialchars( 
-					FeedValidator::unhtmlentities( 
-						urldecode( 
-							stripslashes( $text ) 
-						) 
-					) 
+					simplifyText( $text )
 				,ENT_DISALLOWED, $charset )
 			,$charset, "auto" )
+		);
+		return ( strlen( $text_charset_detected ) > 0 )? $text_charset_detected : simplifyText( $text );
+	}
+	
+	private function simplifyText( $text )
+	{
+		return FeedValidator::unhtmlentities( 
+			urldecode( 
+				stripslashes( $text ) 
+			) 
 		);
 	}
 	
