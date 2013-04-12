@@ -11,7 +11,8 @@
   	$essFeed->setPublished( FeedWriter::getISODate() );
 	$essFeed->setUpdated( 	FeedWriter::getISODate() );
 	$essFeed->setRights( 	'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );
-  
+	
+  	$essFeed->DEBUG = true; // display on screen the result, and explain the errors. Have to be switch to false for production.
   
   		// ======================================================================
     	// --- Create a new Feed entry

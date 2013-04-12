@@ -19,7 +19,7 @@ final class FeedWriter
 	private $items		= array();  				// Collection of items as object of FeedItem class.
 	private $channelDTD	= array();					// DTD Array of Channel first XML child elements.
 	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA.
-	private $DEBUG		= false;					// output debug information.
+	public $DEBUG		= false;					// output debug information.
 	private $autoPush	= true; 					// Auto-push changes to ESS Feed Aggregators.
 	protected $CHARSET	= 'UTF-8';					// Force the chartset encoding for the whole document and the value inserted.
 	protected $tb		= '   ';					// Display a tabulation (for human).
