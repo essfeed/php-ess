@@ -141,7 +141,7 @@ final class EssDTD
 			),
 			'people' => array(
 				'mandatory' => false,
-				'types' 	=> array('organizer','performer','attendee'),
+				'types' 	=> array('organizer','performer','attendee','author','contributor'),
 				'tags' 		=> array(
 					'name' 			=> true,
 					'id' 			=> false,
@@ -166,26 +166,6 @@ final class EssDTD
 					'restriction'	=> false,
 				)
 			),
-			'authors' => array(
-				'mandatory'	=> false,
-				'types' 	=> array('author','contributor'),
-				'tags' 		=> array(
-					'name'			=> true,
-					'uri'			=> true,
-					'firstname' 	=> false,
-					'lastname'		=> false,
-					'organization'	=> false,
-					'address'		=> false,
-					'city'			=> false,
-					'zip'			=> false,
-					'state' 		=> false,
-					'state_code'	=> false,
-					'country' 		=> false,
-					'country_code' 	=> false,
-					'email'			=> false,
-					'phone'			=> false
-				)
-			), 
 			'relations' => array(
 				'mandatory' => false,
 				'types' 	=> array('alternative','related','enclosure'),

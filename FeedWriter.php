@@ -370,19 +370,27 @@ final class FeedWriter
   	 * Generate current String date in ISO standard format
 	 * 
 	 * @access  public
-	 * @param 	date in seconds to convert in a ISO String Date
+	 * @param 	date in seconds OR in convertible String Date (http://php.net/manual/en/function.strtotime.php)
+	 *  		to convert in a ISO String Date format: 'Y-m-d\TH:i:sZ'
 	 * @return  String
 	 */ 
 	public static function getISODate( $date=null )
 	{
-		$datetime_template = 'Y-m-d\TH:i:s';
-		
-		if ( isset( $date ) && intval( $date ) > 0 )
+		if ( FeedValidator::isNull( $date ) == false )
 		{
-			return date( DateTime::ATOM, $date );
+			if ( strlen( $date ) > 12 && FeedValidator::isAlphaNumChars( $date ) )	
+			{
+				return date( DateTime::ATOM, strtotime( $date ) );
+			}
+			else if ( intval( $date ) > 0 && FeedValidator::isOnlyNumsChars( $date ) )
+			{
+				return date( DateTime::ATOM, $date );
+			}
 		}
 		else
 		{
+			$datetime_template = 'Y-m-d\TH:i:s';
+			
 			// control if PHP is configured with the same timezone then the server
 			$timezone_server = @exec( 'date +%:z' );
 			$timezone_php	 = date( 'P' );

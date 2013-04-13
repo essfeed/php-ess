@@ -8,8 +8,9 @@
  	$essFeed = new FeedWriter('en');
 	$essFeed->setTitle( 	'ESS Feed' );
   	$essFeed->setLink( 		'http://example.com/feed/sample.ess' );
-  	$essFeed->setPublished( FeedWriter::getISODate() );
-	$essFeed->setUpdated( 	FeedWriter::getISODate() );
+  	$essFeed->setPublished( FeedWriter::getISODate() );							// current date (according to server time). 
+  	$essFeed->setPublished( FeedWriter::getISODate( 1365791459 ) ); 			// OR date in seconds 
+	$essFeed->setUpdated( 	FeedWriter::getISODate( 'Jun 10, 2012, 6pm PST' ) );// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
 	$essFeed->setRights( 	'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );
 	
   	$essFeed->DEBUG = false; // display on screen the result, and explain the errors. Have to be switch to false for production.
@@ -21,7 +22,7 @@
     	$newEvent = $essFeed->newEventFeed();
 		$newEvent->setTitle( 		'Football match every saturdays' );
 		$newEvent->setUri( 			'http://sample.com/events/specific-and-unique-event-page/' );
-		$newEvent->setPublished( 	FeedWriter::getISODate() );
+		$newEvent->setPublished( 	FeedWriter::getISODate() );	
 		$newEvent->setUpdated( 		FeedWriter::getISODate() );
 		$newEvent->setAccess( 		'PUBLIC' );
 		$newEvent->setDescription(	"Welcome to my first football match event.<br/> 
@@ -88,11 +89,18 @@ Our team meets the main competitor of our league." );
 		
 		// ====== PEOPLE ============
 		// ---------- Define who created this event.
-		$newEvent->addPeople( 'organizer', array('name' => 'The Football Club Association','firstname' => 'John','lastname' => 'Doe','organization' => 'Football AC','logo' => 'http://example.com/logo.png','icon'=> 'http://example.com/icon.png','uri'=> 'http://example.com','address'=> 'Ave of Americas, 875','city'=> 'New York','zip'=> '10001','state'=> 'New York', 'state_code' => 'NY', 'country' => 'United States of Americas', 'country_code' => 'US','email'=> 'contact@example.com', 'phone' => '(646) 225-9987' ) );
+		$newEvent->addPeople( 'organizer', 	 array( 'name' => 'The Football Club Association','firstname' => 'John','lastname' => 'Doe','organization' => 'Football AC','logo' => 'http://example.com/logo.png','icon'=> 'http://example.com/icon.png','uri'=> 'http://example.com','address'=> 'Ave of Americas, 875','city'=> 'New York','zip'=> '10001','state'=> 'New York', 'state_code' => 'NY', 'country' => 'United States of Americas', 'country_code' => 'US','email'=> 'contact@example.com', 'phone' => '(646) 225-9987' ) );
+		
 		// ---------- Define who is performing at the event (actors, performers, singers, speakers...)
-		$newEvent->addPeople( 'performer', array('name' => 'The main player', 'firstname' => 'Christiano','lastname' => 'Ronaldo' ) );
+		$newEvent->addPeople( 'performer', 	 array( 'name' => 'The main player', 'firstname' => 'Christiano','lastname' => 'Ronaldo' ) );
+		
 		// ---------- Define rules for the event: the stadium can hold only 2000 people, the minimum age is 16 years old and it's prohibited to smoke! 
-		$newEvent->addPeople( 'attendee',  array('name' => 'All kind of public are welcomed', 'minpeople' => '0', 'maxpeople' => '2000', 'minage' => '16', 'restriction' => 'Smoking is not allowed in the stadium' ) );
+		$newEvent->addPeople( 'attendee',  	 array( 'name' => 'Attendees informations: ', 'minpeople' => '0', 'maxpeople' => '2000', 'minage' => '16', 'restriction' => 'Smoking is not allowed in the stadium' ) );
+		
+		// ---------- Define who created this feed (sometime it is not the same as the organizer).
+		$newEvent->addPeople( 'author', 	 array( 'name' => 'ESS Feed Powered by Addon-XXX', 'icon' => 'http://example.com/images/icon.png' ) );
+		$newEvent->addPeople( 'contributor', array( 'name' => 'Martine Doe - Secretary', 'uri' => 'http://example.com/events/', ) );
+		
 		
 		
 		// ====== MEDIA ============
@@ -111,12 +119,6 @@ Our team meets the main competitor of our league." );
 		$newEvent->addRelation(	'related', 		array('name' => 'Art exposition about Football', 				'uri' => 'http://example.com/related/event', 		'id' => FeedWriter::uuid( 'http://example.com/related/event.html' ) ) );
 		$newEvent->addRelation(	'enclosure', 	array('name' => 'Another event near the stadium the same day', 	'uri' => 'http://example.com/enclosure/event', 		'id' => FeedWriter::uuid( 'http://example.com/enclosure/event' ) ) );
 		
-		
-		// ====== AUTHORS ============
-		// ---------- add information about who created this feed (sometime it is not the same the organizer) and define two event author contributor (can be a person, a company, an association or a simple website).
-		$newEvent->addAuthor( 'author', 	 array( 'name' => 'John Doe', 				 'uri' => 'http://example.com/events/', 'email' => 'jdoe@example.com', 'phone' => '001 (646) 490-8899', 'firstname' => 'Janette', 'lastname' => 'Doe', 'organization' => 'Football club association', 'address' => '80, 5th avenue / 45st E - #504', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
-		$newEvent->addAuthor( 'contributor', array( 'name' => 'Martine Doe - Secretary', 'uri' => 'http://example.com/events/', ) );
-		$newEvent->addAuthor( 'contributor', array( 'name' => 'MyCompany', 				 'uri' => 'http://example.com' ) );
 		
 		
 		// Add the EventFeed to ESSFeed

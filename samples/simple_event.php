@@ -4,7 +4,8 @@
   	
 	// Create the ESS Feed
 	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> FeedWriter::getISODate(), 'rights'=> 'Copyright (c)'));
- 	$essFeed->DEBUG = true; // display on screen the result, and explain the errors. Have to be switch to false for production.
+ 	
+ 	$essFeed->DEBUG = false; // display on screen the result, and explain the errors. Have to be switch to false for production.
 	
 	// Create an Event 
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));

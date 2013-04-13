@@ -382,7 +382,10 @@ final class EventFeed
 									{
 										if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) $mandatories .= "<" .$tag."> ";
 									}
-									throw new Exception( $errorType . "All XML mandatories elements are not provided (".$mandatories.")." );
+									if ( strlen( $mandatories ) > 0 )
+									{
+										throw new Exception( $errorType . "All XML mandatories elements are not provided (".$mandatories.")." );
+									}
 								}
 							}
 							else throw new Exception( $errorType . "Attribute padding_week='".$padding_week."' is not available within ESS DTD." );	
@@ -643,7 +646,7 @@ final class EventFeed
 	 * @see		http://essfeed.org/index.php/ESS:People
 	 * 
 	 * @param	String	Define the type of persons involve in the event. 
-	 * 					Can take the values: "organizer", "performer" or "attendee".
+	 * 					Can take the values: "organizer", "performer", "attendee", "author", or "contributor".
 	 * 					ESS Processors should consider that "organizer" is the default attribute if it is not specified.
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
@@ -747,46 +750,6 @@ final class EventFeed
 		$this->addElement( 'relations', $type, null, null, $data_, $priority ); 
 	}
 	
-	
-	/**
-	 * 	[OPTIONAL] Add a Relation other events have with this current event feed.
-	 * 
-	 * @access  public
-	 * @see		http://essfeed.org/index.php/ESS:Relations
-	 * 
-	 * @param	String	Define the type of authorship the current person have with this event. 
-	 * 					Can take two values: "author", or "contributor".
-	 * 					ESS Processors should consider that "author" is the default attribute if it is not specified.
-	 * 
-	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
-	 * 					The structure the Array must be:
-	 * 					array(
-	 * 						'name' 			=> xxx,	// [MANDATORY]	String 	Short name of the author. (Should not be longer then 128 chars).
-	 * 						'uri' 			=> xxx,	// [MANDATORY]	URI 	Define URI where more information is available about the author.
-	 *						'firstname' 	=> xxx,	// [OPTIONAL]	String 	lirst name of the author.
-	 *						'lastname' 		=> xxx,	// [OPTIONAL]	String 	last name of the author.
-	 *						'address' 		=> xxx,	// [OPTIONAL]	String 	address of the author.
-	 *						'city' 			=> xxx,	// [OPTIONAL]	String 	city of the author.
-	 *						'zip' 			=> xxx,	// [OPTIONAL]	String 	zip code of the author.
-	 *						'state' 		=> xxx,	// [OPTIONAL]	String 	state code of the author.
-	 *						'state_code'	=> xxx,	// [OPTIONAL]	String 	city of the author.
-	 *						'country' 		=> xxx,	// [OPTIONAL]	String 	country name of the author.
-	 *						'country_code' 	=> xxx,	// [OPTIONAL]	String 	country code in 2 chars of the author (ISO 3166).
-	 *						'email' 		=> xxx,	// [OPTIONAL]	String 	email to contact the author.
-	 * 						'phone' 		=> xxx	// [OPTIONAL]	String 	phone number to contact the author.
-	 * 					);
-	 *  
-	 * @param 	int		[OPTIONAL] 	The "priority" attribute refers to the order and the preference applied to each <item> XML elements. 
-	 * 								ESS processors should consider the natural position of the <item> element as the priority if this attribute is not defined.
-	 * @return 	void
-	 */
-	public function addAuthor( 
-		$type		= "author", 
-		$data_ 		= null, 
-		$priority	= 0 
-	) 
-	{
-		$this->addElement( 'authors', $type, null, null, $data_, $priority ); }
 	
 	
 	

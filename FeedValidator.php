@@ -624,6 +624,22 @@ final class FeedValidator
 	}
 	
 	
+	public static function isAlphaNumChars( $in ) 
+	{
+		return ereg_replace( "[^[:alnum:]]", "", $in );
+	}
+
+	public static function isOnlyAlphaChars( $in ) 
+	{
+		return ereg_replace( "[^[:alpha:]]", "", $in );
+	}
+	
+	public static function isOnlyNumsChars( $in ) 
+	{
+		return ereg_replace( "[^0-9]", "", $in );
+	}
+	
+	
 	
 	public static function isValidCurrency( $currency )
 	{
