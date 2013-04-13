@@ -2,14 +2,18 @@
 error_reporting(E_ERROR | E_PARSE);
 @mb_detect_order( "UTF-8,eucjp-win,sjis-win" );
 require_once( "EssDTD.php" );
+require_once( 'FeedValidator.php' );
+require_once( 'EventFeed.php' );
 
  /**
   * Universal ESS Feed Writer class
   * Generate ESS Feed v0.9
   *                             
-  * @package     ESSFeedWriter
-  * @author      Brice Pissard
-  * @link        http://essfeed.org
+  * @package 	ESSFeedWriter
+  * @author  	Brice Pissard
+  * @copyright 	NO COPYRIGHT
+  * @license   	GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
+  * @link    	http://essfeed.org
   */ 
 final class FeedWriter
 {
@@ -122,7 +126,7 @@ final class FeedWriter
 		
 		if ( $this->DEBUG == false )
 		{
-			header( 'Content-Type: text/html; charset=' .$this->CHARSET );
+			header( 'Content-Type: text/xml; charset=' .$this->CHARSET );
 		}
 		
 		echo $this->getFeedData();
@@ -371,6 +375,8 @@ final class FeedWriter
 	 */ 
 	public static function getISODate( $date=null )
 	{
+		$datetime_template = 'Y-m-d\TH:i:s';
+		
 		if ( isset( $date ) && intval( $date ) > 0 )
 		{
 			return date( DateTime::ATOM, $date );
@@ -383,7 +389,29 @@ final class FeedWriter
 			
 			if ( strlen( $timezone_server ) > 0 && $timezone_php != $timezone_server ) 
 			{
-				return date( 'Y-m-d\TH:i:s', @exec( "date --date='@" . date( 'U' ) . "'" ) ) . $timezone_server;
+				return date( $datetime_template, @exec( "date --date='@" . date( 'U' ) . "'" ) ) . $timezone_server;
+			}
+			else
+			{
+				if ( date_default_timezone_get() == 'UTC' ) 
+				{
+					 $offsetString = 'Z'; // No need to calculate offset, as default timezone is already UTC 
+				} 
+				else 
+				{ 
+				    $phpTime 		= date( $datetime_template ); 
+				    $millis 		= strtotime( $phpTime ); 							// Convert time to milliseconds since 1970, using default timezone 
+				    $timezone 		= new DateTimeZone( date_default_timezone_get() ); 	// Get default system timezone to create a new DateTimeZone object 
+				    $offset 		= $timezone->getOffset( new DateTime( $phpTime ) ); // Offset in seconds to UTC 
+				    $offsetHours 	= round( abs( $offset)/3600); 
+				    $offsetMinutes 	= round( ( abs( $offset ) - $offsetHours * 3600 ) / 60 ); 
+				    $offsetString 	= ($offset < 0 ? '-' : '+' ) 
+		                . ( $offsetHours < 10 ? '0' : '' ) . $offsetHours 
+		                . ':' 
+		                . ( $offsetMinutes < 10 ? '0' : '' ) . $offsetMinutes; 
+				}
+				
+				return date( $datetime_template, $millis ) . $offsetString;
 			}
 		}
 		
@@ -607,7 +635,16 @@ final class FeedWriter
 				
 				if ( $this->DEBUG == true)
 				{
+					echo "<div style='background-color:#ffd5d5;color:#f00;border:1px solid #f00;width:95%;padding:10px;font-size:14px;margin:10px;'>".
+						"Set the DEBUG attribute to false to remove this warning message.".
+						"<br/><br/>".
+						"$ newFeed = new FeedWriter();<br/>".
+						"<b>$ newFeed->DEBUG = false;</b>".
+						"<br/><br/>";
+					
 					var_dump( $response );
+					
+					echo "</div>";
 				}
 			} 
 			else 

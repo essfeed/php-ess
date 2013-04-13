@@ -6,9 +6,11 @@
  * The feed can be validate in : http://essfeed.org/index.php/ESS:Validator
  * 
  *
- * @package FeedValidator
- * @author  Brice Pissard
- * @link	http://essfeed.org/index.php/ESS:Validator
+ * @package 	FeedValidator
+ * @author  	Brice Pissard
+ * @copyright 	NO COPYRIGHT
+ * @license   	GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
+ * @link		http://essfeed.org/index.php/ESS:Validator
  */
 final class FeedValidator
 {

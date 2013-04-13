@@ -12,7 +12,7 @@
 	$essFeed->setUpdated( 	FeedWriter::getISODate() );
 	$essFeed->setRights( 	'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );
 	
-  	$essFeed->DEBUG = true; // display on screen the result, and explain the errors. Have to be switch to false for production.
+  	$essFeed->DEBUG = false; // display on screen the result, and explain the errors. Have to be switch to false for production.
   
   		// ======================================================================
     	// --- Create a new Feed entry
@@ -51,8 +51,8 @@ Our team meets the main competitor of our league." );
 		$newEvent->addDate( 'recurrent', 	'month', 24, null, "sunday", "last", array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
 		
 		// ----------- add two simple dates that happen only two times: 10/25/2013 and 11/25/2013 at 3:30pm (PST: Pacific Standard Time: GMT + 8 hours) for 3 hours.
-		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next saturday', 'start'=> '2013-10-25T15:30:00+0800', 'duration'=> 3*3600 ) );
-		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next month', 	'start'=> '2013-11-25T15:30:00+0800', 'duration'=> 3*3600 ) );
+		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next saturday', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 3*3600 ) );
+		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next month', 	'start'=> '2013-11-25T15:30:00+08:00', 'duration'=> 3*3600 ) );
 		
 		// ----------- add a repetitive event that happens on Monday, Tuesday and Thursday every 3 weeks for 6 months starting at the same time as the first one (8am PST) defined in the “start” attribute and for 8 hours.
 		$newEvent->addDate( 'recurrent', 	'week', 6, 3, "monday,tuesday,thirsday", null, array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T08:00:00+08:00', 'duration'=> 8*3600 ) );

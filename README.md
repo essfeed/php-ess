@@ -5,6 +5,8 @@ php-ess
 
 ESS (Event Standard Syndication) library in PHP
 This two classes allow to generate ESS feed with a simple instanciation.
+https://github.com/hypecal/php-ess
+
 
 To use this Class a complete example is available in /samples/complex_events.php
 with more options and differents events types: 

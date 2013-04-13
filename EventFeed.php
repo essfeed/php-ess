@@ -1,12 +1,12 @@
 <?php
-require_once( 'EssDTD.php' );
-require_once( 'FeedValidator.php' );
  /**
    * Universal ESS EventFeed Entry Writer
    * FeedItem class - Used as feed element in FeedWriter class
    *
    * @package 	ESSFeedWriter
    * @author  	Brice Pissard
+   * @copyright NO COPYRIGHT
+   * @license   GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
    * @link		http://essfeed.org/index.php/ESS_structure
    */
 final class EventFeed
