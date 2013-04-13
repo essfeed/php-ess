@@ -8,7 +8,7 @@
  *
  * @package 	FeedValidator
  * @author  	Brice Pissard
- * @copyright 	NO COPYRIGHT
+ * @copyright 	No copyright
  * @license   	GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
  * @link		http://essfeed.org/index.php/ESS:Validator
  */
@@ -60,9 +60,37 @@ final class FeedValidator
 	{
 		$urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
 		
-		return ( @eregi( $urlregex, $url ) == true && strlen( $url ) > 10 )? true : FeedValidator::isValidIP( $url );  
+		return ( @eregi( $urlregex, $url ) == true && strlen( $url ) > 10 )? true : self::isValidIP( $url );  
 	}
 	
+	
+	public static function isImageURL( $url )
+	{
+		if ( isValidURL( $url ) )
+		{
+			$MEDIA_FORMAT = array('ART','AVI','AVS','BMP','CUR','EPS','GIF','ICO','JPG','PDF','PIX','PNG','PSD','RGB','SVG','TGA','TIF','TIM','TTF','TXT','WMF','WPG','TIF','MPG');
+			
+			$ex_ = @explode( '.', $url );
+			
+			return (
+				strlen( $url ) > 0 && 
+				in_array( 
+					strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), 
+					$MEDIA_FORMAT 
+				)
+			)? true : false;
+		}
+		return false;
+	}
+	
+	
+	/**
+	 * 	Control if the parameter submited is a valide IP v4 
+	 * 
+	 * 	@access public
+	 * 	@param	String	Value of the IP to evaluate
+	 * 	@return	Boolean	If the parameter submited is a valide IP return true, false else.
+	 */
 	public static function isValidIP( $ip )
 	{
 		if ( !eregi("^[0-9]+(\.[0-9]+)+(\.[0-9]+)+(\.[0-9]+)$", $ip ) )
@@ -71,15 +99,16 @@ final class FeedValidator
 		}
 		else
 		{
-			$Array = explode(".", $ip);
+			$a = explode( ".", $ip );
 			
-			if ( $Array[0] > 255) { return false; }
-			if ( $Array[1] > 255) { return false; }
-			if ( $Array[2] > 255) {	return false; }
-			if ( $Array[3] > 255) { return false; }
+			if ( $a[0] > 255) { return false; }
+			if ( $a[1] > 255) { return false; }
+			if ( $a[2] > 255) {	return false; }
+			if ( $a[3] > 255) { return false; }
 			
 			return true;
 		}
+		return false;
 	}
 	
 	
@@ -604,43 +633,80 @@ final class FeedValidator
 	}
 	
 	
-	
+	/**
+	 * 	Check if the parameter submited is a valid decimal Latitude
+	 * 
+	 * 	@access	public
+	 * 	@param	Float	Value of the Latitude to evaluate.
+	 * 	@return Boolean	Return true is the Latitude is valide, false else.
+	 */
 	public static function isValidLatitude( $latitude )
 	{
-		$regexp = "/^-?([0-8]?[0-9]|90)\.[0-9]{1,6}$/";
-		$match_latitude = @preg_match( $regexp, $latitude );
+		$match_latitude = @preg_match( "/^-?([0-8]?[0-9]|90)\.[0-9]{1,6}$/", $latitude );
 		
 		return ( $match_latitude == 1 )? true : false;
 	}
 	
 	
-	
+	/**
+	 * 	Check if the parameter submited is a valid decimal Longitude
+	 * 
+	 * 	@access	public
+	 * 	@param	Float	Value of the Longitude to evaluate.
+	 * 	@return Boolean	Return true is the Longitude is valide, false else.
+	 */
 	public static function isValidLongitude( $longitude )
 	{
-		$regexp = "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,6}$/";
-		$match_longitude = @preg_match( $regexp, $longitude );
+		$match_longitude = @preg_match( "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,6}$/", $longitude );
 		
 		return ( $match_longitude == 1 )? true : false;
 	}
 	
 	
+	/**
+	 * 	Check if the parameter submited contain both numbers and alpha characters.
+	 * 
+	 * 	@access	public
+	 * 	@param	Object	Value of the String to evaluate.
+	 * 	@return Boolean	Return true is the both elements are found, false else.
+	 */
 	public static function isAlphaNumChars( $in ) 
 	{
-		return ereg_replace( "[^[:alnum:]]", "", $in );
+		return @ereg_replace( "[^[:alnum:]]", "", $in );
 	}
-
+	
+	/**
+	 * 	Check if the parameter submited contain only alpha characters.
+	 * 
+	 * 	@access	public
+	 * 	@param	Object	Value of the String to evaluate.
+	 * 	@return Boolean	Return true is only alpha chars are found, false else.
+	 */
 	public static function isOnlyAlphaChars( $in ) 
 	{
-		return ereg_replace( "[^[:alpha:]]", "", $in );
+		return @ereg_replace( "[^[:alpha:]]", "", $in );
 	}
 	
+	/**
+	 * 	Check if the parameter submited contain only numbers.
+	 * 
+	 * 	@access	public
+	 * 	@param	Object	Value of the String to evaluate.
+	 * 	@return Boolean	Return true is only numbers are found, false else.
+	 */
 	public static function isOnlyNumsChars( $in ) 
 	{
-		return ereg_replace( "[^0-9]", "", $in );
+		return @ereg_replace( "[^0-9]", "", $in );
 	}
 	
-	
-	
+	/**
+	 * 	Check if the parameter submited is a valide 3 chars currency
+	 * 	Conform to the standard ISO 
+	 * 
+	 * 	@access	public
+	 * 	@param	String	Value of the 3 chars currency to evaluate.
+	 * 	@return Boolean	Return true is the currency is valide, false else.
+	 */
 	public static function isValidCurrency( $currency )
 	{
 		$currencies = array(
@@ -895,7 +961,91 @@ final class FeedValidator
 		return false;
 	}
 	
+	public static function getOnlyText( $text='', $charset='UTF-8' )
+	{
+		return self::removeBreaklines( 
+			self::removeSpecialChars(
+				strip_tags(
+					self::charsetString( 
+						$text
+					, $charset )
+				)
+			)
+		);
+	}
 	
+	public static function stripSpecificHTMLtags( $text='' )
+	{
+		return @preg_replace( array(
+			'@<iframe[^>]*?>.*?</iframe>@si',  	// Strip out iframes
+			'@<script[^>]*?>.*?</script>@si',  	// Strip out javascript
+			'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+			'@<![\s\S]*?--[ \t\n\r]*>@'        	// Strip multi-line comments including CDATA
+		), '', $text );
+	}
+	
+	
+	public static function charsetString( $text, $charset='UTF-8' )
+	{
+		$text_charset_detected = self::resolveUnicode(
+			mb_convert_encoding(
+				self::unhtmlentities(
+					htmlspecialchars( 
+						self::simplifyText( $text )
+					,ENT_DISALLOWED, $charset )
+				)
+			,$charset, "auto" )
+		);
+		return ( strlen( trim( $text_charset_detected ) ) > 0 )? $text_charset_detected : self::simplifyText( $text );
+	}
+	
+	
+	public static function removeBreaklines( $text='', $replace=' ' )
+	{
+		return @preg_replace( 
+			array(
+				'@<br \/>@si',
+				'@<br/>@si',
+				'@<br>@si',
+				'@&lt;br&gt;@si',
+				'@&lt;br\/&gt;@si',
+				'@&lt;br\ \/&gt;@si',
+				'@\n@si', 
+				'@\r@si'
+			), 
+			$replace, 
+			$text
+		);
+	}
+	
+	
+	
+	
+	
+	
+	// -- Private/Protected Methods --
+	
+	private static function removeSpecialChars( $text='' ) 
+	{
+		return preg_replace( '/[^a-zA-Z0-9_%:[.:\\?&-]\\/-]/s', ' ',  str_replace( array( ')', '(', ']', '[',';',',' ),  ' ', str_replace( array( ':http', '/http' ), ' http', $text ) ) );
+	}
+	
+	protected static function simplifyText( $text )
+	{
+		return urldecode( stripslashes( $text ) );
+	}
+	
+	protected static function unhtmlentities( $text )
+	{
+	   // replace numeric entities
+	   $text = preg_replace( '~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', 	$text );
+	   $text = preg_replace( '~&#([0-9]+);~e',	  	'chr(\\1)', 			$text );
+	   
+	   // replace literal entities
+	   $trans_tbl = array_flip( @get_html_translation_table( HTML_ENTITIES ) );
+	   
+	   return strtr( $text, $trans_tbl );
+	}
 	
 	private static function resolveUnicode( $text )
 	{
@@ -1001,49 +1151,6 @@ final class FeedValidator
 		
 		return $text;
 	}
-	
-	public static function charsetString( $text, $charset='UTF-8' )
-	{
-		$text_charset_detected = FeedValidator::resolveUnicode(
-			mb_convert_encoding(
-				htmlspecialchars( 
-					FeedValidator::unhtmlentities(
-						FeedValidator::simplifyText( $text )
-					)
-				,ENT_DISALLOWED, $charset )
-			,$charset, "auto" )
-		);
-		return ( strlen( trim( $text_charset_detected ) ) > 0 )? $text_charset_detected : FeedValidator::simplifyText( $text );
-	}
-	
-	private static function simplifyText( $text )
-	{
-		return urldecode( stripslashes( $text ) );
-	}
-	
-	public static function stripSpecificHTMLtags( $text )
-	{
-		return preg_replace( array(
-			'@<iframe[^>]*?>.*?</iframe>@si',  	// Strip out iframes
-			'@<script[^>]*?>.*?</script>@si',  	// Strip out javascript
-			'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
-			'@<![\s\S]*?--[ \t\n\r]*>@'        	// Strip multi-line comments including CDATA
-		), '', $text);
-	}
-	
-	private static function unhtmlentities( $string )
-	{
-	   // replace numeric entities
-	   $string = preg_replace('~&#x([0-9a-f]+);~ei', 'chr(hexdec("\\1"))', $string );
-	   $string = preg_replace('~&#([0-9]+);~e', 'chr(\\1)', $string );
-	   
-	   // replace literal entities
-	   $trans_tbl = get_html_translation_table( HTML_ENTITIES );
-	   $trans_tbl = array_flip( $trans_tbl );
-	   
-	   return strtr( $string, $trans_tbl );
-	}
-	
 	
 	
 }

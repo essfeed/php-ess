@@ -28,7 +28,7 @@ with more options and differents events types:
 	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> FeedWriter::getISODate(), 'rights'=> 'Copyright (c)'));
  	$essFeed->DEBUG = true; // display on screen the result, and explain the errors. Have to be switch to false for production.
  	
-	// Create an Event 
+	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 										 array('name'=> 'Rock Music', 'id'=> 'M22'));
 		$newEvent->addDate( 	'recurrent', 'year', 1, null,null,null,			 array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:30:00Z', 'duration'=> '7200' ) );
@@ -39,6 +39,8 @@ with more options and differents events types:
 		
 	// Add the event to the Feed
 	$essFeed->addItem( $newEvent );
+	
+	// Other event feed can be added... 
 	
 	// Print on screen the ESS Feed
 	$essFeed->genarateFeed();

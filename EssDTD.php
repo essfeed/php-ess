@@ -76,7 +76,23 @@ final class EssDTD
 		return array( 
 			'categories' => array(
 				'mandatory' => true,
-				'types' 	=> array('award','competition','commemoration','conference','concert','diner','exhibition','family','festival','meeting','networking','party','seminar','theme'),
+				'types' 	=> array( 	'award',
+										'competition',
+										'commemoration',
+										'conference',
+										'concert',
+										'diner',
+										'cocktail',
+										'exhibition',
+										'family',
+										'friends',
+										'festival',
+										'meeting',
+										'networking',
+										'party',
+										'seminar',
+										'theme'
+									),
 				'tags' 		=> array(
 					'name' 			=> true,
 					'id' 			=> false 
@@ -116,7 +132,7 @@ final class EssDTD
 				)	
 			),
 			'prices' => array(
-				'mandatory' 	=> true, 
+				'mandatory' 	=> false, 
 				'types' 		=> array('standalone','recurrent'),
 				'modes'			=> array('fixed','free','invitation','renumerated','prepaid'),
 				'units'			=> array('hour','day','week','month','year'),

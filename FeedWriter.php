@@ -25,9 +25,9 @@ final class FeedWriter
 	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA.
 	public $DEBUG		= false;					// output debug information.
 	private $autoPush	= true; 					// Auto-push changes to ESS Feed Aggregators.
-	protected $CHARSET	= 'UTF-8';					// Force the chartset encoding for the whole document and the value inserted.
-	protected $tb		= '   ';					// Display a tabulation (for human).
-	protected $ln		= '
+	const CHARSET		= 'UTF-8';					// Force the chartset encoding for the whole document and the value inserted.
+	const TB			= '   ';					// Display a tabulation (for human).
+	const LN			= '
 ';													// Display breaklines (for human).
 
 	
@@ -94,7 +94,7 @@ final class FeedWriter
 		
 		for ( $i=1; $i <= $num ; $i++ ) 
 		{ 
-			$text .= $this->tb;
+			$text .= self::TB;
 		}
 		return $text;
 	}
@@ -122,11 +122,12 @@ final class FeedWriter
 	 */ 
 	public function genarateFeed()
 	{
-		@mb_internal_encoding( $this->CHARSET );
+		@mb_internal_encoding( self::CHARSET );
 		
 		if ( $this->DEBUG == false )
 		{
-			header( 'Content-Type: text/xml; charset=' .$this->CHARSET );
+			header( 'Content-Type: text/xml; charset=' .self::CHARSET );
+			//header( 'Content-Type: application/ess+xml; charset=' .self::CHARSET );
 		}
 		
 		echo $this->getFeedData();
@@ -142,7 +143,7 @@ final class FeedWriter
 	 */ 
 	public function genarateFeedFile( $filePath, $feedURL )
 	{
-		@mb_internal_encoding( $this->CHARSET );
+		@mb_internal_encoding( self::CHARSET );
 		$this->setLink( $feedURL );
 		
 		try
@@ -188,7 +189,7 @@ final class FeedWriter
 	 */
 	public function newEventFeed( Array $arr_= null )
 	{
-		$newEvent = new EventFeed( null, $this->CHARSET );
+		$newEvent = new EventFeed( null, self::CHARSET );
 		
 		if ( $arr_ )
 		{
@@ -238,7 +239,7 @@ final class FeedWriter
 	 */
 	public function setTitle( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'title', FeedValidator::charsetString( $el, $this->CHARSET ) );
+		if ( $el != NULL ) $this->setChannelElement( 'title', FeedValidator::charsetString( $el, self::CHARSET ) );
 	}
 	
 	/**
@@ -255,7 +256,7 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'link', $el, $this->CHARSET );
+			$this->setChannelElement( 'link', $el, self::CHARSET );
 			$this->setId( $el );
 		}
 	}
@@ -298,7 +299,7 @@ final class FeedWriter
 	 * 
 	 * @param   String  Value of 'published' channel tag.
 	 * 					Must be an UTC Date format (ISO 8601).
-	 * 					e.g. 2013-10-31T15:30:59Z in Paris or 2013-10-31T15:30:59+0800 in San Francisco
+	 * 					e.g. 2013-10-31T15:30:59+02:00 in Paris or 2013-10-31T15:30:59-08:00 in San Francisco
 	 * 
 	 * @return  void
 	 */
@@ -337,7 +338,7 @@ final class FeedWriter
 	 */
 	public function setRights( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'rights', FeedValidator::charsetString( $el, $this->CHARSET ) );
+		if ( $el != NULL ) $this->setChannelElement( 'rights', FeedValidator::charsetString( $el, self:: CHARSET ) );
 	}
 	
 	
@@ -367,12 +368,12 @@ final class FeedWriter
  	}
 	
 	/**
-  	 * Generate current String date in ISO standard format
+  	 * 	Generate or convert a String or an Integer parameter into an ISO 8601 Date format.
 	 * 
-	 * @access  public
-	 * @param 	date in seconds OR in convertible String Date (http://php.net/manual/en/function.strtotime.php)
-	 *  		to convert in a ISO String Date format: 'Y-m-d\TH:i:sZ'
-	 * @return  String
+	 * 	@access public
+	 * 	@param 	Object	date in seconds OR in convertible String Date (http://php.net/manual/en/function.strtotime.php)
+	 *  				to convert in a ISO 8601 Date format: 'Y-m-d\TH:i:sZ'
+	 * 	@return  String
 	 */ 
 	public static function getISODate( $date=null )
 	{
@@ -427,6 +428,69 @@ final class FeedWriter
 	}
 	
 	/**
+	 * 	Extract images URL from a blog HTML content.
+	 * 
+	 * @access	public
+	 * @param	String	HTML content that can content fom <img /> XHTML element
+	 * @return 	Array	Return an array of the images URL founds.
+	 */
+	public static function getMediaURLfromHTML( $text=null )
+	{
+		$media_ = array();
+		
+		// == check images
+		
+		// extract images URL from <img src='*'/>
+		if ( strlen( $text ) > 0 )
+		{
+			$tt = @preg_match_all( '/<img[^>]+src=[\'"]([^\'"]+)[\'"].*>/i', str_replace( '><img', '>
+<img', FeedValidator::removeBreaklines( $text,'
+' ) ), $matches );
+			
+			if ( $tt > 0 && @count( $matches[1] ) > 0 ) 
+			{
+				foreach ( $matches[1] as $value ) 
+				{
+					preg_match_all('/(alt)=("[^"]*")/i',$matches[0], $matches2 );
+					
+					array_push( $media_, array(
+						'uri' 	=> $value, 
+						'type'	=> 'image',
+						'name'	=> $matches2[1]
+					) );
+				}
+			}
+		}
+		
+		// remone html and analyzed the url found in the text. (CF: MediaWiki content).
+		$text_split = explode( ' ', FeedValidator::getOnlyText( $text, self::CHARSET ) );
+		
+		if ( @count( $text_split ) > 0 )
+		{
+			foreach ( $text_split as $value ) 
+			{
+				if ( FeedValidator::isImageURL( $value ) )
+				{
+					if ( !in_array( $value, $media_ ) )
+					{
+						array_push( $media_, array(
+							'uri' 	=> $value, 
+							'type'	=> 'image',
+							'name'	=> 'image'
+						) );
+					}
+				}	
+			}
+		}
+		
+		// == check video
+		
+		// == check sound
+		
+		return $media_;
+	}
+	
+	/**
 	 * Prints the xml and ESS namespace
 	 * 
 	 * @access   private
@@ -434,9 +498,9 @@ final class FeedWriter
 	 */
 	private function getHead()
 	{
-		$out  = '<?xml version="1.0" encoding="'.$this->CHARSET.'"?>' . $this->ln;
-		$out  = '<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/'.urlencode($this->version).'/index.dtd">' . $this->ln;
-		$out .= '<ess xmlns="http://essfeed.org/history/'.urlencode($this->version).'/" version="'. urlencode($this->version) .'" lang="'. $this->lang .'">' . $this->ln; // . PHP_EOL;
+		$out  = '<?xml version="1.0" encoding="'.self:: CHARSET.'"?>' . self::LN;
+		$out  = '<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/'.urlencode($this->version).'/index.dtd">' . self::LN;
+		$out .= '<ess xmlns="http://essfeed.org/history/'.urlencode($this->version).'/" version="'. urlencode($this->version) .'" lang="'. $this->lang .'">' . self::LN; // . PHP_EOL;
 		
 		return $out;
 	}
@@ -449,7 +513,7 @@ final class FeedWriter
 	 */
 	private function getEndChannel()
 	{
-		return $this->t(1) . "</channel>" . $this->ln . "</ess>". $this->ln;
+		return $this->t(1) . "</channel>" . self::LN . "</ess>". self::LN;
 	}
 
 	/**
@@ -477,7 +541,7 @@ final class FeedWriter
 			}
 		}
 		
-		$nodeText .= $this->t(2) . ( ( in_array( $tagName, $this->CDATA ) )? "<{$tagName}{$attrText}>" . $this->ln . $this->t(3) . "<![CDATA[" . $this->ln : "<{$tagName}{$attrText}>" );
+		$nodeText .= $this->t(2) . ( ( in_array( $tagName, $this->CDATA ) )? "<{$tagName}{$attrText}>" . self::LN . $this->t(3) . "<![CDATA[" . self::LN : "<{$tagName}{$attrText}>" );
 		 
 		if ( is_array( $tagContent ) )
 		{ 
@@ -498,9 +562,9 @@ final class FeedWriter
 			);
 		}           
 			
-		$nodeText .= ( ( in_array( $tagName, $this->CDATA ) )? $this->ln .  $this->t(3) . "]]>" . $this->ln . $this->t(3) . "</$tagName>" : "</$tagName>" );
+		$nodeText .= ( ( in_array( $tagName, $this->CDATA ) )? self::LN .  $this->t(3) . "]]>" . self::LN . $this->t(3) . "</$tagName>" : "</$tagName>" );
 
-		return $nodeText . $this->ln;
+		return $nodeText . self::LN;
 	}
 	
 	/**
@@ -511,7 +575,7 @@ final class FeedWriter
 	 */
 	private function getChannel()
 	{
-		$out = $this->t(1) .'<channel>' . $this->ln;
+		$out = $this->t(1) .'<channel>' . self::LN;
 		
 		foreach( $this->channel as $k => $v ) 
 		{
@@ -549,12 +613,12 @@ final class FeedWriter
 						}
 						else
 						{
-							$out .= $this->t(3) . "<tags>" . $this->ln;
+							$out .= $this->t(3) . "<tags>" . self::LN;
 							foreach( $val as $tag )
 							{
 								$out .= $this->t(2) . $this->makeNode( 'tag', $tag );
 							}
-							$out .= $this->t(3) . "</tags>" . $this->ln;
+							$out .= $this->t(3) . "</tags>" . self::LN;
 						}
 					}
 				}
@@ -566,7 +630,7 @@ final class FeedWriter
 				{
 					if ( @count( $thisItems[ $key ] ) > 0 && strlen( $key ) > 0 )
 					{
-						$out .= $this->t(3) . "<{$key}>" . $this->ln;
+						$out .= $this->t(3) . "<{$key}>" . self::LN;
 						
 						foreach ( $val as $position => $feedItem ) 
 						{
@@ -578,16 +642,16 @@ final class FeedWriter
 								( ( intval( @$feedItem[ 'padding' ]	) > 1 )? " padding='".		intval( 	$feedItem[ 'padding' ]		) . "'" : '' ) .
 								( ( intval( @$feedItem[ 'limit' ] 	) > 0 )? " limit='".		intval( 	$feedItem[ 'limit' ]		) . "'" : '' ) .
 								( ( intval( @$feedItem[ 'priority' ]) > 0 )? " priority='".		intval( 	$feedItem[ 'priority' ] 	) . "'" : " priority='".( $position + 1 ) . "'" ).
-							">" . $this->ln;
+							">" . self::LN;
 							
 							foreach ( $feedItem['content'] as $elm => $feedElm ) 
 							{
 								$out .= $this->t(3) . $this->makeNode( $elm, $feedElm	);
 							}
 							
-							$out .= $this->t(4) . "</item>" . $this->ln;
+							$out .= $this->t(4) . "</item>" . self::LN;
 						}
-						$out .= $this->t(3) . "</{$key}>" . $this->ln;
+						$out .= $this->t(3) . "</{$key}>" . self::LN;
 					}
 				}
 			}
@@ -597,14 +661,14 @@ final class FeedWriter
 	}
 	
 	/**
-	 * Make the starting tag of feed
+	 * Create the starting tag of feed
 	 * 
 	 * @access   private
 	 * @return   String
 	 */
 	private function startFeed()
 	{
-		return $this->t(2) . '<feed>' . $this->ln;
+		return $this->t(2) . '<feed>' . self::LN;
 	}
 	
 	/**
@@ -615,7 +679,7 @@ final class FeedWriter
 	*/
 	private function endFeed()
 	{
-		return $this->t(2) . '</feed>' . $this->ln;
+		return $this->t(2) . '</feed>' . self::LN;
 	}
 	
 	private function pushToAggregators( $feedURL, $feedData=null )
