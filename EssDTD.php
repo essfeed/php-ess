@@ -124,8 +124,6 @@ final class EssDTD
 					'zip' 			=> false,
 					'state' 		=> false,
 					'state_code'	=> false,
-					'begining' 		=> false,
-					'ending' 		=> false,
 					'medium_name' 	=> false,
 					'medium_type'	=> false,
 					'kml' 			=> false

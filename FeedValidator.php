@@ -18,17 +18,17 @@ final class FeedValidator
 	
 
 	/**
-	 * Control the content of the data is null
+	 * Check is the content to evaluate is empty
 	 * 
 	 * @access	public
-	 * @param	String	stringDate string element to control
+	 * @param	String	Object to evaluate ()
 	 * @return	Boolean
 	 */
-	public static function isNull( $str )
+	public static function isNull( $obj=null )
 	{
-		$str = trim( str_replace( array( '\n', '\r', '	', ' ' ), '', $str ) );
+		$str = trim( str_replace( array( '	', ' ' ), '', self::removeBreaklines( $obj ) ) );
 		
-		return ( $str == '' || $str == null )? true : false;
+		return ( $obj == '' || $obj == null || ( !is_string( $obj ) && intval( $obj ) <= 0 ) || ( is_bool( $obj ) && $obj == false ) )? true : false;
 	}
 	
 	/**
@@ -42,7 +42,23 @@ final class FeedValidator
 	public static function isValidDate( $stringDate )
 	{
 		$ereg = "/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|(\+|-)\d{2}(:?\d{2})?)$/";
-		$matcher = preg_match( $ereg, $stringDate );
+		$matcher = @preg_match( $ereg, $stringDate );
+		
+		$t_sep = explode( 'T', strtoupper( $stringDate ) );
+		if ( @count( $t_sep ) > 0 )
+		{
+			$time_sep = explode( ':', $t_sep[ 1 ] );
+			
+			if ( intval( $time_sep[ 0 ] ) > 24 ) return false;
+			
+			if ( @count( $time_sep ) <= 4 )
+			{
+				for ( $i=1 ; $i<@count( $time_sep ) ; $i++ )
+				{
+					if ( intval( $time_sep[ $i ] ) > 59 && $i < 3 ) return false;
+				}
+			}
+		}
 		
 		return ( $matcher == 1 )? true : false;			
 	}
@@ -58,29 +74,82 @@ final class FeedValidator
 	 */
 	public static function isValidURL( $url )
 	{
-		$urlregex = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+		$ereg = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
 		
-		return ( @eregi( $urlregex, $url ) == true && strlen( $url ) > 10 )? true : self::isValidIP( $url );  
+		return ( @eregi( $ereg, $url ) == true && strlen( $url ) > 10 )? true : self::isValidIP( $url );  
 	}
 	
 	
-	public static function isImageURL( $url )
+	/**
+	 * Control if the URL is contain a valid media file
+	 * 
+	 * @access	public
+	 * @param	String	string Media URL to control
+	 * @return	Boolean
+	 */
+	public static function isValidMediaURL( $url, $type='image' )
 	{
-		if ( isValidURL( $url ) )
+		switch( strtolower( $type ) )	
 		{
-			$MEDIA_FORMAT = array('ART','AVI','AVS','BMP','CUR','EPS','GIF','ICO','JPG','PDF','PIX','PNG','PSD','RGB','SVG','TGA','TIF','TIM','TTF','TXT','WMF','WPG','TIF','MPG');
+			default :
+			case 'image' : $MEDIA_FORMAT = array('ART','AVI','AVS','BMP','CUR','EPS','GIF','ICO','JPG','PDF','PIX','PNG','PSD','RGB','SVG','TGA','TIF','TIM','TTF','TXT','WMF','WPG','TIF','MPG'); break;
+			case 'video' : $MEDIA_FORMAT = array('FLV','MPG','AVI','MOV','ACC','AAC','MP4','3GP','OGG','FLA','M4V','WMV','DAT','NSV'); break;
+			case 'sound' : $MEDIA_FORMAT = array('M4A','MP3','M4P','MPC','OGG','AMR','GSM','WAV','WMA','VOX','RAW','MPC'); break;
+		}
+		
+		$ex_ = @explode( '.', $url );
+		
+		return ( strlen( $url ) > 0 && 
+			in_array( strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), $MEDIA_FORMAT )
+		)? true : false;
+	}
+	
+	
+	/**
+	 * Get the media file type.
+	 * 
+	 * @access	public
+	 * @param	String	String Media URL to check
+	 * @return	String	Return the media type: 'image', 'video' or 'sound' or null if not found 
+	 */
+	public static function getMediaType( $url )
+	{
+		if ( strlen( trim( $url ) ) > 0 )
+		{
+			$MEDIA_IMAGE = array('ART','AVI','AVS','BMP','CUR','EPS','GIF','ICO','JPG','PDF','PIX','PNG','PSD','RGB','SVG','TGA','TIF','TIM','TTF','TXT','WMF','WPG','TIF','MPG');
+			$MEDIA_SOUND = array('M4A','MP3','M4P','MPC','OGG','AMR','GSM','WAV','WMA','VOX','RAW','MPC');
+			$MEDIA_VIDEO = array('FLV','MPG','AVI','MOV','ACC','AAC','MP4','3GP','OGG','FLA','M4V','WMV','DAT','NSV');
 			
 			$ex_ = @explode( '.', $url );
 			
-			return (
-				strlen( $url ) > 0 && 
-				in_array( 
-					strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), 
-					$MEDIA_FORMAT 
-				)
-			)? true : false;
+			// detect some specific website URL video content
+			$VIDEO_WEBSITES = array( 
+				'youtube.com', 
+				'vimeo.com',
+				'ted.com',
+				'dailymotion.com',
+				'current.com',
+				'bigthink.com',
+				'atom.com',
+				'blip.tv',
+				'5min.com',
+				'hulu.com',
+				'stickam.com',
+				'ustream.tv',
+				'blinkx.com',
+				'wimp.com'
+			);
+			
+			$domain = parse_url( $url );
+			$dh_ = explode( '.', $domain['host'] );
+			if ( @count( $dh_ ) > 1 ) { $domain['host'] = $dh_[@count( $dh_ )-2].".".$dh_[@count( $dh_ )-1]; } // remove www.
+			
+			if ( in_array( strtolower( $domain['host'] ), $VIDEO_WEBSITES ) ) 					 { return 'video'; }
+			if ( in_array( strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), $MEDIA_IMAGE ) ) { return 'image'; }
+			if ( in_array( strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), $MEDIA_VIDEO ) ) { return 'video'; }
+			if ( in_array( strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), $MEDIA_SOUND ) ) { return 'sound'; }
 		}
-		return false;
+		return ( self::isValidURL( $url ) )? 'image' : null;
 	}
 	
 	
@@ -961,6 +1030,16 @@ final class FeedValidator
 		return false;
 	}
 	
+	
+	/**
+	 * 	Get a simplification of the text: reformat it to the define Charset (UTF-8 by default)
+	 * 	And remove HTML tags and breaklines.
+	 * 
+	 * 	@access	public
+	 * 	@param	String	String text to reformat.
+	 * 	@param	String	[OPTIONAL] Charset to reset the text
+	 * 	@return String	Return reformated text.
+	 */
 	public static function getOnlyText( $text='', $charset='UTF-8' )
 	{
 		return self::removeBreaklines( 
@@ -974,17 +1053,48 @@ final class FeedValidator
 		);
 	}
 	
+	/**
+	 * 	Remove somme HTML elements that can distube the event content broadcast.
+	 * 
+	 * 	@access	public
+	 * 	@param	String	String HTML text to reformat.
+	 * 	@return String	Return reformated text.
+	 */
 	public static function stripSpecificHTMLtags( $text='' )
 	{
-		return @preg_replace( array(
-			'@<iframe[^>]*?>.*?</iframe>@si',  	// Strip out iframes
-			'@<script[^>]*?>.*?</script>@si',  	// Strip out javascript
-			'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
-			'@<![\s\S]*?--[ \t\n\r]*>@'        	// Strip multi-line comments including CDATA
-		), '', $text );
+		return @preg_replace( 
+			array(
+				/*
+				 * Leave Flash Objects
+				'@<embed[^>]*?>.*?</embed>@si',
+				'@<param[^>]*?>.*?</param>@si',
+				'@<object[^>]*?>.*?</object>@si',
+				*
+				* Leave HTML5 Objects
+				'@<canvas[^>]*?>.*?</canvas>@si',
+				'@<source[^>]*?>.*?</source>@si',
+				*/
+				'@<noscript[^>]*?>.*?</noscript>@si',
+				'@<iframe[^>]*?>.*?</iframe>@si', 
+				'@<script[^>]*?>.*?</script>@si', 
+				'@<style[^>]*?>.*?</style>@siU',  
+				'@<![\s\S]*?--[ \t\n\r]*>@' // Strip multi-line comments including CDATA
+			), 
+			'', 
+			@preg_replace( '~>\s+<~', '><', $text ) // Remove extra HTML whitespaces
+		);
 	}
 	
 	
+	/**
+	 * 	Reformat a text according to a specific Charset (by default UTF-8).
+	 * 	If the Charset is not detected, the text is forwarded with basic reformating	
+	 * 	@see	self::simplifyText() 
+	 * 
+	 * 	@access	public
+	 * 	@param	String	String HTML text to reformat.
+	 * 	@return String	Return reformated text.
+	 */
 	public static function charsetString( $text, $charset='UTF-8' )
 	{
 		$text_charset_detected = self::resolveUnicode(
@@ -1000,6 +1110,15 @@ final class FeedValidator
 	}
 	
 	
+	/**
+	 * 	Replace anykind of breaklines from a text: HTML, url encoded or graphic breaklines 
+	 * 	with aspecific character send as segond parameter.
+	 * 
+	 * 	@access	public
+	 * 	@param	String	String HTML text to reformat.
+	 * 	@param 	String	String to substitute from the breakline found.	
+	 * 	@return String	Return reformated text.
+	 */
 	public static function removeBreaklines( $text='', $replace=' ' )
 	{
 		return @preg_replace( 

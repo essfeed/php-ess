@@ -11,7 +11,7 @@ require_once( 'EventFeed.php' );
   *                             
   * @package 	ESSFeedWriter
   * @author  	Brice Pissard
-  * @copyright 	NO COPYRIGHT
+  * @copyright 	No Copyright.
   * @license   	GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
   * @link    	http://essfeed.org
   */ 
@@ -24,7 +24,8 @@ final class FeedWriter
 	private $channelDTD	= array();					// DTD Array of Channel first XML child elements.
 	private $CDATA  	= array( 'description' );  	// The tag names which have to encoded as CDATA.
 	public $DEBUG		= false;					// output debug information.
-	private $autoPush	= true; 					// Auto-push changes to ESS Feed Aggregators.
+	const AUTO_PUSH		= true; 					// Auto-push changes to ESS Feed Aggregators.
+	const IS_DOWNLOAD	= false;					// Defines if the feed is to be downloaded (Header: application/ess+xml).
 	const CHARSET		= 'UTF-8';					// Force the chartset encoding for the whole document and the value inserted.
 	const TB			= '   ';					// Display a tabulation (for human).
 	const LN			= '
@@ -126,8 +127,16 @@ final class FeedWriter
 		
 		if ( $this->DEBUG == false )
 		{
-			header( 'Content-Type: text/xml; charset=' .self::CHARSET );
-			//header( 'Content-Type: application/ess+xml; charset=' .self::CHARSET );
+			ob_end_clean();
+			header_remove();
+			
+			header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+			header("Cache-Control: no-cache");
+			header("Pragma: no-cache");
+			header("Keep-Alive: timeout=1, max=1");
+			
+			if ( self::IS_DOWNLOAD ) { header( 'Content-Type: application/ess+xml; charset=' .self::CHARSET ); }
+			else					 { header( 'Content-Type: application/xml; charset=' .self::CHARSET ); }
 		}
 		
 		echo $this->getFeedData();
@@ -195,12 +204,12 @@ final class FeedWriter
 		{
 			if ( @count( $arr_ ) > 0 )
 			{
-				if ( FeedValidator::isNull( 	 $arr_['title'] 		) == false ) { $newEvent->setTitle( 		$arr_['title'] 			); }
-				if ( FeedValidator::isNull( 	 $arr_['uri'] 			) == false ) { $newEvent->setUri( 			$arr_['uri'] 			); }
-				if ( FeedValidator::isValidDate( $arr_['published'] 	) == true  ) { $newEvent->setPublished( 	$arr_['published'] 		); } else { $newEvent->setPublished( FeedWriter::getISODate() 	); }
-				if ( FeedValidator::isValidDate( $arr_['updated'] 		) == true  ) { $newEvent->setUpdated( 		$arr_['updated'] 		); } else { $newEvent->setUpdated( FeedWriter::getISODate() 	); }
-				if ( FeedValidator::isNull( 	 $arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( 'PUBLIC' 						); }
-				if ( FeedValidator::isNull(	 	 $arr_['description']	) == false ) { $newEvent->setDescription(	$arr_['description'] 	); }
+				if ( FeedValidator::isNull( 	 @$arr_['title'] 		) == false ) { $newEvent->setTitle( 		$arr_['title'] 			); }
+				if ( FeedValidator::isNull( 	 @$arr_['uri'] 			) == false ) { $newEvent->setUri( 			$arr_['uri'] 			); }
+				if ( FeedValidator::isValidDate( @$arr_['published'] 	) == true  ) { $newEvent->setPublished( 	$arr_['published'] 		); } else { $newEvent->setPublished( self::getISODate() 	); }
+				if ( FeedValidator::isValidDate( @$arr_['updated'] 		) == true  ) { $newEvent->setUpdated( 		$arr_['updated'] 		); } else { $newEvent->setUpdated( self::getISODate() 	); }
+				if ( FeedValidator::isNull( 	 @$arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( 'PUBLIC' 						); }
+				if ( FeedValidator::isNull(	 	 @$arr_['description']	) == false ) { $newEvent->setDescription(	$arr_['description'] 	); }
 				if ( @count( $arr_['tags'] ) > 0 ) 								 	 { $newEvent->setTags(			$arr_['tags'] 			); }
 			}
 		}
@@ -381,7 +390,18 @@ final class FeedWriter
 		{
 			if ( strlen( $date ) > 12 && FeedValidator::isAlphaNumChars( $date ) )	
 			{
-				return date( DateTime::ATOM, strtotime( $date ) );
+				if ( FeedValidator::isValidDate( $date ) )
+				{
+					return $date;
+				}
+				else 
+				{
+					return ( FeedValidator::isNull( strtotime( $date ) ) )? 
+						self::getISODate()
+						:
+						date( DateTime::ATOM, strtotime( $date ) 
+					);
+				}
 			}
 			else if ( intval( $date ) > 0 && FeedValidator::isOnlyNumsChars( $date ) )
 			{
@@ -438,55 +458,68 @@ final class FeedWriter
 	{
 		$media_ = array();
 		
-		// == check images
-		
-		// extract images URL from <img src='*'/>
-		if ( strlen( $text ) > 0 )
+		if ( strlen( trim( $text ) ) > 0 )
 		{
-			$tt = @preg_match_all( '/<img[^>]+src=[\'"]([^\'"]+)[\'"].*>/i', str_replace( '><img', '>
-<img', FeedValidator::removeBreaklines( $text,'
+			$tt = @preg_match_all( '/<(source|iframe|embed|param|img)[^>]+src=[\'"]([^\'"]+)[\'"].*>/i', str_replace( '><', '>
+<', FeedValidator::removeBreaklines( $text,'
 ' ) ), $matches );
 			
-			if ( $tt > 0 && @count( $matches[1] ) > 0 ) 
+			if ( $tt > 0 && @count( $matches[ 2 ] ) > 0 ) 
 			{
-				foreach ( $matches[1] as $value ) 
+				foreach ( $matches[ 2 ] as $i => $value ) 
 				{
-					preg_match_all('/(alt)=("[^"]*")/i',$matches[0], $matches2 );
-					
-					array_push( $media_, array(
-						'uri' 	=> $value, 
-						'type'	=> 'image',
-						'name'	=> $matches2[1]
-					) );
+					if ( FeedValidator::isValidURL( $value ) )
+					{
+						$simple_tag = str_replace( "'","\"",strtolower( stripcslashes( $matches[ 0 ][ $i ] ) ) );
+						
+						$sb1 = explode( 'title="', $simple_tag );
+						if ( @count( $sb1 ) > 0 ) { $sb3 = explode( '"', $sb1[1] ); }
+						$sb2 = explode( 'alt="', $simple_tag );
+						if ( @count( $sb2 ) > 0 ) { $sb4 = explode( '"', $sb2[1] ); }
+				
+						$media_type = FeedValidator::getMediaType( $value );
+						
+						array_push( 
+							$media_, 
+							array(
+								'uri' 	=> $value, 
+								'type'	=> $media_type,
+								'name'	=> ( ( strlen( $sb3[ 0 ] ) > 0 )? $sb3[ 0 ] : ( ( strlen( $sb4[ 0 ] ) > 0 )? $sb4[ 0 ] : $media_type) )
+							) 
+						);
+					}
 				}
 			}
-		}
-		
-		// remone html and analyzed the url found in the text. (CF: MediaWiki content).
-		$text_split = explode( ' ', FeedValidator::getOnlyText( $text, self::CHARSET ) );
-		
-		if ( @count( $text_split ) > 0 )
-		{
-			foreach ( $text_split as $value ) 
+			
+			// Strip HTML content and analyzed individual world to find URL in the text. (CF: MediaWiki content).
+			$text_split = explode( ' ', FeedValidator::getOnlyText( $text, self::CHARSET ) );
+			
+			if ( @count( $text_split ) > 0 )
 			{
-				if ( FeedValidator::isImageURL( $value ) )
+				foreach ( $text_split as $value ) 
 				{
-					if ( !in_array( $value, $media_ ) )
+					foreach ( array( 'image', 'sound', 'video' ) as $media_type ) 
 					{
-						array_push( $media_, array(
-							'uri' 	=> $value, 
-							'type'	=> 'image',
-							'name'	=> 'image'
-						) );
+						if ( FeedValidator::isValidURL( $value ) )
+						{
+							if ( FeedValidator::isValidMediaURL( $value, $media_type ) )
+							{
+								if ( !in_array( $value, $media_ ) )
+								{
+									array_push( $media_, array(
+										'uri' 	=> $value, 
+										'type'	=> $media_type,
+										'name'	=> $media_type
+									) );
+								}
+							}
+						}
 					}
-				}	
+				}
 			}
+		
 		}
-		
-		// == check video
-		
-		// == check sound
-		
+	
 		return $media_;
 	}
 	
@@ -639,9 +672,10 @@ final class FeedWriter
 								( ( isset( $feedItem[ 'mode' ]			) && strlen( @$feedItem[ 'mode' ] 		 	) > 0 )? " mode='".			strtolower( $feedItem[ 'mode' ]			) . "'" : '' ) .
 								( ( isset( $feedItem[ 'padding_day' ]	) && strlen( @$feedItem[ 'padding_day' ] 	) > 0 )? " padding_day='".	strtolower( $feedItem[ 'padding_day' ]	) . "'" : '' ) .
 								( ( isset( $feedItem[ 'padding_week' ]	) && strlen( @$feedItem[ 'padding_week' ]	) > 0 )? " padding_week='".	strtolower( $feedItem[ 'padding_week' ]	) . "'" : '' ) .
-								( ( intval( @$feedItem[ 'padding' ]	) > 1 )? " padding='".		intval( 	$feedItem[ 'padding' ]		) . "'" : '' ) .
-								( ( intval( @$feedItem[ 'limit' ] 	) > 0 )? " limit='".		intval( 	$feedItem[ 'limit' ]		) . "'" : '' ) .
-								( ( intval( @$feedItem[ 'priority' ]) > 0 )? " priority='".		intval( 	$feedItem[ 'priority' ] 	) . "'" : " priority='".( $position + 1 ) . "'" ).
+								( ( intval( @$feedItem[ 'padding' ]			) > 1 )? " padding='".			intval( $feedItem[ 'padding' ]			) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'limit' ] 			) > 0 )? " limit='".			intval( $feedItem[ 'limit' ]			) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'moving_position' ]	) > 0 )? " moving_position='".	intval( $feedItem[ 'moving_position' ]	) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'priority' ]		) > 0 )? " priority='".			intval( $feedItem[ 'priority' ] 		) . "'" : " priority='".( $position + 1 ) . "'" ).
 							">" . self::LN;
 							
 							foreach ( $feedItem['content'] as $elm => $feedElm ) 
@@ -684,7 +718,7 @@ final class FeedWriter
 	
 	private function pushToAggregators( $feedURL, $feedData=null )
 	{
-		if ( $this->autoPush == true )
+		if ( self::AUTO_PUSH )
 		{
 			$aggregator_url = "http://api.hypecal.com/v1/ess/aggregator.json";
 			$ch = @curl_init();
@@ -707,7 +741,12 @@ final class FeedWriter
 				
 				if ( $this->DEBUG == true)
 				{
-					echo "<div style='background-color:#ffd5d5;color:#f00;border:1px solid #f00;width:95%;padding:10px;font-size:14px;margin:10px;'>".
+					$isOK = @isset(  $response['result']['result'] )? true : false;
+					
+					$bg_color = ( $isOK )? '#91ff86' : '#ffd5d5';
+					$mn_color = ( $isOK )? '#168c0a' : '#ff0000';
+					
+					echo "<div style='background-color:$bg_color;color:$mn_color;border:1px solid $mn_color;width:95%;padding:10px;font-size:14px;margin:10px;'>".
 						"Set the DEBUG attribute to false to remove this warning message.".
 						"<br/><br/>".
 						"$ newFeed = new FeedWriter();<br/>".

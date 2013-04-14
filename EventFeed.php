@@ -56,7 +56,7 @@ final class EventFeed
 				}
 				
 				if ( $isFound == false )
-					throw new Exception("Error: Event XML element <". $tagTest . "> is not specified within ESS Feed DTD." );
+					throw new Exception("Error: Event XML element <". $tagTest . "> is not specified in ESS Feed DTD." );
 			}
 			
 			foreach ( $data_ as $tag => $value ) 
@@ -121,6 +121,12 @@ final class EventFeed
 		}
 	}
 	
+	public function getTitle()
+	{
+		return $this->roots[ 'title' ];
+	}
+	
+	
 	/**
 	 * Set the 'uri' feed element
 	 * 
@@ -144,6 +150,11 @@ final class EventFeed
 			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
 			$this->setId( $el );
 		}
+	}
+	
+	public function getUri()
+	{
+		return $this->roots[ 'uri' ];
 	}
 	
 	
@@ -171,6 +182,12 @@ final class EventFeed
 		}
 	}
 	
+	public function getId()
+	{
+		return $this->roots[ 'id' ];
+	}
+	
+	
 	/**
 	 * Set the 'published' feed element
 	 * 
@@ -196,6 +213,12 @@ final class EventFeed
 			$this->setRootElement( 'published', $el );
 		}
 	}
+	
+	public function getPublished()
+	{
+		return $this->roots[ 'published' ];
+	}
+	
 	
 	/**
 	 * Set the 'updated' feed element
@@ -223,6 +246,12 @@ final class EventFeed
 		}
 	}
 	
+	public function getUpdated()
+	{
+		return $this->roots[ 'updated' ];
+	}
+	
+	
 	/**
 	 * Set the 'access' feed element
 	 * 
@@ -246,6 +275,12 @@ final class EventFeed
 			$this->setRootElement( 'access', FeedValidator::charsetString( $el, $this->CHARSET ) );
 		}
 	}
+	
+	public function getAccess()
+	{
+		return $this->roots[ 'access' ];
+	}
+	
 	
 	/**
 	 * Set the 'description' feed element
@@ -274,6 +309,12 @@ final class EventFeed
 		}
 	}
 	
+	public function getDescription()
+	{
+		return $this->roots[ 'description' ];
+	}
+	
+	
 	/**
 	 * Set the 'tags' feed element
 	 * 
@@ -299,6 +340,10 @@ final class EventFeed
 		}
 	}
 	
+	public function getTags()
+	{
+		return $this->roots[ 'tags' ];
+	}
 	
 	
 	
@@ -321,15 +366,16 @@ final class EventFeed
 	 */
 	private function addElement( 
 		$groupName, 
-		$type 			= '', 
-		$mode 			= '', 
-		$unit 			= null, 
-		$data_ 			= null, 
-		$priority 		= 0, 
-		$limit			= 0, 
-		$padding		= 1, 
-		$padding_day	= null, 
-		$padding_week	= null 
+		$type 				= '', 
+		$mode 				= '', 
+		$unit 				= null, 
+		$data_ 				= null, 
+		$priority 			= 0, 
+		$limit				= 0, 	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$padding			= 1, 	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$padding_day		= null, // only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$padding_week		= null,	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$moving_position	= null  // only for <places><item type="moving">
 	)
 	{
 		$groupName = strtolower( $groupName );
@@ -362,16 +408,17 @@ final class EventFeed
 									array_push(
 										$this->elements[ $groupName ],
 										array(
-											'type' 			=> FeedValidator::charsetString( $type, 		$this->CHARSET ),
-											'mode'			=> FeedValidator::charsetString( $mode,			$this->CHARSET ),
-											'unit' 			=> FeedValidator::charsetString( $unit,			$this->CHARSET ),
-											'priority'		=> FeedValidator::charsetString( $priority,		$this->CHARSET ),
-											'limit'			=> FeedValidator::charsetString( $limit,		$this->CHARSET ),
-											'padding'		=> FeedValidator::charsetString( $padding,		$this->CHARSET ),
-											'padding_day'	=> FeedValidator::charsetString( $padding_day,	$this->CHARSET ),
-											'padding_week'	=> FeedValidator::charsetString( $padding_week,	$this->CHARSET ),
+											'type' 				=> FeedValidator::charsetString( $type, 			$this->CHARSET ),
+											'mode'				=> FeedValidator::charsetString( $mode,				$this->CHARSET ),
+											'unit' 				=> FeedValidator::charsetString( $unit,				$this->CHARSET ),
+											'priority'			=> FeedValidator::charsetString( $priority,			$this->CHARSET ),
+											'limit'				=> FeedValidator::charsetString( $limit,			$this->CHARSET ),
+											'padding'			=> FeedValidator::charsetString( $padding,			$this->CHARSET ),
+											'padding_day'		=> FeedValidator::charsetString( $padding_day,		$this->CHARSET ),
+											'padding_week'		=> FeedValidator::charsetString( $padding_week,		$this->CHARSET ),
+											'moving_position'	=> FeedValidator::charsetString( $moving_position,	$this->CHARSET ),
 											
-											'content'		=> $data_
+											'content'			=> $data_
 										)
 									);
 								}
@@ -388,13 +435,13 @@ final class EventFeed
 									}
 								}
 							}
-							else throw new Exception( $errorType . "Attribute padding_week='".$padding_week."' is not available within ESS DTD." );	
+							else throw new Exception( $errorType . "Attribute padding_week='".$padding_week."' is not available in ESS DTD." );	
 						}
-						else throw new Exception( $errorType . "Attribute padding_day='".$padding_day."' is not available within ESS DTD." );
+						else throw new Exception( $errorType . "Attribute padding_day='".$padding_day."' is not available in ESS DTD." );
 					}
-					else throw new Exception( $errorType . "Attribute mode='".$mode."' is not available within ESS DTD." );
+					else throw new Exception( $errorType . "Attribute mode='".$mode."' is not available in ESS DTD." );
 				}
-				else throw new Exception( $errorType . "Attribute type='".$type."' is not available within ESS DTD." );
+				else throw new Exception( $errorType . "Attribute type='".$type."' is not available in ESS DTD." );
 			}
 			else throw new Exception( $errorType . "Element could not be empty." );
 		}
@@ -473,7 +520,7 @@ final class EventFeed
 	
 	
 	/**
-	 * 	[MANDATORY] Add a Date for the event within the current event's feed.
+	 * 	[MANDATORY] Add a Date for the event in the current event's feed.
 	 * 
 	 * @access  public
 	 * @see 	http://essfeed.org/index.php/ESS:Dates
@@ -539,6 +586,8 @@ final class EventFeed
 	 * @param	String	Define the type of place of this event. 
 	 * 					Can take the values: "fixed", "area", "moving" or "virtual".
 	 * 					ESS Processors should consider that "fixed" is the default attribute if it is not specified.
+	 * 
+	 * @param	int		[OPTIONAL] 	Defines, only for events type="moving", the position of the event in the moving event.
 	 *
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -553,8 +602,6 @@ final class EventFeed
 	 *						'zip' 			=> xxx,	// [OPTIONAL] 					String	event zip code.
 	 *						'state' 		=> xxx,	// [OPTIONAL] 					String	event state.
 	 *						'state_code'	=> xxx,	// [OPTIONAL] 					String	event state code.
-	 *						'begining' 		=> xxx,	// [OPTIONAL] 					XML		moving event starting location. (only for type="moving").
-	 *						'ending' 		=> xxx,	// [OPTIONAL] 					XML		moving event ending location. (only for type="moving").
 	 *						'medium_name' 	=> xxx,	// [OPTIONAL] 					String	virtual event medium name. (only for type="virtual").
 	 *						'medium_type'	=> xxx,	// [OPTIONAL] 					String	virtual event medium type ("television", "radio" or "internet").  (only for type="virtual").
 	 *						'kml' 			=> xxx	// [OPTIONAL] 					XML		area event surface representation. (only for type="area").
@@ -565,12 +612,13 @@ final class EventFeed
 	 * @return 	void
 	 */
 	public function addPlace( 
-		$type		= "fixed", 
-		$data_ 		= null, 
-		$priority	= 0 
+		$type				= "fixed",
+		$moving_position	= null,
+		$data_ 				= null, 
+		$priority			= 0 
 	) 
 	{
-		$this->addElement( 'places', $type, null, null, $data_, $priority ); 
+		$this->addElement( 'places', $type, null, null, $data_, $priority, null, null, null, null, $moving_position ); 
 	}
 	
 	
