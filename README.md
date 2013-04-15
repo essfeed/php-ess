@@ -15,8 +15,10 @@ with more options and differents events types:
 - Several times a month.
 - Every last saturday for 6 months.
 - Monthly billing payment (with an payment API url).
-- free event.
+- Free event.
 - Event only available with invitation.
+- Motor race event moving to several places
+- Images of the event only available in the HTML description: a simple script convert it into a feed entry.
 
 
 ## Usage
