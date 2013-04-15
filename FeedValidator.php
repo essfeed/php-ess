@@ -1343,10 +1343,9 @@ final class FeedValidator
 	    return $str;
 	}
 	
-	
 	private static function removeSpecialChars( $text='' ) 
 	{
-		return preg_replace( '/[^a-zA-Z0-9_%:[.:\\?&-]\\/-]/s', ' ',  str_replace( array( ')', '(', ']', '[',';',',' ),  ' ', str_replace( array( ':http', '/http' ), ' http', $text ) ) );
+		return preg_replace( '/[^a-zA-Z0-9_%:[.:\\?&-]\\/-]/s', ' ', str_replace(array(':http','/http'),' http',$text ) );
 	}
 	
 	protected static function simplifyText( $text )

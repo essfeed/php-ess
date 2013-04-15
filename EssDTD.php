@@ -99,12 +99,12 @@ final class EssDTD
 				)
 			),
 			'dates' => array(
-				'mandatory'		=> true,
-				'types' 		=> array('standalone','recurrent','permanent'),
-				'units'			=> array('hour','day','week','month','year'),
-				'padding_days'	=> array("number","monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
-				'padding_weeks'	=> array("first","second","third","fourth","last"),
-				'tags' 			=> array(
+				'mandatory'			=> true,
+				'types' 			=> array('standalone','recurrent','permanent'),
+				'units'				=> array('hour','day','week','month','year'),
+				'selected_days'		=> array("number","monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
+				'selected_weeks'	=> array("first","second","third","fourth","last"),
+				'tags' 				=> array(
 					'name' 			=> true,
 					'start' 		=> true,
 					'duration' 		=> false
@@ -130,13 +130,13 @@ final class EssDTD
 				)	
 			),
 			'prices' => array(
-				'mandatory' 	=> false, 
-				'types' 		=> array('standalone','recurrent'),
-				'modes'			=> array('fixed','free','invitation','renumerated','prepaid'),
-				'units'			=> array('hour','day','week','month','year'),
-				'padding_days'	=> array("number","monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
-				'padding_weeks'	=> array("first","second","third","fourth","last"),
-				'tags' 			=> array(
+				'mandatory' 		=> false, 
+				'types' 			=> array('standalone','recurrent'),
+				'modes'				=> array('fixed','free','invitation','renumerated','prepaid'),
+				'units'				=> array('hour','day','week','month','year'),
+				'selected_days'		=> array("number","monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
+				'selected_weeks'	=> array("first","second","third","fourth","last"),
+				'tags' 				=> array(
 					'name' 			=> true,
 					'value' 		=> true,
 					'currency'		=> false,

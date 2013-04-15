@@ -332,7 +332,7 @@ final class FeedWriter
 	 * 
 	 * @return  void
 	 */
-	public function setPublished( $el=NULL )
+	public function setPublished( $el='now' )
 	{
 		if ( $el != NULL ) $this->setChannelElement( 'published', FeedWriter::getISODate( $el ) );
 	}
@@ -353,7 +353,7 @@ final class FeedWriter
 	 * 					e.g. 2013-10-31T15:30:59Z in Paris or 2013-10-31T15:30:59+0800 in San Francisco
 	 * @return  void
 	 */
-	public function setUpdated( $el=NULL )
+	public function setUpdated( $el='now' )
 	{
 		if ( $el != NULL ) $this->setChannelElement( 'updated', FeedWriter::getISODate( $el ) );
 	}
@@ -703,11 +703,11 @@ final class FeedWriter
 						foreach ( $val as $position => $feedItem ) 
 						{
 							$out .= $this->t(4) . "<item type='". strtolower( $feedItem[ 'type' ] ) ."'".
-								( ( isset( $feedItem[ 'unit' ]			) && strlen( @$feedItem[ 'unit' ] 			) > 0 )? " unit='".			strtolower( $feedItem[ 'unit' ]			) . "'" : '' ) .
-								( ( isset( $feedItem[ 'mode' ]			) && strlen( @$feedItem[ 'mode' ] 		 	) > 0 )? " mode='".			strtolower( $feedItem[ 'mode' ]			) . "'" : '' ) .
-								( ( isset( $feedItem[ 'padding_day' ]	) && strlen( @$feedItem[ 'padding_day' ] 	) > 0 )? " padding_day='".	strtolower( $feedItem[ 'padding_day' ]	) . "'" : '' ) .
-								( ( isset( $feedItem[ 'padding_week' ]	) && strlen( @$feedItem[ 'padding_week' ]	) > 0 )? " padding_week='".	strtolower( $feedItem[ 'padding_week' ]	) . "'" : '' ) .
-								( ( intval( @$feedItem[ 'padding' ]			) > 1 )? " padding='".			intval( $feedItem[ 'padding' ]			) . "'" : '' ) .
+								( ( isset( $feedItem[ 'unit' ]			) && strlen( @$feedItem[ 'unit' ] 			) > 0 )? " unit='".			strtolower( $feedItem[ 'unit' ]				) . "'" : '' ) .
+								( ( isset( $feedItem[ 'mode' ]			) && strlen( @$feedItem[ 'mode' ] 		 	) > 0 )? " mode='".			strtolower( $feedItem[ 'mode' ]				) . "'" : '' ) .
+								( ( isset( $feedItem[ 'selected_day' ]	) && strlen( @$feedItem[ 'selected_day' ] 	) > 0 )? " selected_day='".	strtolower( $feedItem[ 'selected_day' ]		) . "'" : '' ) .
+								( ( isset( $feedItem[ 'selected_week' ]	) && strlen( @$feedItem[ 'selected_week' ]	) > 0 )? " selected_week='".strtolower( $feedItem[ 'selected_week' ]	) . "'" : '' ) .
+								( ( intval( @$feedItem[ 'interval' ]		) > 1 )? " interval='".			intval( $feedItem[ 'interval' ]			) . "'" : '' ) .
 								( ( intval( @$feedItem[ 'limit' ] 			) > 0 )? " limit='".			intval( $feedItem[ 'limit' ]			) . "'" : '' ) .
 								( ( intval( @$feedItem[ 'moving_position' ]	) > 0 )? " moving_position='".	intval( $feedItem[ 'moving_position' ]	) . "'" : '' ) .
 								( ( intval( @$feedItem[ 'priority' ]		) > 0 )? " priority='".			intval( $feedItem[ 'priority' ] 		) . "'" : " priority='".( $position + 1 ) . "'" ).

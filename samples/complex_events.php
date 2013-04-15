@@ -14,9 +14,9 @@
   	$essFeed->DEBUG = false;
 	// #######################
 	
-	$essFeed->setTitle( 	'ESS Feed' );										// Defines the Feed name (not the event).
+	$essFeed->setTitle( 	'ESS Feed' );											// Defines the Feed name (not the event).
   	$essFeed->setLink( 		'http://example.com/feed/sample.ess?with=params&add' );	// Define the URL of the Feed.
-  	$essFeed->setPublished( '' );													// Current date (according to server time). 
+  	$essFeed->setPublished( 'now' );												// Current date (according to server time). 
   	//$essFeed->setPublished( 1361791459 ); 										// OR date in seconds.
 	$essFeed->setUpdated( 	'Jun 10, 2012, 6pm PST' );								// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
 	$essFeed->setRights( 	'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );	// Specified the Copyright restriction for this Feed.

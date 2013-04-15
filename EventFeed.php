@@ -357,9 +357,9 @@ final class EventFeed
 	 * @param	Array   Array of data for this tag element.
 	 * @param 	String  'priority' attibute for this tag.
 	 * @param 	String  'limit' attribute to restrict recurent type occuencies in Date or Price objects.
-	 * @param 	String  'padding' attribute.
-	 * @param 	String  'padding_day' attribute.
-	 * @param 	String 	'padding_week' attribute.	
+	 * @param 	String  'interval' attribute.
+	 * @param 	String  'selected_day' attribute.
+	 * @param 	String 	'selected_week' attribute.	
 	 * @return	void
 	 */
 	private function addElement( 
@@ -370,9 +370,9 @@ final class EventFeed
 		$data_ 				= null, 
 		$priority 			= 0, 
 		$limit				= 0, 	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
-		$padding			= 1, 	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
-		$padding_day		= null, // only for <dates><item type="recurrent"> or <prices><item type="recurrent">
-		$padding_week		= null,	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$interval			= 1, 	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$selected_day		= null, // only for <dates><item type="recurrent"> or <prices><item type="recurrent">
+		$selected_week		= null,	// only for <dates><item type="recurrent"> or <prices><item type="recurrent">
 		$moving_position	= null  // only for <places><item type="moving">
 	)
 	{
@@ -388,9 +388,9 @@ final class EventFeed
 				{
 					if ( $this->controlMode( $groupName, $mode ) == true )
 					{
-						if ( $this->controlPaddingDay( $groupName, $padding_day ) == true )
+						if ( $this->controlSelectedDay( $groupName, $selected_day ) == true )
 						{
-							if ( $this->controlPaddingWeek( $groupName, $padding_week ) == true )
+							if ( $this->controlSelectedWeek( $groupName, $selected_week ) == true )
 							{
 								if ( $this->controlTags( $groupName, $data_ ) == true ) 
 								{
@@ -411,9 +411,9 @@ final class EventFeed
 											'unit' 				=> FeedValidator::charsetString( $unit,				$this->CHARSET ),
 											'priority'			=> FeedValidator::charsetString( $priority,			$this->CHARSET ),
 											'limit'				=> FeedValidator::charsetString( $limit,			$this->CHARSET ),
-											'padding'			=> FeedValidator::charsetString( $padding,			$this->CHARSET ),
-											'padding_day'		=> FeedValidator::charsetString( $padding_day,		$this->CHARSET ),
-											'padding_week'		=> FeedValidator::charsetString( $padding_week,		$this->CHARSET ),
+											'interval'			=> FeedValidator::charsetString( $interval,			$this->CHARSET ),
+											'selected_day'		=> FeedValidator::charsetString( $selected_day,		$this->CHARSET ),
+											'selected_week'		=> FeedValidator::charsetString( $selected_week,	$this->CHARSET ),
 											'moving_position'	=> FeedValidator::charsetString( $moving_position,	$this->CHARSET ),
 											
 											'content'			=> $data_
@@ -433,9 +433,9 @@ final class EventFeed
 									}
 								}
 							}
-							else throw new Exception( $errorType . "Attribute padding_week='".$padding_week."' is not available in ESS DTD." );	
+							else throw new Exception( $errorType . "Attribute selected_week='".$selected_week."' is not available in ESS DTD." );	
 						}
-						else throw new Exception( $errorType . "Attribute padding_day='".$padding_day."' is not available in ESS DTD." );
+						else throw new Exception( $errorType . "Attribute selected_day='".$selected_day."' is not available in ESS DTD." );
 					}
 					else throw new Exception( $errorType . "Attribute mode='".$mode."' is not available in ESS DTD." );
 				}
@@ -535,18 +535,18 @@ final class EventFeed
 	 * 								The "limit" attribute is optional and defines the number of times the recurrent event will happen. 
 	 * 								If the "limit" attribute is not specified or if limits equal zero ESS Processors should consider the current event as infinite.
 	 * 
-	 * @param	int		[OPTIONAL] 	The "padding" attribute only applies if type="recurrent" is specified. 
-	 * 								The "padding" attribute is optional and defines the number of time the recurrent event has to be rescheduled "unit" attribute to happen again. 
-	 * 								If the "padding" attribute is not specified ESS Processors should be consider the event with a padding="1".
+	 * @param	int		[OPTIONAL] 	The "interval" attribute only applies if type="recurrent" is specified. 
+	 * 								The "interval" attribute is optional and defines the number of time the recurrent event has to rescheduled the "unit" attribute to happen again. 
+	 * 								If the "interval" attribute is not specified ESS Processors should be consider the event with a interval="1".
 	 * 
-	 * @param	String	[OPTIONAL] 	The "padding_day" attribute defines the type of "unit" attribute that has to be considered as repeated.
-	 * 								The "padding_day" attribute can take eight types of values: "number", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" or "sunday". 
-	 * 								The "padding_day" attribute only applied if type="recurrent" is specified and if the unit attribute is "week" or "month". 
+	 * @param	String	[OPTIONAL] 	The "selected_day" attribute defines the type of "unit" attribute that has to be considered as repeated.
+	 * 								The "selected_day" attribute can take eight types of values: "number", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" or "sunday". 
+	 * 								The "selected_day" attribute only applied if type="recurrent" is specified and if the unit="week" or unit="month". 
 	 * 				
-	 * @param	String	[OPTIONAL] 	The "padding_week" attribute defines the section of the month that has to considered to be repeated. 
-	 * 								The "padding_week" attribute can take five types of values: "first", "second", "third", "fourth" or "last". 
-	 * 								The "padding_week" attribute only applies if type="recurrent" is specified and if the unit attribute is "month". 
-	 * 								If the "padding_zone" attribute is not specified ESS Processors should be considered the event as without "padding_week".
+	 * @param	String	[OPTIONAL] 	The "selected_week" attribute defines the section of the month that has to considered to be repeated. 
+	 * 								The "selected_week" attribute can take five types of values: "first", "second", "third", "fourth" or "last". 
+	 * 								The "selected_week" attribute only applies if type="recurrent" is specified and if the unit="month". 
+	 * 								If the "pselected_week" attribute is not specified ESS Processors should be considered the event as with a selected_week="".
 	 * 				
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -564,14 +564,14 @@ final class EventFeed
 		$type			= "standalone", 
 		$unit			= "hour", 	
 		$limit			= 0,
-		$padding		= 1,
-		$padding_day	= "number", 
-		$padding_week	= "first",
+		$interval		= 1,
+		$selected_day	= "number", 
+		$selected_week	= "first",
 		$data_ 			= null, 
 		$priority		= 0 
 	) 
 	{
-		 $this->addElement( 'dates', $type, null, $unit, $data_, $priority, $limit, $padding, $padding_day, $padding_week ); 
+		 $this->addElement( 'dates', $type, null, $unit, $data_, $priority, $limit, $interval, $selected_day, $selected_week ); 
 	}
 	
 	
@@ -643,18 +643,18 @@ final class EventFeed
 	 * 								If the "limit" attribute is not specified or if limits equal zero ESS Processors should consider 
 	 * 								the current event as infinite.
 	 * 
-	 * @param	int		[OPTIONAL] 	The "padding" attribute only applies if type="recurrent" is specified. 
-	 * 								The "padding" attribute is optional and defines the number of time the recurrent event has to be rescheduled "unit" attribute to happen again. 
-	 * 								If the "padding" attribute is not specified ESS Processors should be consider the event with a padding="1".
+	 * @param	int		[OPTIONAL] 	The "interval" attribute only applies if type="recurrent" is specified. 
+	 * 								The "interval" attribute is optional and defines the number of time the recurrent event has to be rescheduled "unit" attribute to happen again. 
+	 * 								If the "interval" attribute is not specified ESS Processors should be consider the event with a selected="1".
 	 * 
-	 * @param	String	[OPTIONAL] 	The "padding_day" attribute defines the type of "unit" attribute that has to be considered as repeated.
-	 * 								The "padding_day" attribute can take eight types of values: "number", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" or "sunday". 
-	 * 								The "padding_day" attribute only applied if type="recurrent" is specified and if the unit attribute is "week" or "month". 
+	 * @param	String	[OPTIONAL] 	The "selected_day" attribute defines the type of "unit" attribute that has to be considered as repeated.
+	 * 								The "selected_day" attribute can take eight types of values: "number", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday" or "sunday". 
+	 * 								The "selected_day" attribute only applied if type="recurrent" is specified and if the unit="week" or unit="month". 
 	 * 				
-	 * @param	String	[OPTIONAL] 	The "padding_week" attribute defines the section of the month that has to considered to be repeated. 
-	 * 								The "padding_week" attribute can take five types of values: "first", "second", "third", "fourth" or "last". 
-	 * 								The "padding_week" attribute only applies if type="recurrent" is specified and if the unit attribute is "month". 
-	 * 								If the "padding_zone" attribute is not specified ESS Processors should be considered the event as without "padding_week".
+	 * @param	String	[OPTIONAL] 	The "selected_week" attribute defines the section of the month that has to considered to be repeated. 
+	 * 								The "selected_week" attribute can take five types of values: "first", "second", "third", "fourth" or "last". 
+	 * 								The "selected_week" attribute only applies if type="recurrent" is specified and if the unit="month". 
+	 * 								If the "selected_week" attribute is not specified ESS Processors should be considered the event as with a selected_week="".
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:
@@ -676,14 +676,14 @@ final class EventFeed
 		$mode			= "fixed",
 		$unit			= "hour", 	
 		$limit			= 0,
-		$padding		= 1,
-		$padding_day	= "number",
-		$padding_week	= "first",	
+		$interval		= 1,
+		$selected_day	= "number",
+		$selected_week	= "first",	
 		$data_ 			= null, 
 		$priority		= 0 
 	) 
 	{
-		 $this->addElement( 'prices', $type, $mode, $unit, $data_, $priority, $limit, $padding, $padding_day, $padding_week ); 
+		 $this->addElement( 'prices', $type, $mode, $unit, $data_, $priority, $limit, $interval, $selected_day, $selected_week ); 
 	}
 	
 	
@@ -873,27 +873,27 @@ final class EventFeed
 		return false;
 	}
 	
-	private function controlPaddingDay( $elmName='', $padding_dayToControl='' )
+	private function controlSelectedDay( $elmName='', $selected_dayToControl='' )
 	{
-		if ( isset( $this->feedDTD[ $elmName ][ 'padding_days' ] ) )
+		if ( isset( $this->feedDTD[ $elmName ][ 'selected_days' ] ) )
 		{
-			$padding_ = explode( ',', $padding_dayToControl );
+			$selected_ = explode( ',', $selected_dayToControl );
 			
-			if ( @count( $padding_ ) > 0 )
+			if ( @count( $selected_ ) > 0 )
 			{
-				foreach( $padding_ as $padding_dayToControl )
+				foreach( $selected_ as $selected_dayToControl )
 				{
-					foreach ( $this->feedDTD[ $elmName ][ 'padding_days' ] as $padding_day ) 
+					foreach ( $this->feedDTD[ $elmName ][ 'selected_days' ] as $selected_day ) 
 					{
-						if ( strtolower( $padding_dayToControl ) == $padding_day || $padding_dayToControl == '' ) return true;
+						if ( strtolower( $selected_dayToControl ) == $selected_day || $selected_dayToControl == '' ) return true;
 					}
 				}
 			}
 			else 
 			{
-				foreach ( $this->feedDTD[ $elmName ][ 'padding_days' ] as $padding_day ) 
+				foreach ( $this->feedDTD[ $elmName ][ 'selected_days' ] as $selected_day ) 
 				{
-					if ( strtolower( $padding_dayToControl ) == $padding_day || $padding_dayToControl == '' ) return true;
+					if ( strtolower( $selected_dayToControl ) == $selected_day || $selected_dayToControl == '' ) return true;
 				}
 			}
 		}
@@ -901,13 +901,13 @@ final class EventFeed
 		return false;
 	}
 	
-	private function controlPaddingWeek( $elmName='', $padding_weekToControl='' )
+	private function controlSelectedWeek( $elmName='', $selected_weekToControl='' )
 	{
-		if ( isset( $this->feedDTD[ $elmName ][ 'padding_weeks' ] ) )
+		if ( isset( $this->feedDTD[ $elmName ][ 'selected_weeks' ] ) )
 		{
-			foreach ( $this->feedDTD[ $elmName ][ 'padding_weeks' ] as $padding_day ) 
+			foreach ( $this->feedDTD[ $elmName ][ 'selected_weeks' ] as $selected_day ) 
 			{
-				if ( strtolower( $padding_weekToControl ) == $padding_day || $padding_weekToControl == '' ) return true;
+				if ( strtolower( $selected_weekToControl ) == $selected_day || $selected_weekToControl == '' ) return true;
 			}
 		}
 		else return true;	
