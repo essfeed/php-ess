@@ -116,7 +116,8 @@ final class EventFeed
 				throw new Exception( "Error: '<title>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'title', FeedValidator::charsetString( $el, $this->CHARSET ) );
+			$this->setRootElement( 'title', FeedValidator::noAccent( $el, $this->CHARSET ) );
+			
 			$this->setId( $el );
 		}
 	}
@@ -147,7 +148,7 @@ final class EventFeed
 				throw new Exception( "Error: '<uri>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
+			$this->setRootElement( 'uri', urldecode( FeedValidator::charsetString( $el, $this->CHARSET ) ) );
 			$this->setId( $el );
 		}
 	}
@@ -210,7 +211,7 @@ final class EventFeed
 				return;
 			}
 			
-			$this->setRootElement( 'published', $el );
+			$this->setRootElement( 'published', FeedWriter::getISODate( $el ) );
 		}
 	}
 	
@@ -242,7 +243,7 @@ final class EventFeed
 				return;
 			}
 			
-			$this->setRootElement( 'updated', $el );
+			$this->setRootElement( 'updated', FeedWriter::getISODate( $el ) );
 		}
 	}
 	
@@ -275,7 +276,6 @@ final class EventFeed
 			$this->setRootElement( 'access', FeedValidator::charsetString( $el, $this->CHARSET ) );
 		}
 	}
-	
 	public function getAccess()
 	{
 		return $this->roots[ 'access' ];
@@ -308,7 +308,6 @@ final class EventFeed
 			$this->setRootElement( 'description', FeedValidator::stripSpecificHTMLtags( $el ) );
 		}
 	}
-	
 	public function getDescription()
 	{
 		return $this->roots[ 'description' ];
@@ -339,7 +338,6 @@ final class EventFeed
 			$this->setRootElement( 'tags', $el );
 		}
 	}
-	
 	public function getTags()
 	{
 		return $this->roots[ 'tags' ];
@@ -427,11 +425,11 @@ final class EventFeed
 									$mandatories = "";
 									foreach ( $this->feedDTD[ $groupName ][ 'tags' ] as $tag => $mandatory )
 									{
-										if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) $mandatories .= "<" .$tag."> ";
+										if ( $mandatory == true && @strlen( $data_[ $tag ] ) <= 0 ) $mandatories .= "< " .$tag." > ";
 									}
-									if ( strlen( $mandatories ) > 0 )
+									if ( FeedValidator::isNull( $mandatories ) == false )
 									{
-										throw new Exception( $errorType . "All XML mandatories elements are not provided (".$mandatories.")." );
+										throw new Exception( $errorType . "All the mandatories XML sub-elements of < $groupName > are not provided (".$mandatories.")." );
 									}
 								}
 							}

@@ -130,13 +130,13 @@ final class FeedWriter
 			ob_end_clean();
 			header_remove();
 			
-			header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-			header("Cache-Control: no-cache");
-			header("Pragma: no-cache");
-			header("Keep-Alive: timeout=1, max=1");
+			header( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
+			header( "Cache-Control: no-cache" );
+			header( "Pragma: no-cache" );
+			header( "Keep-Alive: timeout=1, max=1" );
 			
 			if ( self::IS_DOWNLOAD ) { header( 'Content-Type: application/ess+xml; charset=' .self::CHARSET ); }
-			else					 { header( 'Content-Type: application/xml; charset=' .self::CHARSET ); }
+			else					 { header( 'Content-Type: text/xml; charset=' .self::CHARSET ); }
 		}
 		
 		echo $this->getFeedData();
@@ -248,8 +248,13 @@ final class FeedWriter
 	 */
 	public function setTitle( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'title', FeedValidator::charsetString( $el, self::CHARSET ) );
+		if ( $el != NULL ) $this->setChannelElement( 'title', FeedValidator::noAccent( $el, $this->CHARSET ) );
 	}
+	public function getTitle()
+	{
+		return $this->channel[ 'title' ];
+	}
+	
 	
 	/**
 	 * Set the 'link' channel element
@@ -265,10 +270,15 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'link', $el, self::CHARSET );
+			$this->setChannelElement( 'link', urldecode( FeedValidator::charsetString( $el, $this->CHARSET ) ) );
 			$this->setId( $el );
 		}
 	}
+	public function getLink()
+	{
+		return $this->channel[ 'link' ];
+	}
+	
 	
 	/**
 	 * Set the 'id' channel element
@@ -284,6 +294,11 @@ final class FeedWriter
 			$this->setChannelElement( 'id', $this->uuid( $el, 'ESSID:' ) );
 		}
 	}
+	public function geId()
+	{
+		return $this->channel[ 'id' ];
+	}
+	
 	
 	/**
 	 * Set the 'generator' channel element
@@ -296,9 +311,14 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'generator', $el );
+			$this->setChannelElement( 'generator', FeedValidator::noAccent( $el, $this->CHARSET ) );
 		}
 	}
+	public function getGenerator()
+	{
+		return $this->channel[ 'generator' ];
+	}
+	
 	
 	/**
 	 * Set the 'published' channel element
@@ -314,8 +334,13 @@ final class FeedWriter
 	 */
 	public function setPublished( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'published', $el );
+		if ( $el != NULL ) $this->setChannelElement( 'published', FeedWriter::getISODate( $el ) );
 	}
+	public function getPublished()
+	{
+		return $this->channel[ 'published' ];
+	}
+	
 	
 	/**
 	 * Set the 'updated' channel element
@@ -330,8 +355,13 @@ final class FeedWriter
 	 */
 	public function setUpdated( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'updated', $el );
+		if ( $el != NULL ) $this->setChannelElement( 'updated', FeedWriter::getISODate( $el ) );
 	}
+	public function getUpdated()
+	{
+		return $this->channel[ 'updated' ];
+	}
+	
 	
 	/**
 	 * Set the 'rights' channel element
@@ -347,9 +377,12 @@ final class FeedWriter
 	 */
 	public function setRights( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'rights', FeedValidator::charsetString( $el, self:: CHARSET ) );
+		if ( $el != NULL ) $this->setChannelElement( 'rights', FeedValidator::noAccent( $el, self::CHARSET ) );
 	}
-	
+	public function getRights()
+	{
+		return $this->channel[ 'rights' ];
+	}
 	
 	
 	
@@ -379,10 +412,10 @@ final class FeedWriter
 	/**
   	 * 	Generate or convert a String or an Integer parameter into an ISO 8601 Date format.
 	 * 
-	 * 	@access public
-	 * 	@param 	Object	date in seconds OR in convertible String Date (http://php.net/manual/en/function.strtotime.php)
-	 *  				to convert in a ISO 8601 Date format: 'Y-m-d\TH:i:sZ'
-	 * 	@return  String
+	 * 	@access 	public
+	 * 	@param 		Object	date in seconds OR in convertible String Date (http://php.net/manual/en/function.strtotime.php)
+	 *  					to convert in a ISO 8601 Date format: 'Y-m-d\TH:i:sZ'
+	 * 	@return  	String
 	 */ 
 	public static function getISODate( $date=null )
 	{
@@ -589,7 +622,7 @@ final class FeedWriter
 		else
 		{
 			$nodeText .= ( ( in_array( $tagName, $this->CDATA ) || $tagName == 'published' || $tagName == 'updated' || $tagName == 'start' )? 
-				$tagContent 
+				( ( $tagName == 'start' )? self::getISODate( $tagContent ) : $tagContent ) 
 				: 
 				htmlentities( $tagContent )
 			);

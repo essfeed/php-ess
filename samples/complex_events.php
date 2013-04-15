@@ -15,10 +15,10 @@
 	// #######################
 	
 	$essFeed->setTitle( 	'ESS Feed' );											// Defines the Feed name (not the event).
-  	$essFeed->setLink( 		'http://example.com/feed/sample.ess' );					// Define the URL of the Feed.
-  	$essFeed->setPublished( FeedWriter::getISODate() );								// Current date (according to server time). 
-  	$essFeed->setPublished( FeedWriter::getISODate( 1361791459 ) ); 				// OR date in seconds.
-	$essFeed->setUpdated( 	FeedWriter::getISODate( 'Jun 10, 2012, 6pm PST' ) );	// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
+  	$essFeed->setLink( 		'http://example.com/feed/sample.ess?with=params&add' );	// Define the URL of the Feed.
+  	$essFeed->setPublished( '' );													// Current date (according to server time). 
+  	//$essFeed->setPublished( 1361791459 ); 											// OR date in seconds.
+	$essFeed->setUpdated( 	'Jun 10, 2012, 6pm PST' );								// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
 	$essFeed->setRights( 	'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );	// Specified the Copyright restriction for this Feed.
 	
 	
@@ -29,13 +29,13 @@
     	// <feed> 
     	// ======================================================================
     	$newEvent = $essFeed->newEventFeed();
-		$newEvent->setTitle( 		'Football match every saturdays' );								// Defines the title of the Event.
-		$newEvent->setUri( 			'http://sample.com/events/specific-and-unique-event-page/' );	// Defines the URL of the event page
-		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );											// You can define your event unic ID, otherwise the vent URL will be used to generate a unic ID. 		
-		$newEvent->setPublished( 	FeedWriter::getISODate( 'now' ) );								// check strtotime() to see all the format supported.
-		$newEvent->setUpdated( 		FeedWriter::getISODate( "2013-10-31T19:90:99-08:00" ) ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
-		$newEvent->setAccess( 		'PUBLIC' );														// Defines if the event is 'PUBLIC' or 'PRIVATE'
-		$newEvent->setTags(			array( 'Sport', 'Football', 'match' ) );						// Defines an array of keywords or tags to Help search engine to find your event.
+		$newEvent->setTitle( 		'Football match every saturdays, (text with åççéñts).' );	// Defines the title of the Event.
+		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=param&additional' );	// Defines the URL of the event page
+		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unic ID, otherwise the vent URL will be used to generate a unic ID. 		
+		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
+		$newEvent->setUpdated( 		"2013-10-31T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
+		$newEvent->setAccess( 		'PUBLIC' );							// Defines if the event is 'PUBLIC' or 'PRIVATE'
+		$newEvent->setTags(	array( 'Sport', 'Football', 'match' ) );	// Defines an array of keywords or tags to Help search engine to find your event.
 		
 		// -- Add some complex HTML event description content.
 		$description_HTML ="<h1>Welcome to my first football match event.<h1><br/> 
@@ -47,7 +47,7 @@
 			<br/><br/>	
 			<h2>Title of a subsection</h2>
 			<img src='http://sample.com/images/with/dynamic/url/abcdef'/>
-			<img src='http://sample.com/images/pictute_02.png' alt='description 02' />
+			<img src='http://sample.com/images/pictute_02.png' alt='description 02'/>
 			<img src='http://sample.com/images/picture_03.png' title='Title of the third image' />
 			<!-- Text with comments -->
 			<p>Display a video in the description</p>
@@ -124,8 +124,8 @@
 		
 		// ====== PRICES == (add one or more prices) =======
 		// =========
-		// == /!\ == 	EVEN IF THE PRICE ELEMENT IS NOT OPTIONAL, 
-		// =========	ESS PROCESSORS CAN UNDERSTAND YOUR EVENT AS FREE IF IT IS NOT DENINE...
+		// == /!\ == 	EVEN IF THE PRICE ELEMENT IS NOT MANDATORY, 
+		// =========	ESS PROCESSORS CAN UNDERSTAND THE EVENT AS FREE IF IT IS NOT DENINE.
 		// =========
 		// ----------- Define a free entrance for the event.
 		$newEvent->addPrice( 'standalone', 'free', null,null,null,null,null, array('name'=> 'Free Entrance', 'value'=> '0'));
@@ -179,6 +179,7 @@
 		// --------------------------------------------------------
 		foreach ( FeedWriter::getMediaURLfromHTML( $description_HTML ) as $m ) 
 		{
+			//echo $m['type'] . " name:". $m['name'] ." >> " . $m['uri'] . "<br/>";
 			$newEvent->addMedia( $m['type'], array('name' => $m['name'],  'uri' => $m['uri'] ) );
 		}
 		
