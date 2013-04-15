@@ -270,7 +270,7 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'link', urldecode( FeedValidator::charsetString( $el, $this->CHARSET ) ) );
+			$this->setChannelElement( 'link', FeedValidator::noAccent( $el, $this->CHARSET ) );
 			$this->setId( $el );
 		}
 	}
@@ -609,23 +609,25 @@ final class FeedWriter
 		
 		$nodeText .= $this->t(2) . ( ( in_array( $tagName, $this->CDATA ) )? "<{$tagName}{$attrText}>" . self::LN . $this->t(3) . "<![CDATA[" . self::LN : "<{$tagName}{$attrText}>" );
 		 
-		if ( is_array( $tagContent ) )
+		if ( is_array( $tagContent ) ) // tag
 		{ 
 			foreach ( $tagContent as $key => $value ) 
 			{
 				if ( isset( $value ) )
 				{
-					$nodeText .= $this->t(4) . $this->makeNode( $key, $value );
+					$nodeText .= $this->t(4) . $this->makeNode( $key, FeedValidator::noAccent( $value ) );
 				}
 			}
 		}
 		else
 		{
-			$nodeText .= ( ( in_array( $tagName, $this->CDATA ) || $tagName == 'published' || $tagName == 'updated' || $tagName == 'start' )? 
-				( ( $tagName == 'start' )? self::getISODate( $tagContent ) : $tagContent ) 
-				: 
-				htmlentities( $tagContent )
-			);
+			if ( in_array( $tagName, $this->CDATA ) || 
+				 $tagName == 'published' || 
+				 $tagName == 'updated' )		{ $nodeText .= $tagContent; }
+			else if ( $tagName == 'start' ) 	{ $nodeText .= self::getISODate( $tagContent ); }
+			else if ($tagName == 'link' || 
+					 $tagName == 'uri' )		{ $nodeText .= htmlentities( $tagContent ); }
+			else								{ $nodeText .= FeedValidator::noAccent( $tagContent ); }		 
 		}           
 			
 		$nodeText .= ( ( in_array( $tagName, $this->CDATA ) )? self::LN .  $this->t(3) . "]]>" . self::LN . $this->t(3) . "</$tagName>" : "</$tagName>" );
@@ -682,7 +684,7 @@ final class FeedWriter
 							$out .= $this->t(3) . "<tags>" . self::LN;
 							foreach( $val as $tag )
 							{
-								$out .= $this->t(2) . $this->makeNode( 'tag', $tag );
+								$out .= $this->t(2) . $this->makeNode( 'tag', FeedValidator::noAccent( $tag ) );
 							}
 							$out .= $this->t(3) . "</tags>" . self::LN;
 						}

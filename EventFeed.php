@@ -148,7 +148,7 @@ final class EventFeed
 				throw new Exception( "Error: '<uri>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'uri', urldecode( FeedValidator::charsetString( $el, $this->CHARSET ) ) );
+			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
 			$this->setId( $el );
 		}
 	}
