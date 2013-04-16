@@ -7,12 +7,15 @@
   	// ======================================================================
  	$essFeed = new FeedWriter( 'en' ); // ISO 4217 language code (2 chars).
 	
-	// #######################
+	// ####################################################################
+ 	// ###
 	// ###  DEBUG  MODE  
 	// ###	display on screen the result, and explain the errors. 
 	// ###	Have to be switch to false for production.
-  	$essFeed->DEBUG = true;
-	// #######################
+	// ###
+  			$essFeed->DEBUG = false;
+	// ####################################################################
+  	
 	
 	$essFeed->setTitle( 	'ESS Feed' );											// Defines the Feed name (not the event).
   	$essFeed->setLink( 		'http://example.com/feed/sample.ess?with=params&add' );	// Define the URL of the Feed.

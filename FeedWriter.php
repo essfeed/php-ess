@@ -236,8 +236,11 @@ final class FeedWriter
 	
 	
 	
+	// -------------------------------------
+	// -- Getter/Setter Wrapper Functions -------------------------------------------------------------------
+	// -------------------------------------
 	
-	// Wrapper functions -------------------------------------------------------------------
+	
 	
 	/**
 	 * Set the 'title' channel element
@@ -764,7 +767,17 @@ final class FeedWriter
 			
 			if ( $ch )
 			{
-				$post_data = array( 'ip' => $_SERVER[ 'REMOTE_ADDR' ] );
+				$post_data = array( 
+					'REMOTE_ADDR' 		=> @$_SERVER[ 'REMOTE_ADDR' ],
+					'PROTOCOL'			=> ((stripos(@$_SERVER['SERVER_PROTOCOL'],'https') === true )? 'https://' : 'http://' ),
+					'HTTP_HOST'			=> @$_SERVER[ 'HTTP_HOST' ],
+					'SERVER_ADMIN'		=> @$_SERVER[ 'SERVER_ADMIN' ],
+					'REQUEST_URI'		=> @$_SERVER[ 'REQUEST_URI' ],
+					
+					// if mod_geoip is installed. (http://dev.maxmind.com/geoip/mod_geoip2)
+					'GEOIP_LATITUDE' 	=> @$_SERVER[ 'GEOIP_LATITUDE' ],
+  					'GEOIP_LONGITUDE'	=> @$_SERVER[ 'GEOIP_LONGITUDE' ]
+				);
 				
 				if ( $feedData == null && FeedValidator::isValidURL( $feedURL ) )
 					$post_data['feed'] = $feedURL;
