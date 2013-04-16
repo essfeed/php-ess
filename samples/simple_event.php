@@ -24,8 +24,10 @@
 	// Add the event to the Feed
 	$essFeed->addItem( $newEvent );
 	
-	// Print on screen the ESS Feed
-	$essFeed->genarateFeed();
 	
-	// OR Generate the feed in a local server file
-	// $essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', $new_feed_url );
+	// Generate the feed in a local server file.
+	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', $new_feed_url );
+	
+	
+	// OR Display on screen the ESS Feed.
+	$essFeed->genarateFeed();

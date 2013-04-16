@@ -1,0 +1,76 @@
+<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/0.9/index.dtd">
+<ess xmlns="http://essfeed.org/history/0.9/" version="0.9" lang="en">
+   <channel>
+      <generator>ess:php:generator:version:VERSION</generator>
+      <title>ESS Feed</title>
+      <link>http://ess.hypecal.com/php-ess/samples/simple_event.ess</link>
+      <id>ESSID:c78e258d-f0fb-593f-3361-df9b696ede39</id>
+      <published>2013-04-16T10:15:23+02:00</published>
+      <rights>Copyright (c)</rights>
+      <feed>
+         <title>Madonna Concert</title>
+         <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
+         <published>2013-04-16T10:15:23+02:00</published>
+         <updated>2013-04-16T10:15:23+02:00</updated>
+         <access>PUBLIC</access>
+         <description>
+         <![CDATA[
+This is the description of the Madonna concert.
+         ]]>
+         </description>
+         <tags>
+            <tag>music</tag>
+            <tag>pop</tag>
+            <tag>80s</tag>
+            <tag>Madonna</tag>
+            <tag>concert</tag>
+         </tags>
+         <categories>
+            <item type='concert' priority='1'>
+               <name>Rock Music</name>
+               <id>M22</id>
+            </item>
+         </categories>
+         <dates>
+            <item type='recurrent' unit='year' limit='1' priority='1'>
+               <name>Yearly concert</name>
+               <start>2013-10-25T15:30:00Z</start>
+               <duration>7200</duration>
+            </item>
+         </dates>
+         <places>
+            <item type='fixed' priority='1'>
+               <name>Stadium</name>
+               <latitude>40.71675</latitude>
+               <longitude>-74.00674</longitude>
+               <address>Ave of Americas, 871</address>
+               <city>New York</city>
+               <zip>10001</zip>
+               <state>New York</state>
+               <state_code>NY</state_code>
+               <country>United States of America</country>
+               <country_code>US</country_code>
+            </item>
+         </places>
+         <prices>
+            <item type='standalone' mode='fixed' priority='1'>
+               <name>Entrance with VIP access</name>
+               <value>90</value>
+               <currency>USD</currency>
+               <uri>http://madonna.com/payment/api</uri>
+            </item>
+         </prices>
+         <media>
+            <item type='image' priority='1'>
+               <name>Foto of Madonna</name>
+               <uri>http://madonna.com/image.png</uri>
+            </item>
+         </media>
+         <people>
+            <item type='performer' priority='1'>
+               <name>Madonna</name>
+            </item>
+         </people>
+      </feed>
+   </channel>
+</ess>

@@ -53,9 +53,8 @@
 			<p>Display a video in the description</p>
 			<br/>
 			<video width='320' height='240' controls>
-			  	<source src='http://sample.com/videos/movie.mp4' type='video/mp4'>
-			  	<source src='http://sample.com/videos/movie.ogg' type='video/ogg'>
-				Your browser does not support the video tag.
+			  	<source src='http://sample.com/videos/movie.mp4' type='video/mp4'/>
+			  	<source src='http://sample.com/videos/movie.ogg' type='video/ogg'/>
 			</video>
 			<br/>
 			<br/>
@@ -234,11 +233,13 @@
  	// Genarate the ESS feed on screen only. 
  	$essFeed->genarateFeed();
 	
-	// OR
+	
+	// OR 
 	
 	
 	// Generate the ESS Feed file on server.
 	// you have to configure the folder on the server with the same owner then the Apache user
 	// #> chown www-data:www-data /var/local/www/site/
 	// #> chmod 0755 /var/local/www/site/
-	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', 'http://example.com/feeds/events.ess' );
+	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/complex_events.ess', 'http://example.com/feeds/complex_events.ess' );
+	

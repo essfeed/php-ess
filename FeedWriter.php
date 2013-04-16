@@ -17,20 +17,23 @@ require_once( 'EventFeed.php' );
   */ 
 final class FeedWriter
 {
-	const VERSION			= '1.1';					// GitHub library versioning control.			
-	private $ess_version	= '0.9'; 					// ESS Feed version.
- 	private $lang			= 'en';						// Default 2 chars language (ISO 3166-1).
+	const LIBRARY_VERSION	= '1.2';					// GitHub library versioning control.
+	const ESS_VERSION		= '0.9'; 					// ESS Feed version.
+	const CHARSET			= 'UTF-8';					// Defines the encoding Chartset for the whole document and the value inserted.
+	
+	public $lang			= 'en';						// Default 2 chars language (ISO 3166-1).
+	public $DEBUG			= false;					// output debug information.
+	const AUTO_PUSH			= true; 					// Defines feed changes have to be submited to ESS Aggregators.
+	const IS_DOWNLOAD		= false;					// Defines if the feed is to be downloaded (Header: application/ess+xml).
+	
 	private $channel 		= array();  				// Collection of channel elements.
 	private $items			= array();  				// Collection of items as object of FeedItem class.
 	private $channelDTD		= array();					// DTD Array of Channel first XML child elements.
 	private $CDATA  		= array( 'description' );  	// Tags names displayed with <[CDATA[...]]>.
-	public $DEBUG			= false;					// output debug information.
-	const AUTO_PUSH			= true; 					// Auto-push changes to ESS Feed Aggregators.
-	const IS_DOWNLOAD		= false;					// Defines if the feed is to be downloaded (Header: application/ess+xml).
-	const CHARSET			= 'UTF-8';					// Force the chartset encoding for the whole document and the value inserted.
-	const TB				= '   ';					// Display a tabulation (for human).
+						
+	const TB				= '   ';					// Display a tabulation (for humans).
 	const LN				= '
-';													// Display breaklines (for human).
+';														// Display breaklines (for humans).
 
 	
 	/**
@@ -47,7 +50,7 @@ final class FeedWriter
 		
 		$this->lang = ( strlen($lang)==2 )? strtolower($lang) : $this->lang;
 		
-		$this->setGenerator( 'ess:php:generator:version:' . VERSION );
+		$this->setGenerator( 'ess:php:generator:version:' . self::LIBRARY_VERSION );
 		
 		$mandatoryRequiredCount = 0;
 		$mandatoryCount 		= 0;
@@ -167,8 +170,6 @@ final class FeedWriter
 			throw new Exception( "Error: Impossible to generate file in local disk: " . $error );
 			return;
 		}
-		
-		$this->pushToAggregators( $feedURL );
 	}
 	
 	/**
@@ -565,9 +566,9 @@ final class FeedWriter
 	 */
 	private function getHead()
 	{
-		$out  = '<?xml version="1.0" encoding="'.self:: CHARSET.'"?>' . self::LN;
-		$out  = '<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/'.urlencode($this->ess_version).'/index.dtd">' . self::LN;
-		$out .= '<ess xmlns="http://essfeed.org/history/'.urlencode($this->ess_version).'/" version="'. urlencode($this->ess_version) .'" lang="'. $this->lang .'">' . self::LN; // . PHP_EOL;
+		$out  = '<?xml version="1.0" encoding="'.self::CHARSET.'"?>' . self::LN;
+		$out  = '<!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/'.urlencode( self::ESS_VERSION ).'/index.dtd">' . self::LN;
+		$out .= '<ess xmlns="http://essfeed.org/history/'.urlencode( self::ESS_VERSION ).'/" version="'. urlencode( self::ESS_VERSION ) .'" lang="'. $this->lang .'">' . self::LN; // . PHP_EOL;
 		
 		return $out;
 	}
@@ -786,7 +787,7 @@ final class FeedWriter
 					$mn_color = ( $isOK )? '#168c0a' : $DARK_RED;
 					
 					echo "<div style='background-color:$bg_color;color:$mn_color;border:1px solid $mn_color;width:95%;padding:10px;font-size:14px;margin:10px;'>".
-						( ( $r['version'] != VERSION )?
+						( ( $r['version'] != self::LIBRARY_VERSION )?
 							"<h3 style='color:$DARK_RED;font-size:20px;border:1px dotted $DARK_RED;padding:10px;margin:5px;'>The PHP-ESS library have been updated.<br/>".
 								"Download the last GitHub version (".$r['version'].") : <a target='_blank' href='https://github.com/essfeed/php-ess'  style='color:#ff0000;'>https://github.com/essfeed/php-ess</a>".
 							"</h3>" .
