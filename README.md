@@ -1,11 +1,12 @@
 php-ess
 =======
 
+#### https://github.com/essfeed/php-ess
+
 [![ESS Feed Standard](http://essfeed.org/images/8/87/ESS_logo_32x32.png)](http://essfeed.org/)
 
 ESS (Event Standard Syndication) library in PHP
 This two classes allow to generate ESS feed with a simple instanciation.
-https://github.com/hypecal/php-ess
 
 
 To use this Class a complete example is available in /samples/complex_events.php
