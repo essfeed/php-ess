@@ -170,6 +170,8 @@ final class FeedWriter
 			throw new Exception( "Error: Impossible to generate file in local disk: " . $error );
 			return;
 		}
+		
+		$this->pushToAggregators( $feedURL );
 	}
 	
 	/**
