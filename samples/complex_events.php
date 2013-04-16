@@ -11,7 +11,7 @@
 	// ###  DEBUG  MODE  
 	// ###	display on screen the result, and explain the errors. 
 	// ###	Have to be switch to false for production.
-  	$essFeed->DEBUG = false;
+  	$essFeed->DEBUG = true;
 	// #######################
 	
 	$essFeed->setTitle( 	'ESS Feed' );											// Defines the Feed name (not the event).
