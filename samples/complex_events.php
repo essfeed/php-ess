@@ -17,7 +17,7 @@
 	// ####################################################################
   	
 	
-	$essFeed->setTitle( 	'ESS Feed' );											// Defines the Feed name (not the event).
+	$essFeed->setTitle( 	'ESS Feeds' );											// Defines the Feed name (not the event).
   	$essFeed->setLink( 		'http://example.com/feed/sample.ess?with=params&add' );	// Define the URL of the Feed.
   	$essFeed->setPublished( 'now' );												// Current date (according to server time). 
   	//$essFeed->setPublished( 1361791459 ); 										// OR date in seconds.
@@ -32,7 +32,7 @@
     	// <feed> 
     	// ======================================================================
     	$newEvent = $essFeed->newEventFeed();
-		$newEvent->setTitle( 		'Football match every saturdays, (text with åççéñts).' );	// Defines the title of the Event.
+		$newEvent->setTitle( 		'Football match every saturdays, text with åççéñts.' );	// Defines the title of the Event.
 		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=param&additional' );	// Defines the URL of the event page
 		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unic ID, otherwise the vent URL will be used to generate a unic ID. 		
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
@@ -96,11 +96,11 @@
 		$newEvent->addDate( 'recurrent', 	'month', 24, null, "sunday", "last", array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
 		
 		// ----------- Add two simple dates that happen only two times: 10/25/2013 and 11/25/2013 at 3:30pm (PST: Pacific Standard Time: GMT + 8 hours) for 3 hours.
-		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next saturday', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 3*3600 ) );
-		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next month', 	'start'=> '2013-11-25T15:30:00+08:00', 'duration'=> 3*3600 ) );
+		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next saturday', 'start'=> '2013-10-25T15:30:00-08:00', 'duration'=> 3*3600 ) );
+		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next month', 	'start'=> '2013-11-25T15:30:00-08:00', 'duration'=> 3*3600 ) );
 		
 		// ----------- Add a repetitive event that happens on Monday, Tuesday and Thursday every 3 weeks for 6 months starting at the same time as the first one (8am PST) defined in the “start” attribute and for 8 hours.
-		$newEvent->addDate( 'recurrent', 	'week', 6, 3, "monday,tuesday,thirsday", null, array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T08:00:00+08:00', 'duration'=> 8*3600 ) );
+		$newEvent->addDate( 'recurrent', 	'week', 6, 3, "monday,tuesday,thursday", null, array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T08:00:00+08:00', 'duration'=> 8*3600 ) );
 		
 		
 		
@@ -156,6 +156,9 @@
 		
 		// ---------- Define rules for the event: the stadium can hold only 2000 people, the minimum age is 16 years old and it's prohibited to smoke! 
 		$newEvent->addPeople( 'attendee',  	 array( 'name' => 'Attendees informations: ', 'minpeople' => '0', 'maxpeople' => '2000', 'minage' => '16', 'restriction' => 'Smoking is not allowed in the stadium' ) );
+		
+		// ---------- Define a social network uri to share, rate or get the notes of the event.
+		$newEvent->addPeople( 'social',  	 array( 'name' => 'Facebook Event', 'uri' => 'http://facebook.com/events/my_event' ) );
 		
 		// ---------- Define who created this feed (sometime it is not the same as the organizer).
 		$newEvent->addPeople( 'author', 	 array( 'name' => 'ESS Feed Powered by Addon-XXX', 'icon' => 'http://example.com/images/icon.png' ) );

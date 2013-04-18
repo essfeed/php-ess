@@ -155,7 +155,7 @@ final class EssDTD
 			),
 			'people' => array(
 				'mandatory' => false,
-				'types' 	=> array('organizer','performer','attendee','author','contributor'),
+				'types' 	=> array('organizer','performer','attendee','social','author','contributor'),
 				'tags' 		=> array(
 					'name' 			=> true,
 					'id' 			=> false,
