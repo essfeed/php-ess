@@ -905,9 +905,24 @@ final class EventFeed
 	{
 		if ( isset( $this->feedDTD[ $elmName ][ 'selected_weeks' ] ) )
 		{
-			foreach ( $this->feedDTD[ $elmName ][ 'selected_weeks' ] as $selected_day ) 
+			$selected_ = explode( ',', $selected_weekToControl );
+			
+			if ( @count( $selected_ ) > 0 )
 			{
-				if ( strtolower( $selected_weekToControl ) == $selected_day || $selected_weekToControl == '' ) return true;
+				foreach( $selected_ as $selected_weekToControl )
+				{
+					foreach ( $this->feedDTD[ $elmName ][ 'selected_weeks' ] as $selected_week ) 
+					{
+						if ( strtolower( $selected_weekToControl ) == $selected_week || $selected_weekToControl == '' ) return true;
+					}
+				}
+			}
+			else 
+			{
+				foreach ( $this->feedDTD[ $elmName ][ 'selected_days' ] as $selected_week ) 
+				{
+					if ( strtolower( $selected_weekToControl ) == $selected_week || $selected_weekToControl == '' ) return true;
+				}
 			}
 		}
 		else return true;	

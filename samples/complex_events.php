@@ -92,8 +92,8 @@
 		// ----------- Add a repetitive event that happens 3 week consecutively at the same time as the first one defined in the “start” attribute and for 2 hours.
 		$newEvent->addDate( 'recurrent', 	'week',  3,  null, null, null, array('name'=> 'Matches every saturday during 3 weeks', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
 		
-		// ----------- Add a repetitive event that happens every last Sunday of every month for 2 years (24 months) starting at the same time as the first one defined in the “start” attribute and for 2 hours.  
-		$newEvent->addDate( 'recurrent', 	'month', 24, null, "sunday", "last", array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
+		// ----------- Add a repetitive event that happens every second and last Sunday of every month for 2 years (24 months) starting at the same time as the first one defined in the “start” attribute and for 2 hours.  
+		$newEvent->addDate( 'recurrent', 	'month', 24, null, "sunday", "second,last", array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
 		
 		// ----------- Add two simple dates that happen only two times: 10/25/2013 and 11/25/2013 at 3:30pm (PST: Pacific Standard Time: GMT + 8 hours) for 3 hours.
 		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next saturday', 'start'=> '2013-10-25T15:30:00-08:00', 'duration'=> 3*3600 ) );
