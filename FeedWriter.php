@@ -768,8 +768,9 @@ final class FeedWriter
 			if ( $ch )
 			{
 				$post_data = array( 
+					'LIBRARY_VERSION'	=> self::LIBRARY_VERSION,
 					'REMOTE_ADDR' 		=> @$_SERVER[ 'REMOTE_ADDR' ],
-					'PROTOCOL'			=> ((stripos(@$_SERVER['SERVER_PROTOCOL'],'https') === true )? 'https://' : 'http://' ),
+					'PROTOCOL'			=> ( ( stripos( @$_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ),
 					'HTTP_HOST'			=> @$_SERVER[ 'HTTP_HOST' ],
 					'SERVER_ADMIN'		=> @$_SERVER[ 'SERVER_ADMIN' ],
 					'REQUEST_URI'		=> @$_SERVER[ 'REQUEST_URI' ],
@@ -784,10 +785,10 @@ final class FeedWriter
 				else 
 					$post_data['feed_file'] = $feedData; 
 				
-				curl_setopt($ch, CURLOPT_URL, 				$aggregator_url );
-				curl_setopt($ch, CURLOPT_POSTFIELDS,  		$post_data );
-				curl_setopt($ch, CURLOPT_RETURNTRANSFER, 	1 );
-				curl_setopt($ch, CURLOPT_VERBOSE, 			1 );
+				curl_setopt( $ch, CURLOPT_URL, 				$aggregator_url );
+				curl_setopt( $ch, CURLOPT_POSTFIELDS,  		$post_data );
+				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 	1 );
+				curl_setopt( $ch, CURLOPT_VERBOSE, 			1 );
 				
 				$response = json_decode( curl_exec( $ch ), true );
 				
