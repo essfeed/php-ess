@@ -17,23 +17,22 @@ require_once( 'EventFeed.php' );
   */ 
 final class FeedWriter
 {
-	const LIBRARY_VERSION	= '1.2';					// GitHub library versioning control.
-	const ESS_VERSION		= '0.9'; 					// ESS Feed version.
-	const CHARSET			= 'UTF-8';					// Defines the encoding Chartset for the whole document and the value inserted.
+	const LIBRARY_VERSION	= '1.2';	// GitHub library versioning control.
+	const ESS_VERSION		= '0.9'; 	// ESS Feed version.
+	const CHARSET			= 'UTF-8';	// Defines the encoding Chartset for the whole document and the value inserted.
+	public $lang			= 'en';		// Default 2 chars language (ISO 3166-1).
 	
-	public $lang			= 'en';						// Default 2 chars language (ISO 3166-1).
-	public $DEBUG			= false;					// output debug information.
-	const AUTO_PUSH			= true; 					// Defines feed changes have to be submited to ESS Aggregators.
-	const IS_DOWNLOAD		= false;					// Defines if the feed is to be downloaded (Header: application/ess+xml).
+	public $DEBUG			= false;	// output debug information.
+	const AUTO_PUSH			= true; 	// Defines feed changes have to be submited to ESS Aggregators.
+	const IS_DOWNLOAD		= false;	// Defines if the feed is to be downloaded (with Header: application/ess+xml).
+	const EMAIL_UP_TO_DATE	= true;		// Defines if an email is sent to system administrator if the version is not up-to-date.
+	const REPLACE_ACCENT	= false;	// if some problems occured durring encoding/decoding the data to UTF8, this parameter set to true replace the åççéñts by accents.
 	
-	private $channel 		= array();  				// Collection of channel elements.
-	private $items			= array();  				// Collection of items as object of FeedItem class.
-	private $channelDTD		= array();					// DTD Array of Channel first XML child elements.
-	private $CDATA  		= array( 'description' );  	// Tags names displayed with <[CDATA[...]]>.
-						
-	const TB				= '   ';					// Display a tabulation (for humans).
+	private $channel 		= array();  // Collection of channel elements.
+	private $items			= array();  // Collection of items as object of FeedItem class.					
+	const TB				= '   ';	// Display a tabulation (for humans).
 	const LN				= '
-';														// Display breaklines (for humans).
+';										// Display breaklines (for humans).
 
 	
 	/**
@@ -46,7 +45,7 @@ final class FeedWriter
 	 */ 
 	function __construct( $lang='en', $data_=null )
 	{
-		$this->channelDTD = EssDTD::getChannelDTD();
+		$channelDTD = EssDTD::getChannelDTD(); // DTD Array of Channel first XML child elements.
 		
 		$this->lang = ( strlen($lang)==2 )? strtolower($lang) : $this->lang;
 		
@@ -63,18 +62,18 @@ final class FeedWriter
 				{
 					switch ( $key ) 
 					{
-						case 'title':		$this->setTitle( 	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
-						case 'link':		$this->setLink(  	  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++;$mandatoryCount++; break; // + element ID
-						case 'published':	$this->setPublished(  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
-						case 'updated':		$this->setUpdated(    $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
-						case 'generator':	$this->setGenerator(  $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
-						case 'rights':		$this->setRights(     $el ); if ( $this->channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'title':		$this->setTitle( 	  $el ); if ( $channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'link':		$this->setLink(  	  $el ); if ( $channelDTD[ $key ] == true ) $mandatoryCount++;$mandatoryCount++; break; // + element ID
+						case 'published':	$this->setPublished(  $el ); if ( $channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'updated':		$this->setUpdated(    $el ); if ( $channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'generator':	$this->setGenerator(  $el ); if ( $channelDTD[ $key ] == true ) $mandatoryCount++; break;
+						case 'rights':		$this->setRights(     $el ); if ( $channelDTD[ $key ] == true ) $mandatoryCount++; break;
 						
-						default: throw new Exception("Error: XML Channel element <".$key."> is not defined within ESS DTD." ); break;
+						default: throw new Exception("Error: XML Channel element < ".$key." > is not defined within ESS DTD." ); break;
 					}
 				}
 				
-				foreach ( $this->channelDTD as $kk => $val ) 
+				foreach ( $channelDTD as $kk => $val ) 
 				{
 					if ( $val == true && $kk != 'feed' ) $mandatoryRequiredCount++;
 				}
@@ -82,9 +81,9 @@ final class FeedWriter
 				if ( $mandatoryRequiredCount != $mandatoryCount || $mandatoryCount == 0 )
 				{
 					$out = '';
-					foreach ( $this->channelDTD as $key => $m) 
+					foreach ( $channelDTD as $key => $m) 
 					{
-						if ( $m == true ) $out .= "<$key>, ";
+						if ( $m == true ) $out .= "< $key >, ";
 					}
 					throw new Exception( "Error: All XML Channel's mandatory elements are required: ". $out );
 				}
@@ -162,7 +161,7 @@ final class FeedWriter
 		try
 		{
 			$fp = fopen( $filePath, 'w' );
-			fwrite( $fp, $this->getFeedData() );
+			fwrite( $fp, $this->getFeedData( false ) );
 			fclose( $fp );
 		}
 		catch( ErrorException $error )
@@ -180,7 +179,7 @@ final class FeedWriter
 	 * @access  private
 	 * @return  String
 	 */ 
-	private function getFeedData()
+	private function getFeedData( $isPush=true )
 	{
 		$out = "";
 		
@@ -189,7 +188,11 @@ final class FeedWriter
 		$out .= $this->getItems();
 		$out .= $this->getEndChannel();
 		
-		$this->pushToAggregators('',$out);
+		if ( $isPush )
+		{
+			$this->pushToAggregators('',$out);
+		}
+		
 		
 		return $out;
 	}
@@ -202,7 +205,7 @@ final class FeedWriter
 	 */
 	public function newEventFeed( Array $arr_= null )
 	{
-		$newEvent = new EventFeed( null, self::CHARSET );
+		$newEvent = new EventFeed( null, self::CHARSET, self::REPLACE_ACCENT );
 		
 		if ( $arr_ )
 		{
@@ -255,7 +258,7 @@ final class FeedWriter
 	 */
 	public function setTitle( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'title', FeedValidator::noAccent( $el, $this->CHARSET ) );
+		if ( $el != NULL ) $this->setChannelElement( 'title', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 	}
 	public function getTitle()
 	{
@@ -277,7 +280,7 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'link', FeedValidator::noAccent( $el, $this->CHARSET ) );
+			$this->setChannelElement( 'link', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 			$this->setId( $el );
 		}
 	}
@@ -318,7 +321,7 @@ final class FeedWriter
 	{
 		if ( $el != NULL ) 
 		{
-			$this->setChannelElement( 'generator', FeedValidator::noAccent( $el, $this->CHARSET ) );
+			$this->setChannelElement( 'generator', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 		}
 	}
 	public function getGenerator()
@@ -384,7 +387,7 @@ final class FeedWriter
 	 */
 	public function setRights( $el=NULL )
 	{
-		if ( $el != NULL ) $this->setChannelElement( 'rights', FeedValidator::noAccent( $el, self::CHARSET ) );
+		if ( $el != NULL ) $this->setChannelElement( 'rights', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 	}
 	public function getRights()
 	{
@@ -599,7 +602,9 @@ final class FeedWriter
 	 * @return   String  formatted XML tag
 	 */
 	private function makeNode( $tagName, $tagContent, $attributes = null )
-	{        
+	{
+		$CDATA = array( 'description' );  	// Names of the tags to be displayed with <[CDATA[...]]>.
+		        
 		$nodeText = '';
 		$attrText = '';
 
@@ -614,7 +619,7 @@ final class FeedWriter
 			}
 		}
 		
-		$nodeText .= $this->t(2) . ( ( in_array( $tagName, $this->CDATA ) )? "<{$tagName}{$attrText}>" . self::LN . $this->t(3) . "<![CDATA[" . self::LN : "<{$tagName}{$attrText}>" );
+		$nodeText .= $this->t(2) . ( ( in_array( $tagName, $CDATA ) )? "<{$tagName}{$attrText}>" . self::LN . $this->t(3) . "<![CDATA[" . self::LN : "<{$tagName}{$attrText}>" );
 		 
 		if ( is_array( $tagContent ) ) // tag
 		{ 
@@ -622,13 +627,15 @@ final class FeedWriter
 			{
 				if ( isset( $value ) )
 				{
-					$nodeText .= $this->t(4) . $this->makeNode( $key, FeedValidator::noAccent( $value ) );
+					$nodeText .= $this->t(4) . $this->makeNode( $key, 
+						( ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $value, $this->CHARSET ) : $value )
+					);
 				}
 			}
 		}
 		else
 		{
-			if ( in_array( $tagName, $this->CDATA ) || 
+			if ( in_array( $tagName, $CDATA ) || 
 				 $tagName == 'published' || 
 				 $tagName == 'updated' )		{ $nodeText .= $tagContent; }
 			else if ( $tagName == 'start' ) 	{ $nodeText .= self::getISODate( $tagContent ); }
@@ -637,7 +644,7 @@ final class FeedWriter
 			else								{ $nodeText .= FeedValidator::noAccent( $tagContent ); }		 
 		}           
 			
-		$nodeText .= ( ( in_array( $tagName, $this->CDATA ) )? self::LN .  $this->t(3) . "]]>" . self::LN . $this->t(3) . "</$tagName>" : "</$tagName>" );
+		$nodeText .= ( ( in_array( $tagName, $CDATA ) )? self::LN .  $this->t(3) . "]]>" . self::LN . $this->t(3) . "</$tagName>" : "</$tagName>" );
 
 		return $nodeText . self::LN;
 	}
@@ -691,7 +698,7 @@ final class FeedWriter
 							$out .= $this->t(3) . "<tags>" . self::LN;
 							foreach( $val as $tag )
 							{
-								$out .= $this->t(2) . $this->makeNode( 'tag', FeedValidator::noAccent( $tag ) );
+								$out .= $this->t(2) . $this->makeNode( 'tag', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $tag, $this->CHARSET ) : $tag );
 							}
 							$out .= $this->t(3) . "</tags>" . self::LN;
 						}
@@ -722,7 +729,7 @@ final class FeedWriter
 							
 							foreach ( $feedItem['content'] as $elm => $feedElm ) 
 							{
-								$out .= $this->t(3) . $this->makeNode( $elm, $feedElm	);
+								$out .= $this->t(3) . $this->makeNode( $elm, $feedElm );
 							}
 							
 							$out .= $this->t(4) . "</item>" . self::LN;
@@ -758,6 +765,35 @@ final class FeedWriter
 		return $this->t(2) . '</feed>' . self::LN;
 	}
 	
+	private static function senEmail( $email=null, $subject=null, $message=null )
+	{
+		if ( isset( $email ) || isset( $subject ) || isset( $message ) )
+		{
+			$headers = "From: " . strip_tags( $email ) . "\r\n";
+			$headers .= "Reply-To: ". strip_tags( $email ) . "\r\n";
+			$headers .= "MIME-Version: 1.0\r\n";
+			$headers .= "Content-Type: text/html; charset=" . self::CHARSET . "\r\n";
+			
+			$msg = "<html><body>";
+			$msg .= $message;
+			$msg .= '</body></html>';
+			
+			mail( 
+				$email, 
+				$subject, 
+				$msg, 
+				$headers 
+			);
+		}
+	}
+	
+	private static function htmlvardump()
+ 	{
+		ob_start(); 
+		call_user_func_array( 'var_dump', func_get_args() ); 
+		return ob_get_clean();
+  	} 
+	
 	private function pushToAggregators( $feedURL, $feedData=null )
 	{
 		if ( self::AUTO_PUSH )
@@ -770,12 +806,12 @@ final class FeedWriter
 				$post_data = array( 
 					'LIBRARY_VERSION'	=> self::LIBRARY_VERSION,
 					'REMOTE_ADDR' 		=> @$_SERVER[ 'REMOTE_ADDR' ],
+					'SERVER_ADMIN'		=> @$_SERVER[ 'SERVER_ADMIN' ],
 					'PROTOCOL'			=> ( ( stripos( @$_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ),
 					'HTTP_HOST'			=> @$_SERVER[ 'HTTP_HOST' ],
-					'SERVER_ADMIN'		=> @$_SERVER[ 'SERVER_ADMIN' ],
 					'REQUEST_URI'		=> @$_SERVER[ 'REQUEST_URI' ],
 					
-					// if mod_geoip is installed. (http://dev.maxmind.com/geoip/mod_geoip2)
+					// if mod_geoip is installed. (http://dev.maxmind.com/geoip/mod_geoip2) very useful, you should try :)
 					'GEOIP_LATITUDE' 	=> @$_SERVER[ 'GEOIP_LATITUDE' ],
   					'GEOIP_LONGITUDE'	=> @$_SERVER[ 'GEOIP_LONGITUDE' ]
 				);
@@ -791,19 +827,19 @@ final class FeedWriter
 				curl_setopt( $ch, CURLOPT_VERBOSE, 			1 );
 				
 				$response = json_decode( curl_exec( $ch ), true );
+				$r = @$response['result'];
+				$isOK = @isset( $r['result'] )? true : false;
+				$isVersionUptoDate = ( (String)$r['version'] != (String)self::LIBRARY_VERSION && $isOK )? false : true;
 				
 				if ( $this->DEBUG == true)
 				{
-					$r = $response['result'];
-					$isOK = @isset( $r['result'] )? true : false;
-					
 					$DARK_RED = '#ff0000;';
 					
 					$bg_color = ( $isOK )? '#91ff86' : '#ffd5d5';
 					$mn_color = ( $isOK )? '#168c0a' : $DARK_RED;
 					
 					echo "<div style='background-color:$bg_color;color:$mn_color;border:1px solid $mn_color;width:95%;padding:10px;font-size:14px;margin:10px;'>".
-						( ( $r['version'] != self::LIBRARY_VERSION )?
+						( ( $isVersionUptoDate == false )?
 							"<h3 style='color:$DARK_RED;font-size:20px;border:1px dotted $DARK_RED;padding:10px;margin:5px;'>The PHP-ESS library have been updated.<br/>".
 								"Download the last GitHub version (".$r['version'].") : <a target='_blank' href='https://github.com/essfeed/php-ess'  style='color:#ff0000;'>https://github.com/essfeed/php-ess</a>".
 							"</h3>" .
@@ -814,11 +850,20 @@ final class FeedWriter
 						"<br/><br/>".
 						"$ newFeed = new FeedWriter();<br/>".
 						"<b>$ newFeed->DEBUG = false;</b>".
-						"<br/><br/>";
-					
-					var_dump( $response );
-					
-					echo "</div>";
+						"<br/><br/>".
+						self::htmlvardump( $response ) .
+					"</div>";
+				}
+				
+				if ( $isVersionUptoDate == false && self::EMAIL_UP_TO_DATE && FeedValidator::isValidEmail( $_SERVER[ 'SERVER_ADMIN' ] ) )
+				{
+					self::senEmail( 
+						$_SERVER[ 'SERVER_ADMIN' ], 
+						"Update your ESS Library on " . $_SERVER[ 'HTTP_HOST' ],
+						"<h3>The library you used on your website ". $_SERVER[ 'HTTP_HOST' ] ." is not up-to-date</h3>".
+						"<p style='background:#000;color:#FFF;padding:6px;'>".$_SERVER['DOCUMENT_ROOT'] . "</p>" .
+						"You can upload the lastest version in <a href='https://github.com/essfeed/php-ess/'>https://github.com/essfeed/php-ess/</a>"
+					);
 				}
 			} 
 			else 

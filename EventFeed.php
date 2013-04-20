@@ -11,13 +11,14 @@
    */
 final class EventFeed
 {
-	private $CHARSET	= 'UTF-8';
-	private $roots 		= array();
-	private $elements 	= array();
-	private $rootDTD	= array();
-	private $feedDTD	= array();
+	private $CHARSET		= 'UTF-8';
+	private $REPLACE_ACCENT = false;
+	private $roots 			= array();
+	private $elements 		= array();
+	private $rootDTD		= array();
+	private $feedDTD		= array();
 	
-	public $errors_ 	= array();
+	public $errors_ 		= array();
 	 
 	/**
 	 * 	@access	public
@@ -26,11 +27,12 @@ final class EventFeed
 	 * 		
 	 * 	@return void;
 	 */
-	function __construct( $data_=null, $CHARSET='UTF-8' )
+	function __construct( $data_=null, $CHARSET='UTF-8', $REPLACE_ACCENT=true )
 	{
-		$this->CHARSET = $CHARSET; 
-		$this->rootDTD = EssDTD::getRootDTD();
-		$this->feedDTD = EssDTD::getFeedDTD();
+		$this->CHARSET 			= $CHARSET; 
+		$this->REPLACE_ACCENT 	= $REPLACE_ACCENT;
+		$this->rootDTD 			= EssDTD::getRootDTD();
+		$this->feedDTD 			= EssDTD::getFeedDTD();
 		
 		foreach ( $this->feedDTD as $key => $value ) 
 		{
@@ -116,7 +118,7 @@ final class EventFeed
 				throw new Exception( "Error: '<title>' element is mandatory." );
 				return;
 			}
-			$this->setRootElement( 'title', FeedValidator::noAccent( $el, $this->CHARSET ) );
+			$this->setRootElement( 'title', ( $this->REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 			
 			$this->setId( $el );
 		}
@@ -897,7 +899,7 @@ final class EventFeed
 				}
 			}
 		}
-		else return true;	
+		else return true;
 		return false;
 	}
 	

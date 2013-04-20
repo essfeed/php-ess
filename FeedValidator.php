@@ -1057,9 +1057,14 @@ final class FeedValidator
 	public static function noAccent( $text='', $charset='UTF-8' )
 	{
 		return ( self::utf8_is_ascii() )?
-		self::utf8_accents_to_ascii( self::getOnlyText( $text ) )
+		//self::utf8_accents_to_ascii( 
+			self::getOnlyText( $text ) 
+		//)
 		:
-		self::utf8_strip_ascii_ctrl( self::getOnlyText( $text ) );
+		//self::utf8_strip_ascii_ctrl( 
+			self::getOnlyText( $text ) 
+		//)
+		.'';
 	}
 	
 	/**
@@ -1119,9 +1124,9 @@ final class FeedValidator
 			,$charset, "auto" )
 		);
 		return ( strlen( trim( $text_charset_detected ) ) > 0 )? 
-			self::utf8_strip_ascii_ctrl( $text_charset_detected ) 
+			$text_charset_detected 
 			: 
-			self::resolveUnicode(self::simplifyText( $text )
+			self::resolveUnicode( self::simplifyText( $text )
 		);
 	}
 	

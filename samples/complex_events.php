@@ -16,13 +16,18 @@
   			$essFeed->DEBUG = false;
 	// ####################################################################
   	
+	$currentURL = ( ( stripos( $_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ) . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
+	// $currentURL = 'http://example.com/feed/complex_events.ess';
+	//echo "current URL: " . $currentURL;
 	
-	$essFeed->setTitle( 	'ESS Feeds' );											// Defines the Feed name (not the event).
-  	$essFeed->setLink( 		'http://example.com/feed/sample.ess?with=params&add' );	// Define the URL of the Feed.
-  	$essFeed->setPublished( 'now' );												// Current date (according to server time). 
-  	//$essFeed->setPublished( 1361791459 ); 										// OR date in seconds.
-	$essFeed->setUpdated( 	'Jun 10, 2012, 6pm PST' );								// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
-	$essFeed->setRights( 	'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );	// Specified the Copyright restriction for this Feed.
+	
+	$essFeed->setTitle( 'ESS Feed sample with åççéñts.' );									// Defines the Feed name (not the event).
+  	$essFeed->setLink( $currentURL );											// Define the URL of the Feed (must be unic and specific to this feed).
+  	$essFeed->setPublished( 'now' );											// Current date (according to server time). 
+  	//$essFeed->setPublished( 1361791459 ); 									// OR date in seconds.
+	$essFeed->setUpdated( 'Jun 10, 2012, 6pm PST' );							// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
+	$essFeed->setUpdated( '2013-10-31T15:30:59Z' );								// OR ISO 8601 Date (recommanded)
+	$essFeed->setRights( 'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );	// Specified the Copyright restriction for this Feed.
 	
 	
   	
