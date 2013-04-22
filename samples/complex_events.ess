@@ -2,18 +2,18 @@
 <ess xmlns="http://essfeed.org/history/0.9/" version="0.9" lang="en">
    <channel>
       <generator>ess:php:generator:version:1.2</generator>
-      <title>ESS Feed</title>
-      <link>http://ess.hypecal.com/php-ess/samples/complex_events.ess</link>
-      <id>ESSID:7512678d-4be9-8416-93ae-d144b5c36542</id>
-      <published>2013-04-16T10:30:59+02:00</published>
-      <updated>2012-06-11T04:00:00+02:00</updated>
+      <title>ESS Feed sample with åççéñts.</title>
+      <id>ESSID:cb15b334-9c9a-e90f-9c43-396fd0be402e</id>
+      <link>http://example.com/feed/complex_events.ess</link>
+      <published>2013-04-23T00:05:59+02:00</published>
+      <updated>2013-10-31T15:30:59Z</updated>
       <rights>Copyright (c) 2013, ESS Generator</rights>
       <feed>
-         <title>Football match every saturdays, (text with accents).</title>
+         <title>Football match every saturdays, text with åççéñts and 汉语/漢語 Hànyǔ.</title>
          <id>EVENTID:ffc0a455-e040-ab75-e3f1-17612abde0b2</id>
          <uri>http://sample.com/events/unique-event-page/index.html?with=param&amp;additional</uri>
-         <published>2013-04-16T10:30:59+02:00</published>
-         <updated>2013-04-16T10:30:59+02:00</updated>
+         <published>2013-04-23T00:05:59+02:00</published>
+         <updated>2013-04-23T00:06:00+02:00</updated>
          <access>PUBLIC</access>
          <tags>
             <tag>Sport</tag>
@@ -24,9 +24,7 @@
          <![CDATA[
 <h1>Welcome to my first football match event.<h1><br/><p><b>This football</b> match is very important.</b><br/><br/>
 				Our team meets the main competitor of our league.
-			</p><br/><br/><h2>Title of a subsection</h2><img src='http://sample.com/images/with/dynamic/url/abcdef'/><img src='http://sample.com/images/pictute_02.png' alt='description 02'/><img src='http://sample.com/images/picture_03.png' title='Title of the third image' /><p>Display a video in the description</p><br/><video width='320' height='240' controls><source src='http://sample.com/videos/movie.mp4' type='video/mp4'><source src='http://sample.com/videos/movie.ogg' type='video/ogg'>
-				Your browser does not support the video tag.
-			</video><br/><br/><h3>Display a Youtube video</h3><object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0' width='100%' height='100%'><param name='movie' value='http://www.youtube.com/v/gquUW1u-BN0' /><param name='quality' value='high' /><param name='id' value='PortfolioScroller' /><param name='wmode' value='opaque' /><param name='FlashVars' value='pfcase=1'><embed src='http://www.youtube.com/v/gquUW1u-BN0' width='100%' height='100%' id='PortfolioScroller' quality='high' pluginspage='http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash' type='application/x-shockwave-flash' wmode='opaque' name='PortfolioScroller'></embed></object>
+			</p><br/><br/><h2>Title of a subsection</h2><img src='http://sample.com/images/with/dynamic/url/abcdef'/><img src='http://sample.com/images/pictute_02.png' alt='description 02'/><img src='http://sample.com/images/picture_03.png' title='Title of the third image' /><p>Display a video in the description</p><br/><video width='320' height='240' controls><source src='http://sample.com/videos/movie.mp4' type='video/mp4'/><source src='http://sample.com/videos/movie.ogg' type='video/ogg'/></video><br/><br/><h3>Display a Youtube video</h3><object classid='clsid:D27CDB6E-AE6D-11cf-96B8-444553540000' codebase='http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,28,0' width='100%' height='100%'><param name='movie' value='http://www.youtube.com/v/gquUW1u-BN0' /><param name='quality' value='high' /><param name='id' value='PortfolioScroller' /><param name='wmode' value='opaque' /><param name='FlashVars' value='pfcase=1'><embed src='http://www.youtube.com/v/gquUW1u-BN0' width='100%' height='100%' id='PortfolioScroller' quality='high' pluginspage='http://www.adobe.com/shockwave/download/download.cgi?P1_Prod_Version=ShockwaveFlash' type='application/x-shockwave-flash' wmode='opaque' name='PortfolioScroller'></embed></object>
 		
          ]]>
          </description>
@@ -45,22 +43,22 @@
                <start>2013-10-25T15:30:00+08:00</start>
                <duration>7200</duration>
             </item>
-            <item type='recurrent' unit='month' selected_day='sunday' selected_week='last' limit='24' priority='2'>
+            <item type='recurrent' unit='month' selected_day='sunday' selected_week='second,last' limit='24' priority='2'>
                <name>Sunday matches at the end of the month</name>
                <start>2013-10-25T15:30:00+08:00</start>
                <duration>7200</duration>
             </item>
             <item type='standalone' priority='3'>
                <name>Match next saturday</name>
-               <start>2013-10-25T15:30:00+08:00</start>
+               <start>2013-10-25T15:30:00-08:00</start>
                <duration>10800</duration>
             </item>
             <item type='standalone' priority='4'>
                <name>Match next month</name>
-               <start>2013-11-25T15:30:00+08:00</start>
+               <start>2013-11-25T15:30:00-08:00</start>
                <duration>10800</duration>
             </item>
-            <item type='recurrent' unit='week' selected_day='monday,tuesday,thirsday' interval='3' limit='6' priority='5'>
+            <item type='recurrent' unit='week' selected_day='monday,tuesday,thursday' interval='3' limit='6' priority='5'>
                <name>Sunday matches at the end of the month</name>
                <start>2013-10-25T08:00:00+08:00</start>
                <duration>28800</duration>
@@ -178,15 +176,15 @@
                <uri>http://sample.com/images/picture_03.png</uri>
             </item>
             <item type='video' priority='10'>
-               <name>video</name>
+               <name>title of the third image</name>
                <uri>http://sample.com/videos/movie.mp4</uri>
             </item>
             <item type='video' priority='11'>
-               <name>video</name>
+               <name>title of the third image</name>
                <uri>http://sample.com/videos/movie.ogg</uri>
             </item>
             <item type='video' priority='12'>
-               <name>video</name>
+               <name>title of the third image</name>
                <uri>http://www.youtube.com/v/gquUW1u-BN0</uri>
             </item>
          </media>
@@ -221,11 +219,15 @@
                <minage>16</minage>
                <restriction>Smoking is not allowed in the stadium</restriction>
             </item>
-            <item type='author' priority='4'>
+            <item type='social' priority='4'>
+               <name>Facebook Event</name>
+               <uri>http://facebook.com/events/my_event</uri>
+            </item>
+            <item type='author' priority='5'>
                <name>ESS Feed Powered by Addon-XXX</name>
                <icon>http://example.com/images/icon.png</icon>
             </item>
-            <item type='contributor' priority='5'>
+            <item type='contributor' priority='6'>
                <name>Martine Doe - Secretary</name>
                <uri>http://example.com/events/</uri>
             </item>
@@ -238,7 +240,7 @@
             </item>
             <item type='related' priority='2'>
                <name>Art exposition about Football</name>
-               <uri>http://example.com/related/event</uri>
+               <uri>http://example.com/related/event.html</uri>
                <id>ESSID:ab6a7606-b816-b00f-67b5-495ff77325fa</id>
             </item>
             <item type='enclosure' priority='3'>
@@ -250,9 +252,9 @@
       </feed>
       <feed>
          <title>Madonna Concert</title>
-         <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
-         <published>2013-04-16T10:30:59+02:00</published>
-         <updated>2013-04-16T10:30:59+02:00</updated>
+         <id>EVENTID:aa6621f6-03b6-5347-0d73-54cb4c6a8a2f</id>
+         <uri>htp://madonna.com/concert/page.html</uri>
+         <published>2013-04-23T00:06:00+02:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[
@@ -281,13 +283,10 @@ This is the description of the Madonna concert.
          </dates>
          <places>
             <item type='fixed' priority='1'>
-               <name>Stadium</name>
-               <latitude>40.71675</latitude>
-               <longitude>-74.00674</longitude>
+               <name>Stadium NYC</name>
                <address>Ave of Americas, 871</address>
                <city>New York</city>
                <zip>10001</zip>
-               <state>New York</state>
                <state_code>NY</state_code>
                <country>United States of America</country>
                <country_code>US</country_code>

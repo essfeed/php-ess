@@ -5,14 +5,14 @@
    *
    * @package 	ESSFeedWriter
    * @author  	Brice Pissard
-   * @copyright NO COPYRIGHT
+   * @copyright No copyright
    * @license   GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
    * @link		http://essfeed.org/index.php/ESS_structure
    */
 final class EventFeed
 {
 	private $CHARSET		= 'UTF-8';
-	private $REPLACE_ACCENT = false;
+	private $REPLACE_ACCENT = FALSE;
 	private $roots 			= array();
 	private $elements 		= array();
 	private $rootDTD		= array();
@@ -27,10 +27,10 @@ final class EventFeed
 	 * 		
 	 * 	@return void;
 	 */
-	function __construct( $data_=null, $CHARSET='UTF-8', $REPLACE_ACCENT=true )
+	function __construct( $data_=null, $CHARSET='UTF-8', $REPLACE_ACCENT=FALSE )
 	{
-		$this->CHARSET 			= $CHARSET; 
-		$this->REPLACE_ACCENT 	= $REPLACE_ACCENT;
+		$this->CHARSET 			= $CHARSET; 			// Defines the document encoding Charset (Default UTF-8).
+		$this->REPLACE_ACCENT 	= $REPLACE_ACCENT;		// Defines if the ASCI accent have to be remplaced (Default FALSE).
 		$this->rootDTD 			= EssDTD::getRootDTD();
 		$this->feedDTD 			= EssDTD::getFeedDTD();
 		
@@ -45,7 +45,6 @@ final class EventFeed
 			{
 				if ( $mandatory == true && @strlen( $data_[ $elementName ] ) <= 0 )
 					throw new Exception("Error: Event element ". $elementName . " is mandatory.", 1);
-					
 			}
 			
 			foreach ( $data_ as $tagTest => $value ) 

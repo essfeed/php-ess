@@ -1,21 +1,22 @@
 <!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/0.9/index.dtd">
 <ess xmlns="http://essfeed.org/history/0.9/" version="0.9" lang="en">
    <channel>
-      <generator>ess:php:generator:version:VERSION</generator>
+      <generator>ess:php:generator:version:1.2</generator>
       <title>ESS Feed</title>
-      <link>http://ess.hypecal.com/php-ess/samples/simple_event.ess</link>
-      <id>ESSID:c78e258d-f0fb-593f-3361-df9b696ede39</id>
-      <published>2013-04-16T10:15:23+02:00</published>
+      <id>ESSID:65ca2c92-2c98-068e-390d-543c376f8e7d</id>
+      <link>http://example.com/feed/sample.ess</link>
+      <published>2013-04-22T12:52:40+02:00</published>
       <rights>Copyright (c)</rights>
       <feed>
          <title>Madonna Concert</title>
-         <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
-         <published>2013-04-16T10:15:23+02:00</published>
-         <updated>2013-04-16T10:15:23+02:00</updated>
+         <id>EVENTID:4e0ea291-0acc-b222-60bb-dda020ca8664</id>
+         <uri>http://madonna.com/events/concert.html</uri>
+         <published>1970-01-01T01:33:33+01:00</published>
+         <updated>1970-01-01T01:33:33+01:00</updated>
          <access>PUBLIC</access>
          <description>
          <![CDATA[
-This is the description of the Madonna concert.
+This is the description of the Madonna concert. Plus some HTML: <br><br><img src='http://madonna.com/img/concert.png' alt='The text of the image comming from the description!'>
          ]]>
          </description>
          <tags>
@@ -34,7 +35,7 @@ This is the description of the Madonna concert.
          <dates>
             <item type='recurrent' unit='year' limit='1' priority='1'>
                <name>Yearly concert</name>
-               <start>2013-10-25T15:30:00Z</start>
+               <start>1970-01-01T01:33:33+01:00</start>
                <duration>7200</duration>
             </item>
          </dates>
@@ -64,6 +65,10 @@ This is the description of the Madonna concert.
             <item type='image' priority='1'>
                <name>Foto of Madonna</name>
                <uri>http://madonna.com/image.png</uri>
+            </item>
+            <item type='image' priority='2'>
+               <name>the text of the image comming from the description!</name>
+               <uri>http://madonna.com/img/concert.png</uri>
             </item>
          </media>
          <people>

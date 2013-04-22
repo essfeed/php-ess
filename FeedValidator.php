@@ -26,7 +26,7 @@ final class FeedValidator
 	 */
 	public static function isNull( $obj=null )
 	{
-		$str = trim( str_replace( array( '	', ' ' ), '', self::removeBreaklines( $obj ) ) );
+		$obj = trim( str_replace( array( '	', ' ' ), '', self::removeBreaklines( $obj ) ) );
 		
 		return ( $obj == '' || $obj == null || ( !is_string( $obj ) && intval( $obj ) <= 0 ) || ( is_bool( $obj ) && $obj == false ) )? true : false;
 	}
@@ -36,16 +36,17 @@ final class FeedValidator
 	 * to check if the string formated UTC date is valid (e.g. 2013-10-31T15:30:59Z)
 	 * 
 	 * @access	public
-	 * @param	String	stringDate date string content (e.g. 2013-10-31T15:30:59Z)
+	 * @param	String	stringDate date string content format ISO 8601 (e.g. 2013-10-31T15:30:59Z)
 	 * @return	Boolean
 	 */
-	public static function isValidDate( $stringDate )
+	public static function isValidDate( $stringDate='' )
 	{
-		$ereg = "/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|(\+|-)\d{2}(:?\d{2})?)$/";
-		$matcher = @preg_match( $ereg, $stringDate );
+		if ( self::isNull( $stringDate ) ) return false;
 		
-		$t_sep = explode( 'T', strtoupper( $stringDate ) );
-		if ( @count( $t_sep ) > 0 )
+		$matcher = preg_match( "/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|(\+|-)\d{2}(:?\d{2})?)$/", str_replace( ' ', 'T', $stringDate ) );
+		$t_sep 	 = explode( 'T', strtoupper( $stringDate ) );
+		
+		if ( @count( $t_sep ) > 1 )
 		{
 			$time_sep = explode( ':', $t_sep[ 1 ] );
 			
@@ -59,7 +60,6 @@ final class FeedValidator
 				}
 			}
 		}
-		
 		return ( $matcher == 1 )? true : false;			
 	}
 	
@@ -72,11 +72,12 @@ final class FeedValidator
 	 * @param	String	stringDate string element to control
 	 * @return	Boolean
 	 */
-	public static function isValidURL( $url )
+	public static function isValidURL( $url='' )
 	{
-		$ereg = "^(https?|ftp)\:\/\/([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?[a-z0-9+\$_-]+(\.[a-z0-9+\$_-]+)*(\:[0-9]{2,5})?(\/([a-z0-9+\$_-]\.?)+)*\/?(\?[a-z+&\$_.-][a-z0-9;:@/&%=+\$_.-]*)?(#[a-z_.-][a-z0-9+\$_.-]*)?\$";
+		$url = trim( $url );
+		$ereg = "/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i";
 		
-		return ( @eregi( $ereg, $url ) == true && strlen( $url ) > 10 )? true : self::isValidIP( $url );  
+		return ( preg_match( $ereg, $url ) > 0 && strlen( $url ) > 10 )? true : self::isValidIP( $url );  
 	}
 	
 	
@@ -89,6 +90,8 @@ final class FeedValidator
 	 */
 	public static function isValidMediaURL( $url, $type='image' )
 	{
+		$url = trim( $url );
+		
 		switch( strtolower( $type ) )	
 		{
 			default :
@@ -160,9 +163,12 @@ final class FeedValidator
 	 * 	@param	String	Value of the IP to evaluate
 	 * 	@return	Boolean	If the parameter submited is a valide IP return true, false else.
 	 */
-	public static function isValidIP( $ip )
+	public static function isValidIP( $ip='' )
 	{
-		if ( !eregi("^[0-9]+(\.[0-9]+)+(\.[0-9]+)+(\.[0-9]+)$", $ip ) )
+		$ip = trim( $ip );
+		$regexp = '/^((1?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(1?\d{1,2}|2[0-4]\d|25[0-5])$/'; 
+		
+		if ( preg_match( $regexp, $ip ) <= 0 )
 		{
 			return false;
 		}
@@ -188,8 +194,11 @@ final class FeedValidator
 	 * @param	String	stringDate string element to control
 	 * @return	Boolean
 	 */
-	public static  function isValidEmail( $email ) 
+	public static function isValidEmail( $email ) 
 	{
+		$email = trim( $email );
+		if ( self::isNull( $email ) ) return false;
+		
 		if ( preg_match( '/^\w[-.\w]*@(\w[-._\w]*\.[a-zA-Z]{2,}.*)$/', $email, $matches ) )
         {
         	$hostName = $matches[ 1 ];
@@ -209,7 +218,7 @@ final class FeedValidator
 					{
 						foreach ( $r as $line )
 						{
-							if ( @eregi( "^$hostName", $line ) ) return true;
+							if ( @preg_match( "^$hostName", $line ) ) return true;
 						}
 						return false;
 					}
@@ -219,7 +228,7 @@ final class FeedValidator
         }
 		else 
 		{
-			if ( eregi( "^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$", $email, $check ) )
+			if ( preg_match( "^[0-9a-z]([-_.]?[0-9a-z])*@[0-9a-z]([-.]?[0-9a-z])*\\.[a-z]{2,3}$", $email ) > 0 )
 				return true; 
 		}
 		return false;
@@ -485,7 +494,9 @@ final class FeedValidator
 		  "ZW" => "Zimbabwe"
 		);
 		
-		$countryCode = strtoupper( $countryCode );
+		$countryCode = strtoupper( trim( $countryCode ) );
+		
+		if ( self::isNull( $countryCode ) ) return false;
 		
 		foreach ( $countries as $countryC => $countryN ) 
 		{
@@ -694,6 +705,8 @@ final class FeedValidator
 		
 		$languageCode = strtolower( $languageCode );
 		
+		if ( self::isNull( $languageCode ) ) return false;
+		
 		foreach ( $languages as $langC => $langN ) 
 		{
 			if ( $languageCode == $langC ) return true;
@@ -709,9 +722,9 @@ final class FeedValidator
 	 * 	@param	Float	Value of the Latitude to evaluate.
 	 * 	@return Boolean	Return true is the Latitude is valide, false else.
 	 */
-	public static function isValidLatitude( $latitude )
+	public static function isValidLatitude( $latitude=null )
 	{
-		$match_latitude = @preg_match( "/^-?([0-8]?[0-9]|90)\.[0-9]{1,6}$/", $latitude );
+		$match_latitude = preg_match( "/^-?([0-8]?[0-9]|90)\.[0-9]{1,6}$/", $latitude );
 		
 		return ( $match_latitude == 1 )? true : false;
 	}
@@ -726,7 +739,7 @@ final class FeedValidator
 	 */
 	public static function isValidLongitude( $longitude )
 	{
-		$match_longitude = @preg_match( "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,6}$/", $longitude );
+		$match_longitude = preg_match( "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,6}$/", $longitude );
 		
 		return ( $match_longitude == 1 )? true : false;
 	}
@@ -741,7 +754,7 @@ final class FeedValidator
 	 */
 	public static function isAlphaNumChars( $in ) 
 	{
-		return @ereg_replace( "[^[:alnum:]]", "", $in );
+		return ( ( preg_match( "#(*UTF8)[[:alnum:]]#", $in ) > 0 )? true : false );
 	}
 	
 	/**
@@ -753,7 +766,7 @@ final class FeedValidator
 	 */
 	public static function isOnlyAlphaChars( $in ) 
 	{
-		return @ereg_replace( "[^[:alpha:]]", "", $in );
+		return ( ( preg_match( "#(*UTF8)[[:alpha:]]#", $in ) > 0 )? true : false );
 	}
 	
 	/**
@@ -765,7 +778,7 @@ final class FeedValidator
 	 */
 	public static function isOnlyNumsChars( $in ) 
 	{
-		return @ereg_replace( "[^0-9]", "", $in );
+		return ( ( preg_match( "/^[0-9]*$/", $in ) > 0 )? true : false );
 	}
 	
 	/**
@@ -1051,20 +1064,21 @@ final class FeedValidator
 		);
 	}
 	
-	/*
+	/**
+	 * 	Remove accents from the text submited according to a specific Charset (Default UTF-8)
 	 * 
+	 * 	@access	public
+	 * 	@param	String	Text from which the accent have to be substitute by the ASCI equivalent.
+	 * 	@param 	String	Charset to from whitch the submited text have been encoded.
+	 * 	@return String	Text without accent. 
 	 */ 
 	public static function noAccent( $text='', $charset='UTF-8' )
 	{
-		return ( self::utf8_is_ascii() )?
-		//self::utf8_accents_to_ascii( 
-			self::getOnlyText( $text ) 
-		//)
-		:
-		//self::utf8_strip_ascii_ctrl( 
-			self::getOnlyText( $text ) 
-		//)
-		.'';
+		return ( ( self::utf8_is_ascii( $text ) == true )?
+			self::utf8_accents_to_ascii( self::getOnlyText( $text ) )
+			:
+			self::utf8_strip_ascii_ctrl( self::getOnlyText( $text ) )
+		);
 	}
 	
 	/**
@@ -1191,10 +1205,10 @@ final class FeedValidator
 	 * 	@param 	String
 	 * 	@return Boolean TRUE if it's all ASCII
 	 */
-	private static function utf8_is_ascii( $str ) 
+	private static function utf8_is_ascii( $str='' ) 
 	{
 	    // Search for any bytes which are outside the ASCII range...
-	    return ( preg_match('/(?:[^\x00-\x7F])/', $str ) !== 1 );
+	    return ( preg_match('/(?:[^\x00-\x7F])/', @$str ) !== 1 );
 	}
 	
 	
@@ -1207,11 +1221,11 @@ final class FeedValidator
 	 * 	@return String with non ASCII bytes removed
 	 * 	@see 	utf8_strip_non_ascii_ctrl
 	 */
-	private static function utf8_strip_non_ascii($str) 
+	private static function utf8_strip_non_ascii( $str='' ) 
 	{
 	    ob_start();
 		
-	    while ( preg_match( '/^([\x00-\x7F]+)|([^\x00-\x7F]+)/S', $str, $matches ) ) 
+	    while ( preg_match( '/^([\x00-\x7F]+)|([^\x00-\x7F]+)/S', @$str, $matches ) ) 
 	    {
 	        if ( !isset( $matches[ 2 ] ) ) 
 	        {

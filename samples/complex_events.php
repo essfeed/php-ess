@@ -1,5 +1,5 @@
 <?php
-	include("../FeedWriter.php");
+	include( "../FeedWriter.php" );
   
   	// ======================================================================
   	// --- Creating an instance of FeedWriter class with its tags definition. 
@@ -13,16 +13,21 @@
 	// ###	display on screen the result, and explain the errors. 
 	// ###	Have to be switch to false for production.
 	// ###
-  			$essFeed->DEBUG = false;
+  			$essFeed->DEBUG = true;
 	// ####################################################################
   	
-	$currentURL = ( ( stripos( $_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ) . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
-	// $currentURL = 'http://example.com/feed/complex_events.ess';
-	//echo "current URL: " . $currentURL;
+  	
+  	// ESS Generated on-the-fly by PHP
+	//$new_feed_url = ( ( stripos( $_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ) . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ]; // if the feed have to be regenerated at each request define here the PHP file that return the ESS XML content (generate extra load of the Database and PHP resources)
+	
+	// OR Specify the server-side location
+	$new_feed_url = 'http://example.com/feed/complex_events.ess'; // Specify the server-side location of the .ess file. The feed have to be generated and written in server harddrive (to limit PHP and DataBase load request), seed at the end of this document the two option of file generation.
+	
+	//echo "feed URL: " . $new_feed_url;
 	
 	
-	$essFeed->setTitle( 'ESS Feed sample with åççéñts.' );									// Defines the Feed name (not the event).
-  	$essFeed->setLink( $currentURL );											// Define the URL of the Feed (must be unic and specific to this feed).
+	$essFeed->setTitle( 'ESS Feed sample with åççéñts.' );						// Defines the Feed name (not the event).
+  	$essFeed->setLink( $new_feed_url );											// Define the URL of the Feed (must be unic and specific to this feed).
   	$essFeed->setPublished( 'now' );											// Current date (according to server time). 
   	//$essFeed->setPublished( 1361791459 ); 									// OR date in seconds.
 	$essFeed->setUpdated( 'Jun 10, 2012, 6pm PST' );							// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
@@ -37,7 +42,7 @@
     	// <feed> 
     	// ======================================================================
     	$newEvent = $essFeed->newEventFeed();
-		$newEvent->setTitle( 		'Football match every saturdays, text with åççéñts.' );	// Defines the title of the Event.
+		$newEvent->setTitle( 		'Football match every saturdays, text with åççéñts and 汉语/漢語 Hànyǔ.' );	// Defines the title of the Event.
 		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=param&additional' );	// Defines the URL of the event page
 		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unic ID, otherwise the vent URL will be used to generate a unic ID. 		
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
@@ -198,7 +203,7 @@
 		// ====== RELATIONS == (add one or more other events connected to the this event) ==========
 		// ---------- Add several events in relation to the current event. If you don't have the ID of the event, you can generate it from the URL of the final event web page.
 		$newEvent->addRelation(	'alternative', 	array('name' => 'Another match elswhere the same day', 			'uri' => 'http://example.com/alternative/event', 	'id' => 'ESSID:65ca2c92-2c98-068e-390d-543c376f8e7d' ) );
-		$newEvent->addRelation(	'related', 		array('name' => 'Art exposition about Football', 				'uri' => 'http://example.com/related/event', 		'id' => FeedWriter::uuid( 'http://example.com/related/event.html' ) ) );
+		$newEvent->addRelation(	'related', 		array('name' => 'Art exposition about Football', 				'uri' => 'http://example.com/related/event.html', 	'id' => FeedWriter::uuid( 'http://example.com/related/event.html' ) ) );
 		$newEvent->addRelation(	'enclosure', 	array('name' => 'Another event near the stadium the same day', 	'uri' => 'http://example.com/enclosure/event', 		'id' => FeedWriter::uuid( 'http://example.com/enclosure/event' ) ) );
 		
 		
@@ -220,10 +225,10 @@
 	  	// <feed>
 	  	// All the information defined inside the <feed> element must be applicable to each sub-element:
      	// All the dates defined must be applicable to every price defined and to every image defined...
-	  	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
+	  	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=>'htp://madonna.com/concert/page.html', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
 	  		$newEvent->addCategory( 'concert', 										array('name'=> 'Rock Music', 'id'=> 'M22'));
 			$newEvent->addDate( 	'recurrent', 'year', 12, null,null,null, 		array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:50:00Z', 'duration'=> '7200' ) );
-			$newEvent->addPlace( 	'fixed', null,									array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
+			$newEvent->addPlace( 	'fixed', null,									array('name'=> 'Stadium NYC', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 			$newEvent->addPrice(	'standalone', 'fixed',null,null,null,null,null, array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
 			$newEvent->addPeople(	'performer',									array('name'=> 'Madonna' ) );
 			$newEvent->addMedia(	'image', 										array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));					
@@ -241,16 +246,17 @@
   	// </channel>
   	
   	
- 	// Genarate the ESS feed on screen only. 
+ 	// Genarate the ESS feed dynamicaly at each request (load the DataBase and PHP). 
  	$essFeed->genarateFeed();
 	
 	
 	// OR 
 	
 	
-	// Generate the ESS Feed file on server.
+	// Generate the ESS Feed file on server (to limit the load of PHP and DataBase).
 	// you have to configure the folder on the server with the same owner then the Apache user
 	// #> chown www-data:www-data /var/local/www/site/
 	// #> chmod 0755 /var/local/www/site/
-	//$essFeed->genarateFeedFile( '/var/local/www/site/feeds/complex_events.ess', 'http://example.com/feeds/complex_events.ess' );
+	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.ess' );
+	
 	

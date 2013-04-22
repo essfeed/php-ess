@@ -25,15 +25,16 @@ with more options and differents events types:
 ## Usage
 
  	include("FeedWriter.php");
-  	$new_feed_url = 'http://example.com/feed/sample.ess';
+  	$new_feed_url  = 'http://example.com/feed/sample.ess';
+  	$event_webpage = 'http://madonna.com/event/page.html'; 
   	
 	// Create the ESS Feed
-	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> FeedWriter::getISODate(), 'rights'=> 'Copyright (c)'));
+	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
  	
  	$essFeed->DEBUG = false; // display on screen the result, and explain the errors. Have to be switch to false for production.
 	
 	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
-	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
+	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));
 		$newEvent->addDate( 	'recurrent', 'year', 1, null,null,null,				array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:30:00Z', 'duration'=> '7200' ) );
 		$newEvent->addPlace( 	'fixed', null,										array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
@@ -46,11 +47,9 @@ with more options and differents events types:
 	
 	// Other event feed can be added... 
 	
-	// Print on screen the ESS Feed
+	// Display the ESS Feed generated On-The-Fly by PHP (consume PHP and DataBase resources at each robot access).
 	$essFeed->genarateFeed();
-	
-	// OR Generate the feed in a local server file
-	// $essFeed->genarateFeedFile( '/var/local/www/site/feeds/events.ess', $new_feed_url );
+	//$essFeed->genarateFeed('/var/local/www/site/feeds/events.ess');  // OR create the feed on server-side. Better to reduce the PHP and the Database access.
 
 # Diference between RSS and ESS for events publication
 [![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
