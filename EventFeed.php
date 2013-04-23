@@ -485,6 +485,7 @@ final class EventFeed
 	 * 						'conference', 
 	 * 						'concert', 
 	 * 						'diner', 
+	 * 						'entertainment',
 	 * 						'cocktail', 
 	 * 						'course',
 	 * 						'exhibition', 

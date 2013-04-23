@@ -82,6 +82,7 @@ final class EssDTD
 										'conference',
 										'concert',
 										'diner',
+										'entertainment',
 										'cocktail',
 										'course',
 										'exhibition',
