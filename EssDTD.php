@@ -83,6 +83,7 @@ final class EssDTD
 										'concert',
 										'diner',
 										'cocktail',
+										'course',
 										'exhibition',
 										'family',
 										'friends',
