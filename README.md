@@ -31,8 +31,15 @@ with more options and differents events types:
 	// Create the ESS Feed
 	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
  	
- 	$essFeed->DEBUG = false; // display on screen the result, and explain the errors. Have to be switch to false for production.
-	
+ 	// ####################################################################
+ 	// ###
+	// ###  DEBUG  MODE  
+	// ###	display on screen the result and explain the errors. 
+	// ###	Have to be switch to false for production.
+	// ###
+  			$essFeed->DEBUG = true;
+	// ####################################################################
+ 	
 	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));

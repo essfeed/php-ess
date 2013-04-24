@@ -10,7 +10,7 @@
 	// ####################################################################
  	// ###
 	// ###  DEBUG  MODE  
-	// ###	display on screen the result, and explain the errors. 
+	// ###	display on screen the result and explain the errors. 
 	// ###	Have to be switch to false for production.
 	// ###
   			$essFeed->DEBUG = true;
@@ -18,10 +18,10 @@
   	
   	
   	// ESS Generated On-The-Fly by PHP
-	//$new_feed_url = ( ( stripos( $_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ) . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ]; // if the feed have to be regenerated at each request define here the PHP file that return the ESS XML content (generate extra load of the Database and PHP resources)
+	$new_feed_url = FeedWriter::getCurrentURL(); 					// if the feed have to be regenerated at each request define here the PHP file that return the ESS XML content (generate extra load of the Database and PHP resources)
 	
 	// OR Specify where will be accessible the feed on server-side.
-	$new_feed_url = 'http://example.com/feed/complex_events.ess'; // The feed have to be generated and written in server harddrive (to limit PHP and DataBase load request), seed at the end of this document the file generation options.
+	//$new_feed_url = 'http://example.com/feed/complex_events.ess'; // The feed have to be generated and written in server harddrive (to limit PHP and DataBase load request), seed at the end of this document the file generation options.
 	
 	
 	$essFeed->setTitle( 'ESS Feed sample with åççéñts.' );						// Defines the Feed name (not the event).
@@ -108,7 +108,7 @@
 		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next month', 	'start'=> '2013-11-25T15:30:00-08:00', 'duration'=> 3*3600 ) );
 		
 		// ----------- Add a repetitive event that happens on Monday, Tuesday and Thursday every 3 weeks for 6 months starting at the same time as the first one (8am PST) defined in the “start” attribute and for 8 hours.
-		$newEvent->addDate( 'recurrent', 	'week', 6, 3, "monday,tuesday,thursday", null, array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T08:00:00+08:00', 'duration'=> 8*3600 ) );
+		$newEvent->addDate( 'recurrent', 	'week', 6, 3, "monday,tuesday,thursday", null, array('name'=> 'Monday, Tuesday and Thursday every 3 weeks for 6 months', 'start'=> '2013-10-25T08:00:00+08:00', 'duration'=> 8*3600 ) );
 		
 		
 		

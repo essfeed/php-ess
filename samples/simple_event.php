@@ -4,10 +4,10 @@
 	// Define the absolute location of the ESS feed. if generated and written on server-side (to limit PHP and DataBase access).
   	$new_feed_url 	= 'http://example.com/feed/sample.ess';
 	$feed_on_server = '/var/local/www/site/feeds/simple_event.ess';
+  	
   	// OR Define the PHP dynamic script (the ESS feed will be generated on-the-fly at each request and are not witten on the server-side)
-  	//$new_feed_url = ( ( stripos( $_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ) . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ]; 
+  	//$new_feed_url = FeedWriter::getCurrentURL();
 	
-	$event_webpage = 'http://madonna.com/events/concert.html';
 	
 	// Create the ESS Feed
 	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url, 'published'=> '2013-06-10T10:55:14Z', 'rights'=> 'Copyright (c)'));
@@ -15,11 +15,14 @@
  	// ####################################################################
  	// ###
 	// ###  DEBUG  MODE  
-	// ###	display on screen the result, and explain the errors. 
-	// ###	Have to be switch to false for production, otherwise the validator will emit a bat format.
+	// ###	display on screen the result and explain the errors. 
+	// ###	Have to be switch to false for production.
 	// ###
   			$essFeed->DEBUG = false;
 	// ####################################################################
+	
+	// Defines the first feed event's URL (the URL where will be forwarded the feed users)
+	$event_webpage = 'http://madonna.com/events/concert.html';
 	
 	// Create an Event 
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert. Plus some HTML: <br><br><img src='http://madonna.com/img/concert.png' alt='The text of the image comming from the description!'>",'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));

@@ -244,6 +244,13 @@ final class FeedWriter
 	}
 	
 	
+	public static function getCurrentURL()
+	{
+		return ( ( stripos( $_SERVER[ 'SERVER_PROTOCOL' ], 'https' ) === true )? 'https://' : 'http://' ) . $_SERVER[ 'HTTP_HOST' ] . $_SERVER[ 'REQUEST_URI' ];
+	}
+	
+	
+	
 	
 	
 	
@@ -570,6 +577,10 @@ final class FeedWriter
 			{
 				foreach ( $matches[ 2 ] as $i => $value ) 
 				{
+					$sb1 = array();
+					$sb2 = array();
+					$sb3 = array();
+					$sb4 = array();
 					if ( FeedValidator::isValidURL( $value ) )
 					{
 						$simple_tag = str_replace( "'","\"",strtolower( stripcslashes( $matches[ 0 ][ $i ] ) ) );
@@ -586,7 +597,7 @@ final class FeedWriter
 							array(
 								'uri' 	=> $value, 
 								'type'	=> $media_type,
-								'name'	=> ( ( strlen( @$sb3[ 0 ] ) > 0 )? $sb3[ 0 ] : ( ( strlen( @$sb4[ 0 ] ) > 0 )? $sb4[ 0 ] : $media_type) )
+								'name'	=> ( ( strlen( @$sb3[ 0 ] ) > 0 )? $sb3[ 0 ] : ( ( strlen( @$sb4[ 0 ] ) > 0 )? $sb4[ 0 ] : $media_type . " - " . $i ) )
 							) 
 						);
 					}
@@ -882,7 +893,7 @@ final class FeedWriter
 	{
 		if ( self::AUTO_PUSH )
 		{
-			$aggregator_url = "http://api.hypecal.com/v1/ess/aggregator.json";
+			$aggregator_url = "http://api.hypecal.com/v2/ess/aggregator.json"; // v1/aggregator
 			$ch = @curl_init();
 			
 			if ( $ch !== false )
