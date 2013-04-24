@@ -82,7 +82,6 @@
 		$newEvent->setDescription( $description_HTML );
 		
 		
-		
 		// --- Define the event feed’s mandatory elements
 		
 		
