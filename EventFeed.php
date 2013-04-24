@@ -938,7 +938,7 @@ final class EventFeed
 		{
 			case 'start'			:	
 			case 'published' 		:
-			case 'updated' 			: return FeedValidator::isValidDate( 		$value ); break;	
+			case 'updated' 			: return FeedValidator::isValidDate( FeedWriter::getISODate( $value ) ); break;	
 			case 'name' 			: return ( FeedValidator::isNull( 			$value ) == false )? true : false; break;
 			case 'email' 			: return FeedValidator::isValidEmail( 		$value ); break;
 			case 'logo' 			:

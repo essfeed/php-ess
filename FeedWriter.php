@@ -497,7 +497,7 @@ final class FeedWriter
 	{
 		if ( FeedValidator::isNull( $date ) == false )
 		{
-			if ( strlen( $date ) >= 8 && FeedValidator::isAlphaNumChars( $date ) )	
+			if ( strlen( $date ) >= 8 && !is_int( $date ) )	
 			{
 				if ( FeedValidator::isValidDate( $date ) )
 				{
