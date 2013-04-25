@@ -893,7 +893,7 @@ final class FeedWriter
 	{
 		if ( self::AUTO_PUSH )
 		{
-			$aggregator_url = "http://api.hypecal.com/v2/ess/aggregator.json"; // v1/aggregator
+			$aggregator_url = "http://api.hypecal.com/v1/ess/aggregator.json";
 			$ch = @curl_init();
 			
 			if ( $ch !== false )

@@ -3,17 +3,17 @@
    <channel>
       <generator>ess:php:generator:version:1.2</generator>
       <title>ESS Feed sample with åççéñts.</title>
-      <id>ESSID:cb15b334-9c9a-e90f-9c43-396fd0be402e</id>
-      <link>http://example.com/feed/complex_events.ess</link>
-      <published>2013-04-23T00:05:59+02:00</published>
+      <id>ESSID:cad604f5-a29c-4d4c-ab9c-a599d2d18c00</id>
+      <link>http://ess.hypecal.com/php-ess/samples/complex_events.php</link>
+      <published>2013-04-25T10:27:21+02:00</published>
       <updated>2013-10-31T15:30:59Z</updated>
       <rights>Copyright (c) 2013, ESS Generator</rights>
       <feed>
          <title>Football match every saturdays, text with åççéñts and 汉语/漢語 Hànyǔ.</title>
          <id>EVENTID:ffc0a455-e040-ab75-e3f1-17612abde0b2</id>
          <uri>http://sample.com/events/unique-event-page/index.html?with=param&amp;additional</uri>
-         <published>2013-04-23T00:05:59+02:00</published>
-         <updated>2013-04-23T00:06:00+02:00</updated>
+         <published>2013-04-25T10:27:21+02:00</published>
+         <updated>2013-04-25T10:27:21+02:00</updated>
          <access>PUBLIC</access>
          <tags>
             <tag>Sport</tag>
@@ -44,22 +44,27 @@
                <duration>7200</duration>
             </item>
             <item type='recurrent' unit='month' selected_day='sunday' selected_week='second,last' limit='24' priority='2'>
-               <name>Sunday matches at the end of the month</name>
+               <name>Monthly matches every last Sunday</name>
                <start>2013-10-25T15:30:00+08:00</start>
                <duration>7200</duration>
             </item>
-            <item type='standalone' priority='3'>
+            <item type='recurrent' unit='month' selected_day='15,26' limit='24' priority='3'>
+               <name>Monthly matches every 15 and 16</name>
+               <start>2013-10-25T15:30:00+08:00</start>
+               <duration>7200</duration>
+            </item>
+            <item type='standalone' priority='4'>
                <name>Match next saturday</name>
                <start>2013-10-25T15:30:00-08:00</start>
                <duration>10800</duration>
             </item>
-            <item type='standalone' priority='4'>
+            <item type='standalone' priority='5'>
                <name>Match next month</name>
                <start>2013-11-25T15:30:00-08:00</start>
                <duration>10800</duration>
             </item>
-            <item type='recurrent' unit='week' selected_day='monday,tuesday,thursday' interval='3' limit='6' priority='5'>
-               <name>Sunday matches at the end of the month</name>
+            <item type='recurrent' unit='week' selected_day='monday,tuesday,thursday' interval='3' limit='6' priority='6'>
+               <name>Monday, Tuesday and Thursday every 3 weeks for 6 months</name>
                <start>2013-10-25T08:00:00+08:00</start>
                <duration>28800</duration>
             </item>
@@ -122,7 +127,7 @@
                <value>10</value>
                <currency>USD</currency>
             </item>
-            <item type='recurrent' unit='month' mode='fixed' selected_day='number' interval='28' limit='12' priority='4'>
+            <item type='recurrent' unit='month' mode='fixed' selected_day='28' limit='12' priority='4'>
                <name>Monthly subscription - payment every 28th (for one year)</name>
                <value>20</value>
                <currency>USD</currency>
@@ -164,7 +169,7 @@
                <uri>http://example.com/</uri>
             </item>
             <item type='image' priority='7'>
-               <name>image</name>
+               <name>image - 0</name>
                <uri>http://sample.com/images/with/dynamic/url/abcdef</uri>
             </item>
             <item type='image' priority='8'>
@@ -176,15 +181,15 @@
                <uri>http://sample.com/images/picture_03.png</uri>
             </item>
             <item type='video' priority='10'>
-               <name>title of the third image</name>
+               <name>video - 3</name>
                <uri>http://sample.com/videos/movie.mp4</uri>
             </item>
             <item type='video' priority='11'>
-               <name>title of the third image</name>
+               <name>video - 4</name>
                <uri>http://sample.com/videos/movie.ogg</uri>
             </item>
             <item type='video' priority='12'>
-               <name>title of the third image</name>
+               <name>video - 5</name>
                <uri>http://www.youtube.com/v/gquUW1u-BN0</uri>
             </item>
          </media>
@@ -254,7 +259,7 @@
          <title>Madonna Concert</title>
          <id>EVENTID:aa6621f6-03b6-5347-0d73-54cb4c6a8a2f</id>
          <uri>htp://madonna.com/concert/page.html</uri>
-         <published>2013-04-23T00:06:00+02:00</published>
+         <published>2013-04-25T10:27:21+02:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[

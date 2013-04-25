@@ -13,7 +13,7 @@
 	// ###	display on screen the result and explain the errors. 
 	// ###	Have to be switch to false for production.
 	// ###
-  			$essFeed->DEBUG = true;
+  			$essFeed->DEBUG = FALSE;
 	// ####################################################################
   	
   	
@@ -100,7 +100,10 @@
 		$newEvent->addDate( 'recurrent', 	'week',  3,  null, null, null, array('name'=> 'Matches every saturday during 3 weeks', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
 		
 		// ----------- Add a repetitive event that happens every second and last Sunday of every month for 2 years (24 months) starting at the same time as the first one defined in the “start” attribute and for 2 hours.  
-		$newEvent->addDate( 'recurrent', 	'month', 24, null, "sunday", "second,last", array('name'=> 'Sunday matches at the end of the month', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
+		$newEvent->addDate( 'recurrent', 	'month', 24, null, "sunday", "second,last", array('name'=> 'Monthly matches every last Sunday', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
+		
+		// ----------- Add a repetitive event that happens every 15th and 26th of every month for 2 years (24 months) starting at the same time as the first one defined in the “start” attribute and for 2 hours.  
+		$newEvent->addDate( 'recurrent', 	'month', 24, null, "15,26", null, array('name'=> 'Monthly matches every 15 and 16', 'start'=> '2013-10-25T15:30:00+08:00', 'duration'=> 2*3600 ) );
 		
 		// ----------- Add two simple dates that happen only two times: 10/25/2013 and 11/25/2013 at 3:30pm (PST: Pacific Standard Time: GMT + 8 hours) for 3 hours.
 		$newEvent->addDate( 'standalone', 	null, null, null, null, null, array('name'=> 'Match next saturday', 'start'=> '2013-10-25T15:30:00-08:00', 'duration'=> 3*3600 ) );
@@ -155,8 +158,8 @@
 		// ----------- Define a specific VIP access for $10.
 		$newEvent->addPrice( 'standalone', 'fixed',	null,null,null,null,null, array('name'=> 'Entrance with VIP access', 'value'=> '10', 'currency'=> 'USD'));
 		
-		// ----------- Define a billing payment (required or made) every 28th of every month during 12 months with a payment URL.
-		$newEvent->addPrice( 'recurrent', 'fixed','month', 12, 28, "number", null, array('name'=> 'Monthly subscription - payment every 28th (for one year)', 'value'=> '20', 'currency'=> 'USD', 'start'=> '2013-10-25T23:59:00Z', 'uri'=>'http://payment.com/api'));
+		// ----------- Define a billing payment to make every 28th of every month during 12 months with a payment URL.
+		$newEvent->addPrice( 'recurrent', 'fixed','month', 12, 1, "28", null, array('name'=> 'Monthly subscription - payment every 28th (for one year)', 'value'=> '20', 'currency'=> 'USD', 'start'=> '2013-10-25T23:59:00Z', 'uri'=>'http://payment.com/api'));
 		
 		// ----------- Define a pre-selling ticket available 1 month before the event (define in the “start” attribute) (the date of the event have to be defined in Object->addDate(...) ) and for 1 week of selling availability.
 		$newEvent->addPrice( 'standalone', 'fixed',null,null,null,null,null, array('name'=> 'Tickets available 1 month before the event during 2 weeks.', 'value'=> '20', 'currency'=> 'USD', 'start'=> '2013-09-25T23:59:00Z', 'duration' => 3600*24*15, 'uri'=>'http://payment.com/api/script.do' ) );
@@ -264,6 +267,6 @@
 	// you have to configure the folder on the server with the same owner then the Apache user
 	// #> chown www-data:www-data /var/local/www/site/
 	// #> chmod 0755 /var/local/www/site/
-	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.ess' );
+	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.xml' );
 	
 	

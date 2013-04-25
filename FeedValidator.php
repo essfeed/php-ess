@@ -1194,8 +1194,11 @@ final class FeedValidator
 	 * 	@param	int	or String 	Date to in timestamp format.
 	 * 	@return	int	number of interval type that separate the two dates.
 	 */
-	public static function getDateDiff( $interval_type, $datefrom, $dateto )
+	public static function getDateDiff( $interval_type='d', $datefrom=null, $dateto=null )
 	{
+		$datefrom 	= ( self::isNull( $datefrom == null )? date( 'U' ) : $datefrom );
+		$dateto 	= ( self::isNull( $dateto   == null )? date( 'U' ) : $dateto   );
+		
 		$datefrom 	= ( ( is_string( $datefrom 	) )? strtotime( $datefrom,  0 ) : intval( $datefrom ) );
 	    $dateto 	= ( ( is_string( $dateto	) )? strtotime( $dateto, 	0 ) : intval( $dateto 	) );
 		

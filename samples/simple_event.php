@@ -27,7 +27,7 @@
 	// Create an Event 
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert. Plus some HTML: <br><br><img src='http://madonna.com/img/concert.png' alt='The text of the image comming from the description!'>",'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));
-		$newEvent->addDate( 	'recurrent', 'year', 1, null,null,null,				array('name'=> 'Yearly concert', 'start'=> 1316898400, 'duration'=> '7200' ) );
+		$newEvent->addDate( 	'recurrent', 'month', null, 1, 'saturday', 'last',	array('name'=> 'Yearly concert', 'start'=> 1316898400, 'duration'=> '7200' ) );
 		$newEvent->addPlace( 	'fixed', null,										array('name'=> 'Yankee Stadium', 'address' => '1 E 161st St, Bronx', 'city' => 'New York', 'zip' => '10451', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 		$newEvent->addPrice(	'standalone', 'fixed', null,null,null,null,null,	array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
 		$newEvent->addPeople(	'performer',										array('name'=> 'Madonna' ) );

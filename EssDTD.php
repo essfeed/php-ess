@@ -104,7 +104,7 @@ final class EssDTD
 				'mandatory'			=> true,
 				'types' 			=> array('standalone','recurrent','permanent'),
 				'units'				=> array('hour','day','week','month','year'),
-				'selected_days'		=> array("number","monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
+				'selected_days'		=> array("monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
 				'selected_weeks'	=> array("first","second","third","fourth","last"),
 				'tags' 				=> array(
 					'name' 			=> true,
@@ -136,7 +136,7 @@ final class EssDTD
 				'types' 			=> array('standalone','recurrent'),
 				'modes'				=> array('fixed','free','invitation','renumerated','prepaid'),
 				'units'				=> array('hour','day','week','month','year'),
-				'selected_days'		=> array("number","monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
+				'selected_days'		=> array("monday","tuesday","wednesday","thursday","friday","saturday","sunday"),
 				'selected_weeks'	=> array("first","second","third","fourth","last"),
 				'tags' 				=> array(
 					'name' 			=> true,

@@ -51,10 +51,8 @@ final class EventFeed
 			{
 				$isFound = false;
 				
-				foreach ( $this->rootDTD as $tag ) 
-				{
-					if ( strtolower( $tagTest ) == $tag ) $isFound = true;
-				}
+				if ( in_array( strtolower( $tagTest ), $this->rootDTD ) ) 
+					$isFound = true;
 				
 				if ( $isFound == false )
 					throw new Exception("Error: Event XML element <". $tagTest . "> is not specified in ESS Feed DTD." );
@@ -814,13 +812,15 @@ final class EventFeed
 		{
 			if ( strtolower( $elmName ) != 'tags' )
 			{
-				if ( $mandatory == true && @strlen( $val ) <= 0 ) return false;
+				if ( $mandatory == true && @strlen( $val ) <= 0 ) 
+					return false;
 			}
 			else
 			{
 				if ( is_array( $val ) )
 				{
-					if ( @count( $val ) <= 0 ) return false;
+					if ( @count( $val ) <= 0 ) 
+						return false;
 				}
 				else false;
 			}
@@ -832,34 +832,31 @@ final class EventFeed
 	{
 		foreach ( $this->feedDTD[ $elmName ][ 'tags' ] as $tag => $mandatory )
 		{
-			if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) return false;
+			if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) 
+				return false;
 		}
 		
 		foreach ( $data_ as $tagTest => $value ) 
 		{
 			$isFound = false;
 			
-			foreach ( $this->feedDTD[ $elmName ][ 'tags' ] as $tag ) 
-			{
-				if ( strtolower( $tagTest ) == $tag ) $isFound = true;
-			}
+			if ( in_array( strtolower( $tagTest ), $this->feedDTD[ $elmName ][ 'tags' ] ) ) 
+				 $isFound = true;
 			
 			if ( $isFound == true )
 			{
-				if ( @strlen( $value ) <= 0 ) return false;
+				if ( @strlen( $value ) <= 0 ) 
+					return false;
 			} 
 			else return false;
 		}
-		
 		return true;
 	}
 	
 	private function controlType( $elmName='', $typeToControl='' )
 	{
-		foreach ( $this->feedDTD[ $elmName ][ 'types' ] as $type ) 
-		{
-			if ( strtolower( $typeToControl ) == $type ) return true;
-		}
+		if ( in_array( strtolower( $typeToControl ), $this->feedDTD[ $elmName ][ 'types' ] ) )
+			return true;
 		return false;
 	}
 	
@@ -867,10 +864,8 @@ final class EventFeed
 	{
 		if ( isset( $this->feedDTD[ $elmName ][ 'modes' ] ) )
 		{
-			foreach ( $this->feedDTD[ $elmName ][ 'modes' ] as $mode ) 
-			{
-				if ( strtolower( $modeToControl ) == $mode ) return true;
-			}
+			if ( in_array( strtolower( $modeToControl ), $this->feedDTD[ $elmName ][ 'modes' ] ) )
+				return true;
 		}
 		else return true;	
 		return false;
@@ -878,7 +873,7 @@ final class EventFeed
 	
 	private function controlSelectedDay( $elmName='', $selected_dayToControl='' )
 	{
-		if ( isset( $this->feedDTD[ $elmName ][ 'selected_days' ] ) )
+		if ( isset( $this->feedDTD[ $elmName ][ 'selected_days' ] ) && FeedValidator::isNull( $selected_dayToControl ) == false )
 		{
 			$selected_ = explode( ',', $selected_dayToControl );
 			
@@ -886,18 +881,23 @@ final class EventFeed
 			{
 				foreach( $selected_ as $selected_dayToControl )
 				{
-					foreach ( $this->feedDTD[ $elmName ][ 'selected_days' ] as $selected_day ) 
+					$elFound = false;
+					if ( in_array( strtolower( $selected_dayToControl ), $this->feedDTD[ $elmName ][ 'selected_days' ] ) ) 
+						$elFound = true;
+					
+					if ( $elFound == false )
 					{
-						if ( strtolower( $selected_dayToControl ) == $selected_day || $selected_dayToControl == '' ) return true;
+						if ( intval( $selected_dayToControl ) <= 0 || intval( $selected_dayToControl ) > 31 ) 
+							return false;
+						else $elFound = true;
 					}
 				}
+				return $elFound;
 			}
 			else 
 			{
-				foreach ( $this->feedDTD[ $elmName ][ 'selected_days' ] as $selected_day ) 
-				{
-					if ( strtolower( $selected_dayToControl ) == $selected_day || $selected_dayToControl == '' ) return true;
-				}
+				if ( in_array( strtolower( $selected_dayToControl ), $this->feedDTD[ $elmName ][ 'selected_days' ] ) )
+					return true;
 			}
 		}
 		else return true;
@@ -906,7 +906,7 @@ final class EventFeed
 	
 	private function controlSelectedWeek( $elmName='', $selected_weekToControl='' )
 	{
-		if ( isset( $this->feedDTD[ $elmName ][ 'selected_weeks' ] ) )
+		if ( isset( $this->feedDTD[ $elmName ][ 'selected_weeks' ] ) && FeedValidator::isNull( $selected_weekToControl ) == false  )
 		{
 			$selected_ = explode( ',', $selected_weekToControl );
 			
@@ -914,18 +914,14 @@ final class EventFeed
 			{
 				foreach( $selected_ as $selected_weekToControl )
 				{
-					foreach ( $this->feedDTD[ $elmName ][ 'selected_weeks' ] as $selected_week ) 
-					{
-						if ( strtolower( $selected_weekToControl ) == $selected_week || $selected_weekToControl == '' ) return true;
-					}
+					if ( in_array( strtolower( $selected_weekToControl ), $this->feedDTD[ $elmName ][ 'selected_weeks' ] ) )
+						return true;
 				}
 			}
 			else 
 			{
-				foreach ( $this->feedDTD[ $elmName ][ 'selected_days' ] as $selected_week ) 
-				{
-					if ( strtolower( $selected_weekToControl ) == $selected_week || $selected_weekToControl == '' ) return true;
-				}
+				if ( in_array( strtolower( $selected_weekToControl ), $this->feedDTD[ $elmName ][ 'selected_weeks' ] ) )
+					return true;
 			}
 		}
 		else return true;	
