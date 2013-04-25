@@ -55,7 +55,7 @@ final class EventFeed
 					$isFound = true;
 				
 				if ( $isFound == false )
-					throw new Exception("Error: Event XML element <". $tagTest . "> is not specified in ESS Feed DTD." );
+					throw new Exception("Error: Event XML element < ". $tagTest . " > is not specified in ESS Feed DTD." );
 			}
 			
 			foreach ( $data_ as $tag => $value ) 
@@ -70,7 +70,7 @@ final class EventFeed
 					{
 						$this->roots[ $tag ] = $value;
 					}
-					else throw new Exception("Error: Element <tag> must be of 'Array' type." );
+					else throw new Exception("Error: Element < tag > must be of 'Array' type." );
 				}
 			}
 		}
@@ -112,7 +112,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'title', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<title>' element is mandatory." );
+				throw new Exception( "Error: '< title >' element is mandatory." );
 				return;
 			}
 			$this->setRootElement( 'title', ( $this->REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
@@ -144,7 +144,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'uri', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<uri>' element is mandatory." );
+				throw new Exception( "Error: '< uri >' element is mandatory." );
 				return;
 			}
 			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
@@ -175,7 +175,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'id', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<id>' element is mandatory." );
+				throw new Exception( "Error: '< id >' element is mandatory." );
 				return;
 			}
 			$this->setRootElement( 'id', FeedWriter::uuid( $el, 'EVENTID:' ) );
@@ -206,7 +206,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'published', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<published>' element is mandatory." );
+				throw new Exception( "Error: '< published >' element is mandatory." );
 				return;
 			}
 			
@@ -238,7 +238,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'updated', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<updated>' element is mandatory." );
+				throw new Exception( "Error: '< updated >' element is mandatory." );
 				return;
 			}
 			
@@ -268,7 +268,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'access', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<access>' element is mandatory." );
+				throw new Exception( "Error: '< access >' element is mandatory." );
 				return;
 			}
 			
@@ -300,7 +300,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'description', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<description>' element is mandatory." );
+				throw new Exception( "Error: '< description >' element is mandatory." );
 				return;
 			}
 			
@@ -330,7 +330,7 @@ final class EventFeed
 		{
 			if ( $this->controlRoot( 'tags', $el ) == false ) 
 			{
-				throw new Exception( "Error: '<tags>' element is mandatory." );
+				throw new Exception( "Error: '< tags >' element is mandatory." );
 				return;
 			}
 			
@@ -397,7 +397,7 @@ final class EventFeed
 									{
 										if ( $this->controlNodeContent( $tag, $value ) == false )
 										{
-											throw new Exception( $errorType . "The XML element <$tag> have an invalid content: '$value', please control the correct syntax in ESS DTD." );
+											throw new Exception( $errorType . "The XML element < $tag > have an invalid content: '$value', please control the correct syntax in ESS DTD." );
 											break;
 										}
 									}
@@ -415,7 +415,7 @@ final class EventFeed
 											'selected_week'		=> FeedValidator::charsetString( $selected_week,	$this->CHARSET ),
 											'moving_position'	=> FeedValidator::charsetString( $moving_position,	$this->CHARSET ),
 											
-											'content'			=> $data_
+											'content'			=> array_filter( array_unique( $data_ ) )
 										)
 									);
 								}
@@ -424,7 +424,8 @@ final class EventFeed
 									$mandatories = "";
 									foreach ( $this->feedDTD[ $groupName ][ 'tags' ] as $tag => $mandatory )
 									{
-										if ( $mandatory == true && @strlen( $data_[ $tag ] ) <= 0 ) $mandatories .= "< " .$tag." > ";
+										if ( $mandatory == true && @strlen( $data_[ $tag ] ) <= 0 ) 
+											$mandatories .= "< " .$tag." > ";
 									}
 									if ( FeedValidator::isNull( $mandatories ) == false )
 									{
@@ -592,7 +593,7 @@ final class EventFeed
 	 * 					The structure the Array must be:
 	 * 					array(
 	 * 						'name' 			=> xxx,	// [MANDATORY]					String 	location name (Should not be longer then 128 chars).
-	 *						'country_code' 	=> xxx,	// [MANDATORY]					String 	2 chars country code (ISO 3166-1).
+	 *						'country_code' 	=> xxx,	// [OPTIONAL but RECOMMENDED] sring 	2 chars country code (ISO 3166-1).
 	 *						'country' 		=> xxx,	// [OPTIONAL but RECOMMENDED] 	String 	country name.
 	 *						'latitude' 		=> xxx,	// [OPTIONAL but RECOMMENDED] 	Float 	number of the latitude of the event in Decimal Degrees: -90.XXXXXX to 90.XXXXXX (ISO 6709).
 	 *						'longitude' 	=> xxx,	// [OPTIONAL but RECOMMENDED] 	Float 	number of the latitude of the event in Decimal Degrees: -180.XXXXXX to 180.XXXXXX (ISO 6709).
@@ -617,7 +618,7 @@ final class EventFeed
 		$priority			= 0 
 	) 
 	{
-		$this->addElement( 'places', $type, null, null, $data_, $priority, null, null, null, null, $moving_position ); 
+		$this->addElement( 'places', $type, null, null, $data_, $priority, null, null, null, null, $moving_position );
 	}
 	
 	
@@ -832,23 +833,17 @@ final class EventFeed
 	{
 		foreach ( $this->feedDTD[ $elmName ][ 'tags' ] as $tag => $mandatory )
 		{
-			if ( $mandatory == true &&  @strlen( $data_[ $tag ] ) <= 0 ) 
+			if ( $mandatory == true && FeedValidator::isNull( $data_[ $tag ] ) ) 
 				return false;
 		}
 		
 		foreach ( $data_ as $tagTest => $value ) 
 		{
-			$isFound = false;
-			
-			if ( in_array( strtolower( $tagTest ), $this->feedDTD[ $elmName ][ 'tags' ] ) ) 
-				 $isFound = true;
-			
-			if ( $isFound == true )
+			if ( FeedValidator::isNull( $value ) == false )
 			{
-				if ( @strlen( $value ) <= 0 ) 
+				if ( in_array( strtolower( $tagTest ), $this->feedDTD[ $elmName ][ 'tags' ] ) == false ) 
 					return false;
-			} 
-			else return false;
+			}
 		}
 		return true;
 	}
@@ -930,21 +925,24 @@ final class EventFeed
 	
 	private function controlNodeContent( $name, $value )
 	{
-		switch ( strtolower( $name ) ) 
+		if ( FeedValidator::isNull( $value ) == false )
 		{
-			case 'start'			:	
-			case 'published' 		:
-			case 'updated' 			: return FeedValidator::isValidDate( FeedWriter::getISODate( $value ) ); break;	
-			case 'name' 			: return ( FeedValidator::isNull( 			$value ) == false )? true : false; break;
-			case 'email' 			: return FeedValidator::isValidEmail( 		$value ); break;
-			case 'logo' 			:
-			case 'icon' 			:
-			case 'uri' 				: return FeedValidator::isValidURL( 		$value ); break;
-			case 'latitude'			: return FeedValidator::isValidLatitude(	$value ); break;
-			case 'longitude'		: return FeedValidator::isValidLongitude(	$value ); break;
-			case 'country_code' 	: return FeedValidator::isValidCountryCode( $value ); break;
-			case 'currency' 		: return FeedValidator::isValidCurrency(	$value ); break;
-			default					: return true; break;
+			switch ( strtolower( $name ) ) 
+			{
+				case 'start'			:	
+				case 'published' 		:
+				case 'updated' 			: return FeedValidator::isValidDate( FeedWriter::getISODate( $value ) ); break;	
+				case 'name' 			: return ( FeedValidator::isNull( 			$value ) == false )? true : false; break;
+				case 'email' 			: return FeedValidator::isValidEmail( 		$value ); break;
+				case 'logo' 			:
+				case 'icon' 			:
+				case 'uri' 				: return FeedValidator::isValidURL( 		$value ); break;
+				case 'latitude'			: return FeedValidator::isValidLatitude(	$value ); break;
+				case 'longitude'		: return FeedValidator::isValidLongitude(	$value ); break;
+				case 'country_code' 	: return FeedValidator::isValidCountryCode( $value ); break;
+				case 'currency' 		: return FeedValidator::isValidCurrency(	$value ); break;
+				default					: return true; break;
+			}
 		}
 		return true;
 	}

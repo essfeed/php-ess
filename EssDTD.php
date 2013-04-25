@@ -117,7 +117,7 @@ final class EssDTD
 				'types' 	=> array('fixed','area','moving','virtual'),
 				'tags' 		=> array(
 					'name' 			=> true,
-					'country_code' 	=> true,
+					'country_code' 	=> false,
 					'country' 		=> false,
 					'latitude' 		=> false,
 					'longitude' 	=> false,

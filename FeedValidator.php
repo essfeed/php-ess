@@ -26,9 +26,13 @@ final class FeedValidator
 	 */
 	public static function isNull( $obj=null )
 	{
-		$obj = trim( str_replace( array( '	', ' ' ), '', self::removeBreaklines( $obj ) ) );
+		$objS = trim( str_replace( array( '	', ' ' ), '', self::removeBreaklines( $obj ) ) );
 		
-		return ( $obj == '' || $obj == null || ( !is_string( $obj ) && intval( $obj ) <= 0 ) || ( is_bool( $obj ) && $obj == false ) )? true : false;
+		return ( $objS == '' || $objS == null || 
+			( !is_string( $obj ) && intval( $obj ) <= 0 ) || 
+			( is_numeric( $obj ) && intval( $obj ) <= 0 ) ||
+			( is_bool( $obj ) && $obj == false ) 
+		)? true : false;
 	}
 	
 	/**
