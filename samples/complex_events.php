@@ -13,7 +13,7 @@
 	// ###	display on screen the result and explain the errors. 
 	// ###	Have to be switch to false for production.
 	// ###
-  			$essFeed->DEBUG = FALSE;
+  			$essFeed->DEBUG = true;
 	// ####################################################################
   	
   	
