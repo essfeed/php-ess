@@ -93,7 +93,7 @@ final class EssDTD
 										'networking',
 										'party',
 										'seminar',
-										'theme'
+										'general'
 									),
 				'tags' 		=> array(
 					'name' 			=> true,

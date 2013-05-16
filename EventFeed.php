@@ -495,7 +495,7 @@ final class EventFeed
 	 * 						'networking', 
 	 * 						'party', 
 	 * 						'seminar'
-	 * 						'theme'
+	 * 						'general'
 	 * 
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:

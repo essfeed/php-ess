@@ -115,7 +115,7 @@ final class FeedWriter
 	 */
 	private function setChannelElement( $elementName, $content )
 	{
-		$this->channel[ $elementName ] = $content ;
+		$this->channel[ $elementName ] = $content;
 	}
 	
 	/**
@@ -188,10 +188,10 @@ final class FeedWriter
 	/**
 	 * Get ESS Feed data in String format.
 	 * 
-	 * @access  private
+	 * @access  public
 	 * @return  String
 	 */ 
-	private function getFeedData()
+	public function getFeedData()
 	{
 		$out = "";
 		
@@ -341,7 +341,7 @@ final class FeedWriter
 			throw new Exception( "Error: '<channel><$elNane>' XML element is mandatory and can not be empty." );
 		}
 	}
-	public function geId()
+	public function getId()
 	{
 		return $this->channel[ 'id' ];
 	}
@@ -630,9 +630,7 @@ final class FeedWriter
 					}
 				}
 			}
-		
 		}
-	
 		return $media_;
 	}
 	
