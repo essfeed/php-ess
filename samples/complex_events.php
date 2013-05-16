@@ -90,7 +90,7 @@
 		$newEvent->addCategory( 'competition', 	array('name'=> 'Football match', 'id'=> 'C2AH' ) );
 		
 		// ----------- Add personalized category, without ID - Useful to create several specific events that belong to the same category.
-		$newEvent->addCategory( 'theme', array('name'=> 'FunnySoccer' ) );
+		$newEvent->addCategory( 'general', array('name'=> 'FunnySoccer' ) );
 		
 		
 		
@@ -115,7 +115,7 @@
 		// =========
 		// === /!\ 		Useful function to get the number of occurence between two dates in seconds, days, weeks, months or years.
 		// =========	This function can be used to define the Date "limit" of an event according to the "unit" defined.
-		// =========	Because sometime the end of an event is define by a Date and not by number of occurences.
+		// =========	Sometime the end of an event is define by a Date and not by the number of occurences.
 		// =========	
 		// $limit = FeedValidator::getDateDiff( 's', 	'2013-10-25T15:30:00-08:00', '2013-11-25T15:30:00-08:00' ); // numbers of seconds between this two dates.
 		// $limit = FeedValidator::getDateDiff( 'd', 	'2013-10-25T15:30:00-08:00', '2013-11-25T15:30:00-08:00' ); // numbers of days between this two dates.

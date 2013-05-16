@@ -115,9 +115,14 @@ final class EventFeed
 				throw new Exception( "Error: '< title >' element is mandatory." );
 				return;
 			}
+			
 			$this->setRootElement( 'title', ( $this->REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 			
-			$this->setId( $el );
+			// Set a tempory Feed ID from the title
+			if ( !isset( $this->roots[ 'id' ] ) || FeedValidator::isNull( $this->roots[ 'id' ] ) )
+			{
+				$this->setId( $el );
+			}
 		}
 	}
 	
@@ -147,8 +152,14 @@ final class EventFeed
 				throw new Exception( "Error: '< uri >' element is mandatory." );
 				return;
 			}
+			
 			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
-			$this->setId( $el );
+			
+			// Set a tempory Feed ID from the Feed URI
+			if ( !isset( $this->roots[ 'id' ] ) || FeedValidator::isNull( $this->roots[ 'id' ] ) )
+			{
+				$this->setId( $el );
+			}
 		}
 	}
 	

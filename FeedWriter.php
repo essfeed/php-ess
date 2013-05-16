@@ -278,9 +278,11 @@ final class FeedWriter
 		{
 			$this->setChannelElement( $elNane, ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
 			
-			// Set a tempory Feed ID from the title.
+			// Set a tempory Channel ID from the title.
 			if ( !isset( $this->channel[ 'id' ] ) || FeedValidator::isNull( $this->channel[ 'id' ] ) ) 
+			{
 				$this->setId( $el ); 
+			}
 		}
 		else 
 		{
@@ -309,7 +311,12 @@ final class FeedWriter
 		if ( self::controlChannelElements( $elNane, $el ) )
 		{
 			$this->setChannelElement( $elNane, ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $el, $this->CHARSET ) : $el );
-			$this->setId( $el );
+			
+			// Set a tempory Channel ID from the Link URL.
+			if ( !isset( $this->channel[ 'id' ] ) || FeedValidator::isNull( $this->channel[ 'id' ] ) ) 
+			{
+				$this->setId( $el );
+			}
 		}
 		else 
 		{

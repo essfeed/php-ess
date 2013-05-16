@@ -33,7 +33,7 @@
                <name>Football match</name>
                <id>C2AH</id>
             </item>
-            <item type='theme' priority='2'>
+            <item type='general' priority='2'>
                <name>FunnySoccer</name>
             </item>
          </categories>
