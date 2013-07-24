@@ -426,7 +426,7 @@ final class EventFeed
 											'selected_week'		=> FeedValidator::charsetString( $selected_week,	$this->CHARSET ),
 											'moving_position'	=> FeedValidator::charsetString( $moving_position,	$this->CHARSET ),
 											
-											'content'			=> array_filter( array_unique( $data_ ) )
+											'content'			=> array_unique( $data_ ) // array_filter()
 										)
 									);
 								}
@@ -438,10 +438,9 @@ final class EventFeed
 										if ( $mandatory == true && @strlen( $data_[ $tag ] ) <= 0 ) 
 											$mandatories .= "< " .$tag." > ";
 									}
+								
 									if ( FeedValidator::isNull( $mandatories ) == false )
-									{
 										throw new Exception( $errorType . "All the mandatories XML sub-elements of < $groupName > are not provided (".$mandatories.")." );
-									}
 								}
 							}
 							else throw new Exception( $errorType . "Attribute selected_week='".$selected_week."' is not available in ESS DTD." );	
@@ -844,8 +843,13 @@ final class EventFeed
 	{
 		foreach ( $this->feedDTD[ $elmName ][ 'tags' ] as $tag => $mandatory )
 		{
-			if ( $mandatory == true && FeedValidator::isNull( $data_[ $tag ] ) ) 
-				return false;
+			if ( $mandatory == true )
+			{
+				if ( $tag == 'value' && intval( $data_[ $tag ] ) >= 0 )
+					return true;
+				else if ( FeedValidator::isNull( $data_[ $tag ] ) ) 
+					return false;
+			}
 		}
 		
 		foreach ( $data_ as $tagTest => $value ) 

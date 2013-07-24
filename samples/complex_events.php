@@ -113,11 +113,12 @@
 		$newEvent->addDate( 'recurrent', 	'week', 6, 3, "monday,tuesday,thursday", null, array('name'=> 'Monday, Tuesday and Thursday every 3 weeks for 6 months', 'start'=> '2013-10-25T08:00:00+08:00', 'duration'=> 8*3600 ) );
 		
 		// =========
-		// === /!\ 		Useful function to get the number of occurence between two dates in seconds, days, weeks, months or years.
+		// === /!\ 		Useful function to get the number of occurence between two dates in seconds, minutes, hours, days, weeks, months or years.
 		// =========	This function can be used to define the Date "limit" of an event according to the "unit" defined.
 		// =========	Sometime the end of an event is define by a Date and not by the number of occurences.
 		// =========	
 		// $limit = FeedValidator::getDateDiff( 's', 	'2013-10-25T15:30:00-08:00', '2013-11-25T15:30:00-08:00' ); // numbers of seconds between this two dates.
+		// $limit = FeedValidator::getDateDiff( 'h', 	'2013-10-25T15:30:00-08:00', '2013-11-25T18:30:00-08:00' ); // numbers of hours between this two dates.
 		// $limit = FeedValidator::getDateDiff( 'd', 	'2013-10-25T15:30:00-08:00', '2013-11-25T15:30:00-08:00' ); // numbers of days between this two dates.
 		// $limit = FeedValidator::getDateDiff( 'ww', 	1366171200, 				 '2013-12-25T15:30:00-08:00' ); // numbers of weeks between this two dates.
 		// $limit = FeedValidator::getDateDiff( 'm', 	'2013-10-25T15:30:00-08:00', 1396171200 				 ); // numbers of months between this two dates.
