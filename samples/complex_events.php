@@ -152,13 +152,13 @@
 		// =========	ESS PROCESSORS CAN UNDERSTAND THE EVENT AS FREE IF IT IS NOT DENINE.
 		// =========
 		// ----------- Define a free entrance for the event.
-		$newEvent->addPrice( 'standalone', 'free', null,null,null,null,null, array('name'=> 'Free Entrance', 'value'=> '0'));
+		$newEvent->addPrice( 'standalone', 'free', null,null,null,null,null, array('name'=> 'Free Entrance', 'value'=> 0 ) );
 		
 		// ----------- Define a free entrance but restricted to invitation only.
-		$newEvent->addPrice( 'standalone', 'invitation', null,null,null,null,null, array('name'=> 'Invitation required - please contact the organizer', 'value'=> '0'));
+		$newEvent->addPrice( 'standalone', 'invitation', null,null,null,null,null, array('name'=> 'Invitation required - please contact the organizer', 'value'=> 0 ) );
 		
 		// ----------- Define a specific VIP access for $10.
-		$newEvent->addPrice( 'standalone', 'fixed',	null,null,null,null,null, array('name'=> 'Entrance with VIP access', 'value'=> '10', 'currency'=> 'USD'));
+		$newEvent->addPrice( 'standalone', 'fixed',	null,null,null,null,null, array('name'=> 'Entrance with VIP access', 'value'=> '10', 'currency'=> 'USD' ) );
 		
 		// ----------- Define a billing payment to make every 28th of every month during 12 months with a payment URL.
 		$newEvent->addPrice( 'recurrent', 'fixed','month', 12, 1, "28", null, array('name'=> 'Monthly subscription - payment every 28th (for one year)', 'value'=> '20', 'currency'=> 'USD', 'start'=> '2013-10-25T23:59:00Z', 'uri'=>'http://payment.com/api'));

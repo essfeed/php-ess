@@ -75,7 +75,8 @@ final class FeedWriter
 				
 				foreach ( $channelDTD as $kk => $val ) 
 				{
-					if ( $val == true && $kk != 'feed' ) $mandatoryRequiredCount++;
+					if ( $val == true && $kk != 'feed' ) 
+						$mandatoryRequiredCount++;
 				}
 				
 				if ( $mandatoryRequiredCount != $mandatoryCount || $mandatoryCount == 0 )
@@ -83,7 +84,8 @@ final class FeedWriter
 					$out = '';
 					foreach ( $channelDTD as $key => $m) 
 					{
-						if ( $m == true ) $out .= "< $key >, ";
+						if ( $m == true ) 
+							$out .= "< $key >, ";
 					}
 					throw new Exception( "Error: All XML Channel's mandatory elements are required: ". $out );
 				}
@@ -681,7 +683,7 @@ final class FeedWriter
 		{
 			foreach ( $attributes as $key => $value ) 
 			{
-				if ( strlen( $value ) > 0 )
+				if ( @strlen( $value ) > 0 )
 					$attrText .= " $key=\"$value\" ";
 			}
 		}
@@ -704,7 +706,8 @@ final class FeedWriter
 		{
 			if ( in_array( $tagName, $CDATA ) || 
 				 $tagName == 'published' || 
-				 $tagName == 'updated' )		{ $nodeText .= $tagContent; }
+				 $tagName == 'updated' ||
+				 $tagName == 'value' )			{ $nodeText .= $tagContent; }
 			else if ( $tagName == 'start' ) 	{ $nodeText .= self::getISODate( $tagContent ); }
 			else if ($tagName == 'link' || 
 					 $tagName == 'uri' )		{ $nodeText .= htmlentities( $tagContent ); }
@@ -791,9 +794,17 @@ final class FeedWriter
 								( ( intval( @$feedItem[ 'priority' ]		) > 0 )? " priority='".			intval( $feedItem[ 'priority' ] 		) . "'" : " priority='".( $position + 1 ) . "'" ).
 							">" . self::LN;
 							
-							foreach ( $feedItem['content'] as $elm => $feedElm ) 
+							if ( $key == 'prices' && ( $feedItem[ 'mode' ] == 'free' || $feedItem[ 'mode' ] == 'invitation' ) )
 							{
-								$out .= $this->t(3) . $this->makeNode( $elm, $feedElm );
+								$out .= $this->t(3) . $this->makeNode( 'name', $feedItem['content']['name'] );
+								$out .= $this->t(3) . $this->makeNode( 'value', 0 );
+							}
+							else
+							{
+								foreach ( $feedItem['content'] as $elm => $feedElm ) 
+								{
+									$out .= $this->t(3) . $this->makeNode( $elm, $feedElm );
+								}
 							}
 							$out .= $this->t(4) . "</item>" . self::LN;
 						}
@@ -841,8 +852,8 @@ final class FeedWriter
 	{
 		if ( isset( $email ) || isset( $subject ) || isset( $message ) )
 		{
-			$headers = "From: " . strip_tags( $email ) . "\r\n";
-			$headers .= "Reply-To: ". strip_tags( $email ) . "\r\n";
+			$headers  = "From: " . 		strip_tags( $email ) . "\r\n";
+			$headers .= "Reply-To: ". 	strip_tags( $email ) . "\r\n";
 			$headers .= "MIME-Version: 1.0\r\n";
 			$headers .= "Content-Type: text/html; charset=" . self::CHARSET . "\r\n";
 			
@@ -850,12 +861,7 @@ final class FeedWriter
 			$msg .= $message;
 			$msg .= '</body></html>';
 			
-			return mail( 
-				$email, 
-				$subject, 
-				$msg, 
-				$headers 
-			);
+			return mail( $email, $subject, $msg, $headers );
 		}
 		return false;
 	}

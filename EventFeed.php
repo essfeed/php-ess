@@ -426,7 +426,7 @@ final class EventFeed
 											'selected_week'		=> FeedValidator::charsetString( $selected_week,	$this->CHARSET ),
 											'moving_position'	=> FeedValidator::charsetString( $moving_position,	$this->CHARSET ),
 											
-											'content'			=> array_unique( $data_ ) // array_filter()
+											'content'			=> array_filter( array_unique( $data_ ) )
 										)
 									);
 								}
