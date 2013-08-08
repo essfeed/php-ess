@@ -904,6 +904,11 @@ final class FeedWriter
 				curl_setopt( $ch, CURLOPT_POSTFIELDS,  		$post_data );
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 	1 );
 				curl_setopt( $ch, CURLOPT_VERBOSE, 			1 );
+				curl_setopt( $ch, CURLOPT_FAILONERROR, 		1 );
+				curl_setopt( $ch, CURLOPT_TIMEOUT, 			20 );
+				curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 	0 );
+				curl_setopt( $ch, CURLOPT_COOKIEJAR,  		'/tmp/cookies' );
+				curl_setopt( $ch, CURLOPT_REFERER, 			@$_SERVER[ 'REQUEST_URI' ] );
 				
 				$response = json_decode( curl_exec( $ch ), true );
 				$r = @$response['result'];
