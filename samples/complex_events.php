@@ -239,11 +239,11 @@
      	// All the dates defined must be applicable to every price defined and to every image defined...
 	  	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=>'htp://madonna.com/concert/page.html', 'published'=> FeedWriter::getISODate(), 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
 	  		$newEvent->addCategory( 'concert', 										array('name'=> 'Rock Music', 'id'=> 'M22'));
-			$newEvent->addDate( 	'recurrent', 'year', 12, null,null,null, 		array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:50:00Z', 'duration'=> '7200' ) );
+			$newEvent->addDate( 	'recurrent', 'year', 2, null,null,null, 		array('name'=> 'Yearly concert for the next two years', 'start'=> '2013-10-25T15:50:00Z', 'duration'=> '7200' ) );
 			$newEvent->addPlace( 	'fixed', null,									array('name'=> 'Stadium NYC', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 			$newEvent->addPrice(	'standalone', 'fixed',null,null,null,null,null, array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
 			$newEvent->addPeople(	'performer',									array('name'=> 'Madonna' ) );
-			$newEvent->addMedia(	'image', 										array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));					
+			$newEvent->addMedia(	'image', 										array('name'=> 'Foto of Madonna', 'uri' => 'http://cdn.madonna.com/non_secure/goodies/wallpapers/01_1440x900.jpg'));					
 		$essFeed->addItem( $newEvent );
   		// --- End of the feed entry 
 		// </feed>
@@ -259,7 +259,7 @@
   	
   	
  	// Genarate the ESS feed dynamicaly at each request (load the DataBase and PHP). 
- 	$essFeed->genarateFeed();
+ 	//$essFeed->genarateFeed();
 	
 	
 	// OR 
@@ -267,8 +267,8 @@
 	
 	// Generate the ESS Feed file on server (to limit the load of PHP and DataBase).
 	// you have to configure the folder on the server with the same owner then the Apache user
-	// #> chown www-data:www-data /var/local/www/site/
-	// #> chmod 0755 /var/local/www/site/
+	// #> chown www-data:www-data /var/local/www/site/feeds
+	// #> chmod 0755 /var/local/www/site/feeds
 	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.xml' );
 	
 	
