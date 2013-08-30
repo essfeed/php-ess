@@ -2,7 +2,7 @@
 	include("../FeedWriter.php");
   	
 	// Define the absolute location of the ESS feed. if generated and written on server-side (to limit PHP and DataBase access).
-  	$new_feed_url 	= 'http://example.com/feed/sample.ess';
+  	$new_feed_url 	= 'http://ess.hypecal.com/php-ess/samples/simple_event.ess';
 	$feed_on_server = '/var/local/www/site/feeds/simple_event.ess';
   	
   	// OR Define the PHP dynamic script (the ESS feed will be generated on-the-fly at each request and are not witten on the server-side)

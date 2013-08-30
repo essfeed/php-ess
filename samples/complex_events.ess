@@ -1,19 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE ess PUBLIC "-//ESS//DTD" "http://essfeed.org/history/0.9/index.dtd">
+<!--
+   ESS Feed (Event Standard Syndication)
+
+   Your events are now available to any software that read ESS format, example:
+      http://hypecal.com              (Events search engine)
+      http://wp-events-plugin.com     (Wordpress plugin)
+
+   Standard info:       http://essfeed.org/
+   Other libraries:     https://github.com/essfeed/
+
+-->
 <ess xmlns="http://essfeed.org/history/0.9/" version="0.9" lang="en">
    <channel>
       <generator>ess:php:generator:version:1.2</generator>
       <title>ESS Feed sample with åççéñts.</title>
-      <id>ESSID:cad604f5-a29c-4d4c-ab9c-a599d2d18c00</id>
+      <id>ESSID:c5c309b0-800d-a051-4cf5-257b0335851d</id>
       <link>http://ess.hypecal.com/php-ess/samples/complex_events.php</link>
-      <published>2013-04-25T10:27:21+02:00</published>
+      <published>2013-08-27T12:12:52+02:00</published>
       <updated>2013-10-31T15:30:59Z</updated>
       <rights>Copyright (c) 2013, ESS Generator</rights>
       <feed>
          <title>Football match every saturdays, text with åççéñts and 汉语/漢語 Hànyǔ.</title>
-         <id>EVENTID:ffc0a455-e040-ab75-e3f1-17612abde0b2</id>
+         <id>EVENTID:6c29a4f9-b078-4774-fee1-cf0119a8c5a6</id>
          <uri>http://sample.com/events/unique-event-page/index.html?with=param&amp;additional</uri>
-         <published>2013-04-25T10:27:21+02:00</published>
-         <updated>2013-04-25T10:27:21+02:00</updated>
+         <published>2013-08-27T12:12:52+02:00</published>
+         <updated>2013-08-27T12:12:52+02:00</updated>
          <access>PUBLIC</access>
          <tags>
             <tag>Sport</tag>
@@ -77,7 +89,6 @@
                <address>Ave of Americas, 871</address>
                <city>New York</city>
                <zip>10001</zip>
-               <state>New York</state>
                <state_code>NY</state_code>
                <country>United States of America</country>
                <country_code>US</country_code>
@@ -205,7 +216,6 @@
                <address>Ave of Americas, 875</address>
                <city>New York</city>
                <zip>10001</zip>
-               <state>New York</state>
                <state_code>NY</state_code>
                <country>United States of Americas</country>
                <country_code>US</country_code>
@@ -219,7 +229,6 @@
             </item>
             <item type='attendee' priority='3'>
                <name>Attendees informations: </name>
-               <minpeople>0</minpeople>
                <maxpeople>2000</maxpeople>
                <minage>16</minage>
                <restriction>Smoking is not allowed in the stadium</restriction>
@@ -257,9 +266,9 @@
       </feed>
       <feed>
          <title>Madonna Concert</title>
-         <id>EVENTID:aa6621f6-03b6-5347-0d73-54cb4c6a8a2f</id>
+         <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
          <uri>htp://madonna.com/concert/page.html</uri>
-         <published>2013-04-25T10:27:21+02:00</published>
+         <published>2013-08-27T12:12:52+02:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[
@@ -280,8 +289,8 @@ This is the description of the Madonna concert.
             </item>
          </categories>
          <dates>
-            <item type='recurrent' unit='year' limit='12' priority='1'>
-               <name>Yearly concert</name>
+            <item type='recurrent' unit='year' limit='2' priority='1'>
+               <name>Yearly concert for the next two years</name>
                <start>2013-10-25T15:50:00Z</start>
                <duration>7200</duration>
             </item>
@@ -308,7 +317,7 @@ This is the description of the Madonna concert.
          <media>
             <item type='image' priority='1'>
                <name>Foto of Madonna</name>
-               <uri>http://madonna.com/image.png</uri>
+               <uri>http://cdn.madonna.com/non_secure/goodies/wallpapers/01_1440x900.jpg</uri>
             </item>
          </media>
          <people>
