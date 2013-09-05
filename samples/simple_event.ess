@@ -23,7 +23,7 @@
          <title>Madonna Concert</title>
          <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
          <uri>http://madonna.com/events/concert.html</uri>
-         <published>2013-08-30T11:38:55+02:00</published>
+         <published>2013-08-30T18:28:02+02:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[
@@ -72,9 +72,13 @@ This is the description of the Madonna concert. Plus some HTML: <br><br><img src
          <media>
             <item type='image' priority='1'>
                <name>Foto of Madonna</name>
-               <uri>http://madonna.com/image.png</uri>
+               <uri>http://www.innatfalsecreek.com/controls/FckEditor/editor/filemanager/userfiles/show_tickets_madonna_4963_png.jpg</uri>
             </item>
             <item type='image' priority='2'>
+               <name>Another image</name>
+               <uri>http://1.bp.blogspot.com/-7EQAFopc6lk/UVX_ofAUQeI/AAAAAAAACWs/Le2dvu5nlFM/s640/dona.jpg</uri>
+            </item>
+            <item type='image' priority='3'>
                <name>the text of the image comming from the description!</name>
                <uri>http://madonna.com/img/concert.png</uri>
             </item>
