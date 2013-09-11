@@ -17,15 +17,15 @@
       <title>ESS Feed sample with åççéñts.</title>
       <id>ESSID:c5c309b0-800d-a051-4cf5-257b0335851d</id>
       <link>http://ess.hypecal.com/php-ess/samples/complex_events.php</link>
-      <published>2013-08-27T12:12:52+02:00</published>
+      <published>2013-09-11T14:28:46+02:00</published>
       <updated>2013-10-31T15:30:59Z</updated>
       <rights>Copyright (c) 2013, ESS Generator</rights>
       <feed>
          <title>Football match every saturdays, text with åççéñts and 汉语/漢語 Hànyǔ.</title>
          <id>EVENTID:6c29a4f9-b078-4774-fee1-cf0119a8c5a6</id>
          <uri>http://sample.com/events/unique-event-page/index.html?with=param&amp;additional</uri>
-         <published>2013-08-27T12:12:52+02:00</published>
-         <updated>2013-08-27T12:12:52+02:00</updated>
+         <published>2013-09-11T14:28:46+02:00</published>
+         <updated>2013-09-11T14:28:46+02:00</updated>
          <access>PUBLIC</access>
          <tags>
             <tag>Sport</tag>
@@ -268,7 +268,7 @@
          <title>Madonna Concert</title>
          <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
          <uri>htp://madonna.com/concert/page.html</uri>
-         <published>2013-08-27T12:12:52+02:00</published>
+         <published>2013-09-11T14:28:46+02:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[

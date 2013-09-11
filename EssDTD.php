@@ -5,6 +5,7 @@
  * @package	ESSFeedWriter
  * @author  Brice Pissard
  * @link    http://essfeed.org/index.php/ESS_structure
+ * @link	https://github.com/essfeed
  */
 final class EssDTD
 {

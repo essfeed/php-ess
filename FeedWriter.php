@@ -14,6 +14,7 @@ require_once( 'EventFeed.php' );
   * @copyright 	No Copyright.
   * @license   	GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
   * @link    	http://essfeed.org
+  * @link		https://github.com/essfeed
   */ 
 final class FeedWriter
 {
@@ -23,17 +24,20 @@ final class FeedWriter
 	public $lang			= 'en';		// Default 2 chars language (ISO 3166-1).
 	
 	public $DEBUG			= false;	// output debug information.
-	const AUTO_PUSH			= true; 	// Defines feed changes have to be submited to ESS Aggregators.
-	const IS_DOWNLOAD		= false;	// Defines if the feed is to be downloaded (with Header: application/ess+xml).
+	public $AUTO_PUSH		= true; 	// Defines feed changes have to be submited to ESS Aggregators.
+	public $IS_DOWNLOAD		= false;	// Defines if the feed is to be downloaded (with Header: application/ess+xml).
 	const EMAIL_UP_TO_DATE	= true;		// Defines if an email is sent to system administrator if the version is not up-to-date.
-	const REPLACE_ACCENT	= false;	// if some problems occured durring encoding/decoding the data to UTF8, this parameter set to true replace the åççéñts by accents.
+	const REPLACE_ACCENT	= false;	// if some problems occured durring encoding/decoding the data into UTF8, this parameter set to true force the replacement of åççéñts by accents.
 	
 	private $channel 		= array();  // Collection of Channel elements.
 	private $items			= array();  // Collection of items as object of FeedItem class.					
 	const TB				= '   ';	// Display a tabulation (for humans).
 	const LN				= '
 ';										// Display breaklines (for humans).
-
+	
+	public static $AGGREGATOR_WS = "http://api.hypecal.com/v1/ess/aggregator.json";
+	public static $VALIDATOR_WS  = 'http://api.hypecal.com/v1/ess/validator.json';
+	
 	
 	/**
 	 * FeedWriter Class Constructor
@@ -130,7 +134,7 @@ final class FeedWriter
 	{
 		@mb_internal_encoding( self::CHARSET );
 		
-		if ( $this->DEBUG == false )
+		if ( $this->DEBUG == false && $displayResult == true )
 		{
 			ob_end_clean();
 			header_remove();
@@ -140,8 +144,8 @@ final class FeedWriter
 			header( "Pragma: no-cache" );
 			header( "Keep-Alive: timeout=1, max=1" );
 			
-			if ( self::IS_DOWNLOAD ) { header( 'Content-Type: application/ess+xml; charset=' .self::CHARSET ); }
-			else					 { header( 'Content-Type: text/xml; charset=' .self::CHARSET ); }
+			if ( $this->IS_DOWNLOAD ) { header( 'Content-Type: application/ess+xml; charset=' .self::CHARSET ); }
+			else					  { header( 'Content-Type: text/xml; charset=' .self::CHARSET ); }
 		}
 		
 		$feedData = $this->getFeedData();
@@ -151,6 +155,8 @@ final class FeedWriter
 		
 		if ( $displayResult == true )
 			echo $feedData;
+		else 
+			return $feedData;
 	}
 	
 	/**
@@ -873,11 +879,15 @@ final class FeedWriter
 		return ob_get_clean();
   	} 
 	
+	private static function get_tmp_path()
+	{
+		return ( ( strlen( sys_get_temp_dir() ) >= 0 )? sys_get_temp_dir() : "/tmp" );
+	}
+	
 	public function pushToAggregators( $feedURL='', $feedData=null )
 	{
-		if ( self::AUTO_PUSH )
+		if ( $this->AUTO_PUSH )
 		{
-			$aggregator_url = "http://api.hypecal.com/v1/ess/aggregator.json";
 			$ch = @curl_init();
 			
 			if ( $ch !== false )
@@ -900,14 +910,14 @@ final class FeedWriter
 				else 
 					$post_data['feed_file'] = $feedData; 
 				
-				curl_setopt( $ch, CURLOPT_URL, 				$aggregator_url );
+				curl_setopt( $ch, CURLOPT_URL, 				self::$AGGREGATOR_WS );
 				curl_setopt( $ch, CURLOPT_POSTFIELDS,  		$post_data );
 				curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 	1 );
 				curl_setopt( $ch, CURLOPT_VERBOSE, 			1 );
 				curl_setopt( $ch, CURLOPT_FAILONERROR, 		1 );
 				curl_setopt( $ch, CURLOPT_TIMEOUT, 			20 );
 				curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 	0 );
-				curl_setopt( $ch, CURLOPT_COOKIEJAR,  		'/tmp/cookies' );
+				curl_setopt( $ch, CURLOPT_COOKIEJAR,  		self::get_tmp_path().'/cookies' );
 				curl_setopt( $ch, CURLOPT_REFERER, 			@$_SERVER[ 'REQUEST_URI' ] );
 				
 				$response = json_decode( curl_exec( $ch ), true );
@@ -953,7 +963,7 @@ final class FeedWriter
 			else 
 			{
 				if ( $feedData == null && FeedValidator::isValidURL( $feedURL ) )
-					@exec( "wget -q \"" . $aggregator_url . "?feed=" . $feedURL . "\"" );
+					@exec( "wget -q \"" . self::$AGGREGATOR_WS . "?feed=" . $feedURL . "\"" );
 			}
 			
 		}

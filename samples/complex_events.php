@@ -129,7 +129,7 @@
 		
 		// ====== PLACES == (add one or more places) =======
 		// ----------- Add a simple fix point on a map to localize the event.
-		$newEvent->addPlace( 'fixed', null, array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
+		$newEvent->addPlace( 'fixed', null, array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Av of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 		
 		// ----------- Add a moving event with 5 places to go.
 		$newEvent->addPlace( 'moving', 1, array('name'=> 'Race stop 01', 'latitude'=> '40.71675', 'longitude' => '-74.05671', 'country_code' => 'US' ) );
@@ -270,5 +270,5 @@
 	// #> chown www-data:www-data /var/local/www/site/feeds
 	// #> chmod 0755 /var/local/www/site/feeds
 	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.xml' );
-	
+	$essFeed->genarateFeed( '/home/bibi/www/ess.hypecal.com/php-ess/samples/complex_events.ess' );
 	

@@ -8,6 +8,7 @@
    * @copyright No copyright
    * @license   GNU/GPLv2, see http://www.gnu.org/licenses/gpl-2.0.html
    * @link		http://essfeed.org/index.php/ESS_structure
+   * @link		https://github.com/essfeed
    */
 final class EventFeed
 {

@@ -23,11 +23,11 @@
          <title>Madonna Concert</title>
          <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
          <uri>http://madonna.com/events/concert.html</uri>
-         <published>2013-08-30T18:28:02+02:00</published>
+         <published>2013-09-05T18:04:33+02:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[
-This is the description of the Madonna concert. Plus some HTML: <br><br><img src='http://madonna.com/img/concert.png' alt='The text of the image comming from the description!'>
+This is the description of the Madonna concert. Plus some HTML: <br><br><img src='http://3432-stoollala.voxcdn.com/wp-content/uploads/2010/09/madonna_old.jpg' alt='The text of the image comming from the description!'>
          ]]>
          </description>
          <tags>
@@ -44,7 +44,7 @@ This is the description of the Madonna concert. Plus some HTML: <br><br><img src
             </item>
          </categories>
          <dates>
-            <item type='recurrent' unit='month' selected_day='saturday' selected_week='last' limit='6' priority='1'>
+            <item type='standalone' unit='month' selected_day='saturday' selected_week='last' limit='6' priority='1'>
                <name>Every last saturday of every months for 6 months</name>
                <start>2011-09-24T23:06:40+02:00</start>
                <duration>7200</duration>
@@ -53,7 +53,7 @@ This is the description of the Madonna concert. Plus some HTML: <br><br><img src
          <places>
             <item type='fixed' priority='1'>
                <name>Yankee Stadium</name>
-               <address>1 E 161st St, Bronx</address>
+               <address>1 East, 161street, Bronx</address>
                <city>New York</city>
                <zip>10451</zip>
                <state_code>NY</state_code>
@@ -80,7 +80,7 @@ This is the description of the Madonna concert. Plus some HTML: <br><br><img src
             </item>
             <item type='image' priority='3'>
                <name>the text of the image comming from the description!</name>
-               <uri>http://madonna.com/img/concert.png</uri>
+               <uri>http://3432-stoollala.voxcdn.com/wp-content/uploads/2010/09/madonna_old.jpg</uri>
             </item>
          </media>
          <people>
