@@ -483,7 +483,10 @@ final class FeedWriter
 			if ( strlen( $date ) >= 8 && !is_int( $date ) )	
 			{
 				if ( FeedValidator::isValidDate( $date ) )
+				{
+					//echo "T=4 >> ".$date . "<br>";
 					return $date;
+				}
 				else 
 				{
 					return ( FeedValidator::isNull( strtotime( $date ) ) )? 
@@ -516,7 +519,7 @@ final class FeedWriter
 				    $millis 		= strtotime( $phpTime ); 							// Convert time to milliseconds since 1970, using default timezone 
 				    $timezone 		= new DateTimeZone( date_default_timezone_get() ); 	// Get default system timezone to create a new DateTimeZone object 
 				    $offset 		= $timezone->getOffset( new DateTime( $phpTime ) ); // Offset in seconds to UTC 
-				    $offsetHours 	= round( abs( $offset)/3600); 
+				    $offsetHours 	= round( abs( $offset ) / 3600 ); 
 				    $offsetMinutes 	= round( ( abs( $offset ) - $offsetHours * 3600 ) / 60 ); 
 				    $offsetString 	= ($offset < 0 ? '-' : '+' ) 
 		                . ( $offsetHours < 10 ? '0' : '' ) . $offsetHours 
@@ -715,8 +718,8 @@ final class FeedWriter
 				 $tagName == 'updated' ||
 				 $tagName == 'value' )			{ $nodeText .= $tagContent; }
 			else if ( $tagName == 'start' ) 	{ $nodeText .= self::getISODate( $tagContent ); }
-			else if ($tagName == 'link' || 
-					 $tagName == 'uri' )		{ $nodeText .= htmlentities( $tagContent ); }
+			else if ( $tagName == 'link' || 
+					  $tagName == 'uri' )		{ $nodeText .= htmlentities( $tagContent ); }
 			else								{ $nodeText .= FeedValidator::noAccent( $tagContent ); }		 
 		}           
 			

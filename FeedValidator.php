@@ -743,6 +743,9 @@ final class FeedValidator
 				}
 			}
 		}
+		
+		//var_dump( $stringDate, $matcher);
+		
 		return ( $matcher == 1 )? true : false;			
 	}
 	
@@ -963,7 +966,7 @@ final class FeedValidator
 	 */
 	public static function isValidLatitude( $latitude=null )
 	{
-		$match_latitude = preg_match( "/^-?([0-8]?[0-9]|90)\.[0-9]{1,6}$/", $latitude );
+		$match_latitude = preg_match( "/^-?([0-8]?[0-9]|90)\.[0-9]{1,7}$/", $latitude );
 		
 		return ( $match_latitude == 1 )? true : false;
 	}
@@ -975,9 +978,9 @@ final class FeedValidator
 	 * 	@param	Float	Value of the Longitude to evaluate.
 	 * 	@return Boolean	Return true is the Longitude is valide, false else.
 	 */
-	public static function isValidLongitude( $longitude )
+	public static function isValidLongitude( $longitude=null )
 	{
-		$match_longitude = preg_match( "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,6}$/", $longitude );
+		$match_longitude = preg_match( "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,7}$/", $longitude );
 		
 		return ( $match_longitude == 1 )? true : false;
 	}
