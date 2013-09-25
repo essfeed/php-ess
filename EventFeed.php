@@ -126,7 +126,6 @@ final class EventFeed
 			}
 		}
 	}
-	
 	public function getTitle()
 	{
 		return $this->roots[ 'title' ];
@@ -163,7 +162,6 @@ final class EventFeed
 			}
 		}
 	}
-	
 	public function getUri()
 	{
 		return $this->roots[ 'uri' ];
@@ -193,7 +191,6 @@ final class EventFeed
 			$this->setRootElement( 'id', FeedWriter::uuid( $el, 'EVENTID:' ) );
 		}
 	}
-	
 	public function getId()
 	{
 		return $this->roots[ 'id' ];
@@ -225,7 +222,6 @@ final class EventFeed
 			$this->setRootElement( 'published', FeedWriter::getISODate( $el ) );
 		}
 	}
-	
 	public function getPublished()
 	{
 		return $this->roots[ 'published' ];
@@ -257,7 +253,6 @@ final class EventFeed
 			$this->setRootElement( 'updated', FeedWriter::getISODate( $el ) );
 		}
 	}
-	
 	public function getUpdated()
 	{
 		return $this->roots[ 'updated' ];
@@ -284,7 +279,13 @@ final class EventFeed
 				return;
 			}
 			
-			$this->setRootElement( 'access', FeedValidator::charsetString( $el, $this->CHARSET ) );
+			$this->setRootElement( 'access', 
+				( ( strtoupper( FeedValidator::charsetString( $el, $this->CHARSET ) ) === EssDTD::PRIVACITY_PRIVATE )? 
+					EssDTD::PRIVACITY_PRIVATE 
+					:
+					EssDTD::PRIVACITY_PUBLIC 
+				)
+			);
 		}
 	}
 	public function getAccess()

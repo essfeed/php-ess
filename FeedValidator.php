@@ -733,20 +733,35 @@ final class FeedValidator
 		{
 			$time_sep = explode( ':', $t_sep[ 1 ] );
 			
-			if ( intval( $time_sep[ 0 ] ) > 24 ) return false;
+			if ( intval( $time_sep[ 0 ] ) > 24 ) 
+				return false;
 			
 			if ( @count( $time_sep ) <= 4 )
 			{
 				for ( $i=1 ; $i<@count( $time_sep ) ; $i++ )
 				{
-					if ( intval( $time_sep[ $i ] ) > 59 && $i < 3 ) return false;
+					if ( intval( $time_sep[ $i ] ) > 59 && $i < 3 ) 
+						return false;
 				}
 			}
 		}
 		
 		//var_dump( $stringDate, $matcher);
 		
-		return ( $matcher == 1 )? true : false;			
+		if ( $matcher == 1 )
+		{
+			try
+			{
+				$err = new DateTime( $stringDate, new DateTimeZone( 'GMT' ) );
+				return true;
+			} 
+			catch( Exception $e )
+			{
+				return false;
+			}	
+		}
+		
+		return false;		
 	}
 	
 	/**

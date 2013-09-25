@@ -226,7 +226,7 @@ final class FeedWriter
 				if ( FeedValidator::isNull( 	 @$arr_['uri'] 			) == false ) { $newEvent->setUri( 			$arr_['uri'] 			); }
 				if ( FeedValidator::isValidDate( @$arr_['published'] 	) == true  ) { $newEvent->setPublished( 	$arr_['published'] 		); } else { $newEvent->setPublished( self::getISODate() ); }
 				if ( FeedValidator::isValidDate( @$arr_['updated'] 		) == true  ) { $newEvent->setUpdated( 		$arr_['updated'] 		); } 
-				if ( FeedValidator::isNull( 	 @$arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( 'PUBLIC' ); }
+				if ( FeedValidator::isNull( 	 @$arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( EssDTD::PRIVACITY_PUBLIC ); }
 				if ( FeedValidator::isNull(	 	 @$arr_['description']	) == false ) { $newEvent->setDescription(	$arr_['description'] 	); }
 				if ( @count( $arr_['tags'] ) > 0 ) 								 	 { $newEvent->setTags(			$arr_['tags'] 			); }
 			}
@@ -484,7 +484,6 @@ final class FeedWriter
 			{
 				if ( FeedValidator::isValidDate( $date ) )
 				{
-					//echo "T=4 >> ".$date . "<br>";
 					return $date;
 				}
 				else 
@@ -652,8 +651,8 @@ final class FeedWriter
 			$this->t(1) . 'ESS Feed (Event Standard Syndication)' . self::LN .
 			self::LN .
 			$this->t(1) . 'Your events are now available to any software that read ESS format, example:' . self::LN .
-			$this->t(2) . 'http://hypecal.com          '.$this->t(1).' (Events search engine)' . self::LN .
-			$this->t(2) . 'http://wp-events-plugin.com '.$this->t(1).' (Wordpress plugin)' . self::LN .
+			$this->t(2) . 'http://hypecal.com          '.$this->t(1).' (Events Search Engine)' . self::LN .
+			$this->t(2) . 'http://wp-events-plugin.com '.$this->t(1).' (Wordpress Event Plugin)' . self::LN .
 			self::LN .
 			$this->t(1) . 'Standard info:   '.$this->t(1).' http://essfeed.org/' . self::LN .
 			$this->t(1) . 'Other libraries: '.$this->t(1).' https://github.com/essfeed/' . self::LN .
@@ -699,9 +698,8 @@ final class FeedWriter
 		
 		$nodeText .= $this->t(2) . ( ( in_array( $tagName, $CDATA ) )? "<{$tagName}{$attrText}>" . self::LN . $this->t(3) . "<![CDATA[" . self::LN : "<{$tagName}{$attrText}>" );
 		 
-		if ( is_array( $tagContent ) ) // tag
-		{ 
-			foreach ( $tagContent as $key => $value ) 
+		if ( is_array( $tagContent ) ) // for tags
+		{
 			{
 				if ( isset( $value ) || $value == 0 )
 				{
@@ -957,7 +955,7 @@ final class FeedWriter
 					self::sendEmail( 
 						$_SERVER[ 'SERVER_ADMIN' ], 
 						"Update your ESS Library on " . $_SERVER[ 'HTTP_HOST' ],
-						"<h3>The library you used on your website ". $_SERVER[ 'HTTP_HOST' ] ." is not up-to-date</h3>".
+						"<h3>The library you used on your website ". $_SERVER[ 'HTTP_HOST' ] ." is not up to date</h3>".
 						"<p style='background:#000;color:#FFF;padding:6px;'>".$_SERVER['DOCUMENT_ROOT'] . "</p>" .
 						"You can upload the lastest version in <a href='https://github.com/essfeed/php-ess/'>https://github.com/essfeed/php-ess/</a>"
 					);
