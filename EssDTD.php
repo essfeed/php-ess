@@ -10,8 +10,8 @@
 final class EssDTD
 {
 	// -- Event Privacity
-	const PRIVACITY_PRIVATE	= 'PRIVATE';
-	const PRIVACITY_PUBLIC	= 'PUBLIC'; 
+	const ACCESS_PRIVATE	= 'PRIVATE';
+	const ACCESS_PUBLIC		= 'PUBLIC';
 	
 	public function __construct() {}
 	

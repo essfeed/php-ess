@@ -226,7 +226,7 @@ final class FeedWriter
 				if ( FeedValidator::isNull( 	 @$arr_['uri'] 			) == false ) { $newEvent->setUri( 			$arr_['uri'] 			); }
 				if ( FeedValidator::isValidDate( @$arr_['published'] 	) == true  ) { $newEvent->setPublished( 	$arr_['published'] 		); } else { $newEvent->setPublished( self::getISODate() ); }
 				if ( FeedValidator::isValidDate( @$arr_['updated'] 		) == true  ) { $newEvent->setUpdated( 		$arr_['updated'] 		); } 
-				if ( FeedValidator::isNull( 	 @$arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( EssDTD::PRIVACITY_PUBLIC ); }
+				if ( FeedValidator::isNull( 	 @$arr_['access'] 		) == false ) { $newEvent->setAccess( 		$arr_['access'] 		); } else { $newEvent->setAccess( EssDTD::ACCESS_PUBLIC ); }
 				if ( FeedValidator::isNull(	 	 @$arr_['description']	) == false ) { $newEvent->setDescription(	$arr_['description'] 	); }
 				if ( @count( $arr_['tags'] ) > 0 ) 								 	 { $newEvent->setTags(			$arr_['tags'] 			); }
 			}

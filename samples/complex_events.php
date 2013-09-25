@@ -45,7 +45,7 @@
 		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unic ID, otherwise the event URL will be used to generate a unic ID. 		
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
 		$newEvent->setUpdated( 		"2013-10-31T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
-		$newEvent->setAccess( 		EssDTD::PRIVACITY_PUBLIC );			// Defines if the event is 'PUBLIC' or 'PRIVATE'
+		$newEvent->setAccess( 		EssDTD::ACCESS_PUBLIC );			// Defines if the event is 'PUBLIC' or 'PRIVATE'
 		$newEvent->setTags(	array( 'Sport', 'Football', 'match' ) );	// Defines an array of keywords or tags to Help search engine to find your event.
 		
 		// -- Add some complex HTML event description content.

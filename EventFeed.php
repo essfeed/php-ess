@@ -280,10 +280,10 @@ final class EventFeed
 			}
 			
 			$this->setRootElement( 'access', 
-				( ( strtoupper( FeedValidator::charsetString( $el, $this->CHARSET ) ) === EssDTD::PRIVACITY_PRIVATE )? 
-					EssDTD::PRIVACITY_PRIVATE 
+				( ( strtoupper( FeedValidator::charsetString( $el, $this->CHARSET ) ) === EssDTD::ACCESS_PRIVATE )? 
+					EssDTD::ACCESS_PRIVATE 
 					:
-					EssDTD::PRIVACITY_PUBLIC 
+					EssDTD::ACCESS_PUBLIC 
 				)
 			);
 		}
