@@ -19,7 +19,7 @@ To use this Class complete samples are available in /samples/complex_events.php 
 
 ## Usage
 ```PHP
-/************************************************************************************************/
+/************************************************************************************************
  *
  *	This complete exemple create an event feed that describe:
  *
