@@ -20,7 +20,7 @@ To use this Class complete samples are available in /samples/complex_events.php 
 ## Usage
 ```PHP
 /**
- *	This exemple create an event feed that describe:
+ *	This complete exemple create an event feed that describe:
  *	- A 2 hours Madonna concert that happend every years for three years at 9:30PM the 25th of Oct.
  *  - It happends in a stadium in New York.
  * 	- This happening is defined with a category "concert" explained as "Rock music"
@@ -36,7 +36,7 @@ $event_page = 'http://your_website.com/events/event-page-123.html';
 
 // == Create the ESS Feed ================
 $essFeed = new FeedWriter( 'en', array(
-	'title'		=> 'ESS Feed',
+	'title'		=> 'Madonna events feed',
 	'link'		=> $feed_url,
 	'published'	=> '2013-10-25T15:30:00-08:00',
 	'rights'	=> 'Madonna Copyright (c)'
@@ -79,7 +79,7 @@ $essFeed = new FeedWriter( 'en', array(
 		));
 
 		// -- Define event's price(s) --
-		$newEvent->addPrice('standalone','free',null,null,null,null,null,array('name'=>'Club Card'));
+		$newEvent->addPrice('standalone','free',null,null,null,null,null,array('name'=>'ClubCard'));
 		$newEvent->addPrice('standalone','fixed',null,null,null,null,null,array(
 			'name'		=> 'Normal entrance',
 			'value'		=> '90',
@@ -90,16 +90,16 @@ $essFeed = new FeedWriter( 'en', array(
 		// -- Define event's social platform and people involved --
 		$newEvent->addPeople('performer',array('name'=>'Madonna' ) );
 		$newEvent->addPeople('attendee',array('name'=>'Conditions','maxpeople'=>5000));
-		$newEvent->addPeople('social',array('name'=>'Madonna','uri'=>'http://facebook.com/madonna'));
+		$newEvent->addPeople('social',array('name'=>'Madona','uri'=>'http://facebook.com/madonna'));
 
 		// -- Define event's media files (images, sounds, videos, websites) --
-		$newEvent->addMedia('image',array('name'=>'Photo Madonna','uri'=>'http://madonna.com/i.png'));
-		$newEvent->addMedia('video',array('name'=>'Video Madonna','uri'=>'http://madonna.com/v.ogg'));
+		$newEvent->addMedia('image',array('name'=>'Photo 01','uri'=>'http://madonna.com/i.png'));
+		$newEvent->addMedia('video',array('name'=>'Video 02','uri'=>'http://madonna.com/v.ogg'));
 
 	// == Add the event to the Feed
 	$essFeed->addItem( $newEvent );
 
-	// == Other event feed can be added here...
+	// == Other events can be created and added to the feed here...
 	// ...
 
 
