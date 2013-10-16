@@ -1,5 +1,5 @@
 {
-    "name": "essfeed/essfeed",
+    "name": "essfeed/event-feed",
     "type": "library",
     "description": "Create ESS Feeds and broadcast events information to search engines",
     "keywords": ["ESS feed", "ESS", "feed","SEO", "XML", "events", "event", "events broadcast", "events management", "events manager", "indexation", "concert", "music", "art", "expo"],

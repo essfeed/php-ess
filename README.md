@@ -110,15 +110,16 @@ $essFeed->genarateFeed();
 ```
 
 The ESS XML results will be displayed for search engines and robot crawlers as:
- https://github.com/essfeed/php-ess/blob/master/samples/simple_event.ess
+
+https://github.com/essfeed/php-ess/blob/master/samples/simple_event.ess
 
 
 
 
 
 ## PHP Composer
-The library is available in [PHP Composer](http://getcomposer.org/) in the [Packagist Repository](http://packagist.org/)
-To install the PHP ESS Feed library, just add the following line in your '''composer.json''' file:
+The PHP library is available in [Composer](http://getcomposer.org/) in the [Packagist Repository](https://packagist.org/packages/essfeed)
+To install the PHP ESS Feed library, just add the following line in your "composer.json" file:
 ```PHP
 {
 	"require": {
@@ -132,6 +133,9 @@ To install the PHP ESS Feed library, just add the following line in your '''comp
 
 
 # Diference between RSS and ESS
+Until now, event promoters could only use RSS or iCalendar to broadcast their events.
+The problem has been that vital information gets lost in the event description.
+Now, with ESS all the criteria of any events are clearly defined.
 [![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
 
 [![Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
@@ -141,8 +145,8 @@ To install the PHP ESS Feed library, just add the following line in your '''comp
 
 # Contributing
 
-Contributions to the project are welcome. Feel free to fork and improve. I accept pull requests and issues,
-especially when tests are included.
+Contributions to the project are welcome. Feel free to fork and improve.
+We accept pull requests and issues, especially when tests are included.
 
 # License
 
