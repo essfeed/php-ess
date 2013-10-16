@@ -136,6 +136,7 @@ To install the PHP ESS Feed library, just add the following line in your "compos
 Until now, event promoters could only use RSS or iCalendar to broadcast their events.
 The problem has been that vital information gets lost in the event description.
 Now, with ESS all the criteria of any events are clearly defined.
+
 [![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
 
 [![Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
