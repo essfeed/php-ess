@@ -118,7 +118,7 @@ https://github.com/essfeed/php-ess/blob/master/samples/simple_event.ess
 
 
 ## PHP Composer
-The PHP library is available in [Composer](http://getcomposer.org/) in the [Packagist Repository](https://packagist.org/packages/essfeed)
+The PHP library is available in [Composer](http://getcomposer.org/) for Symphony programmers in the [Packagist Repository](https://packagist.org/packages/essfeed/)
 To install the PHP ESS Feed library, just add the following line in your "composer.json" file:
 ```PHP
 {

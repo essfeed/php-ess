@@ -1,8 +1,8 @@
 {
     "name": "essfeed/event-feed",
     "type": "library",
-    "description": "Create ESS Feeds and broadcast events information to search engines",
-    "keywords": ["ESS feed", "ESS", "feed","SEO", "XML", "events", "event", "events broadcast", "events management", "events manager", "indexation", "concert", "music", "art", "expo"],
+    "description": "Create XML ESS Feeds and broadcast events information to Search Engines to improve SEO",
+    "keywords": ["events","event","Calendar","ESS","Feed","SEO","XML","Broadcast","Management","Manager","RSS","Atome","iCal","Schedule","Google Calendar","indexation","Concert","Music","Art","Museum","Conference","Exhibition","Expo","Syndication","Meetup","Eventbrite","Eventful","Aggregator","Happenings","Festival","Meetings","Standard","Event Publishers","Crawling","Booking","Upcoming","Diary","iCalendar","Organizer","Planner","Venue"],
     "homepage": "https://github.com/essfeed/php-ess",
     "license": "MIT",
     "authors": [
