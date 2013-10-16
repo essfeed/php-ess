@@ -121,6 +121,10 @@ To install the PHP ESS Feed library, just add the following line in your '''comp
 }
 ```
 
+The ESS XML results will be displayed for search engines and robot crawlers as:
+ https://github.com/essfeed/php-ess/blob/master/samples/simple_event.ess
+
+
 # Diference between RSS and ESS
 [![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
 
