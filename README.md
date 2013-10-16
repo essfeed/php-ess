@@ -123,7 +123,7 @@ To install the PHP ESS Feed library, just add the following line in your '''comp
 {
 	"require": {
     	...
-    	"essfeed/essfeed": "1.*"
+    	"essfeed/event-feed": "dev-master"
     }
 }
 ```
