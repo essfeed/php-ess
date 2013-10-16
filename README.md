@@ -109,6 +109,13 @@ $essFeed = new FeedWriter( 'en', array(
 $essFeed->genarateFeed();
 ```
 
+The ESS XML results will be displayed for search engines and robot crawlers as:
+ https://github.com/essfeed/php-ess/blob/master/samples/simple_event.ess
+
+
+
+
+
 ## PHP Composer
 The library is available in [PHP Composer](http://getcomposer.org/) in the [Packagist Repository](http://packagist.org/)
 To install the PHP ESS Feed library, just add the following line in your '''composer.json''' file:
@@ -121,8 +128,7 @@ To install the PHP ESS Feed library, just add the following line in your '''comp
 }
 ```
 
-The ESS XML results will be displayed for search engines and robot crawlers as:
- https://github.com/essfeed/php-ess/blob/master/samples/simple_event.ess
+
 
 
 # Diference between RSS and ESS
