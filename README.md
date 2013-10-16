@@ -10,7 +10,7 @@ This classes allow to generate ESS feed with a simple instanciation.
 
 
 To use this Class a complete example is available in /samples/complex_events.php
-with more options and differents events types: 
+with more options and differents events types:
 - Simple fixed date.
 - Recursive dates.
 - Several times a month.
@@ -21,25 +21,24 @@ with more options and differents events types:
 - Motor race event moving to several places
 - Images of the event only available in the HTML description: a simple script convert it into a feed entry.
 
-
 ## Usage
 
  	include("FeedWriter.php");
   	$new_feed_url  = 'http://example.com/feed/sample.ess';
-  	$event_webpage = 'http://madonna.com/event/page.html'; 
-  	
+  	$event_webpage = 'http://madonna.com/event/page.html';
+
 	// Create the ESS Feed
 	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
- 	
+
  	// ####################################################################
  	// ###
-	// ###  DEBUG  MODE  
-	// ###	display on screen the result and explain the errors. 
+	// ###  DEBUG  MODE
+	// ###	display on screen the result and explain the errors.
 	// ###	Have to be switch to false for production.
 	// ###
   			$essFeed->DEBUG = true;
 	// ####################################################################
- 	
+
 	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));
@@ -47,13 +46,13 @@ with more options and differents events types:
 		$newEvent->addPlace( 	'fixed', null,										array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 		$newEvent->addPrice(	'standalone', 'fixed', null,null,null,null,null,	array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
 		$newEvent->addPeople(	'performer',										array('name'=> 'Madonna' ) );
-		$newEvent->addMedia(	'image', 											array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));					
-		
+		$newEvent->addMedia(	'image', 											array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));
+
 	// Add the event to the Feed
 	$essFeed->addItem( $newEvent );
-	
-	// Other event feed can be added... 
-	
+
+	// Other event feed can be added...
+
 	// Display the ESS Feed generated On-The-Fly by PHP (consume PHP and DataBase resources at each robot access).
 	$essFeed->genarateFeed();
 	//$essFeed->genarateFeed('/var/local/www/site/feeds/events.ess');  // OR create the feed on server-side. Better to reduce the PHP and the Database access.
@@ -62,6 +61,16 @@ with more options and differents events types:
 [![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
 [![Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
 
+
+## PHP Composer
+The library is available in [![PHP Composer]](http://getcomposer.org/) in the [![Packagist Repository]](http://packagist.org/)
+To install the PHP ESS Feed library, just add the following line in your composer.json file:
+ {
+    "require": {
+        ...
+        "essfeed/essfeed": "1.*"
+    }
+ }
 
 # Contributing
 
