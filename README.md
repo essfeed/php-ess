@@ -5,39 +5,26 @@ php-ess
 
 [![ESS Feed Standard](http://essfeed.org/images/8/87/ESS_logo_32x32.png)](http://essfeed.org/)
 
-ESS (Event Standard Syndication) library in PHP
-This classes allow to generate ESS feed with a simple instanciation.
+ESS: Event Standard Syndication.
+ESS is free and open-source XML feed invented exclusively for events.
+This library allows to generate ESS feeds with a simple instanciation and broadcast event's feeds to search engines.
 
-
-To use this Class a complete example is available in /samples/complex_events.php
-with more options and differents events types:
+To use this Class complete samples are available in /samples/complex_events.php :
 - Simple fixed date.
-- Recursive dates.
-- Several times a month.
-- Every last saturday for 6 months.
-- Monthly billing payment (with an payment API url).
-- Free event.
-- Event only available with invitation.
-- Motor race event moving to several places
-- Images of the event only available in the HTML description: a simple script convert it into a feed entry.
+- Recursive dates (several times a month, every last saturday for 6 months...)
+- Free event or events with payment (with an payment API url).
+- Event only available with invitations.
+- Describe events with image, video and sounds.
+...
 
 ## Usage
 
  	include("FeedWriter.php");
-  	$new_feed_url  = 'http://example.com/feed/sample.ess';
+  	$new_feed_url  = 'http://sample.com/feed/sample.ess';
   	$event_webpage = 'http://madonna.com/event/page.html';
 
 	// Create the ESS Feed
 	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
-
- 	// ####################################################################
- 	// ###
-	// ###  DEBUG  MODE
-	// ###	display on screen the result and explain the errors.
-	// ###	Have to be switch to false for production.
-	// ###
-  			$essFeed->DEBUG = true;
-	// ####################################################################
 
 	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
@@ -51,26 +38,30 @@ with more options and differents events types:
 	// Add the event to the Feed
 	$essFeed->addItem( $newEvent );
 
-	// Other event feed can be added...
+	// Other event feed can be added here...
+	// ...
 
-	// Display the ESS Feed generated On-The-Fly by PHP (consume PHP and DataBase resources at each robot access).
+	// Display the ESS Feed generated.
 	$essFeed->genarateFeed();
-	//$essFeed->genarateFeed('/var/local/www/site/feeds/events.ess');  // OR create the feed on server-side. Better to reduce the PHP and the Database access.
-
-# Diference between RSS and ESS for events publication
-[![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
-[![Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
-
 
 ## PHP Composer
 The library is available in [![PHP Composer]](http://getcomposer.org/) in the [![Packagist Repository]](http://packagist.org/)
 To install the PHP ESS Feed library, just add the following line in your composer.json file:
- {
-    "require": {
-        ...
-        "essfeed/essfeed": "1.*"
-    }
- }
+	{
+    	"require": {
+        	...
+        	"essfeed/essfeed": "1.*"
+	    }
+	}
+
+
+# Diference between RSS and ESS
+[Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
+
+[Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
+
+[![Play the video](http://essfeed.org/images/e/ea/ESS-play-video.png)](http://www.youtube.com/watch?v=OGi0U3Eqs6E)
+
 
 # Contributing
 
