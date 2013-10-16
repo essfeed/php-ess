@@ -21,7 +21,7 @@ To use this Class complete samples are available in /samples/complex_events.php 
 ```PHP
 /**
  *	This exemple create an event feed that describe:
- *	- A 2 hours Madonna concert that happend every years for three years at 9:30PM the 25th of October.
+ *	- A 2 hours Madonna concert that happend every years for three years at 9:30PM the 25th of Oct.
  *  - It happends in a stadium in New York.
  * 	- This happening is defined with a category "concert" explained as "Rock music"
  *  - Several specific TAGs are attached to improve SEO.
@@ -29,6 +29,7 @@ To use this Class complete samples are available in /samples/complex_events.php 
  * 	- The event can be free with a specific card accreditation.
  *	- An image and a video is define to give a face to the event.
  */
+
 include("FeedWriter.php");
 $feed_url   = 'http://your_website.com/feeds/event-feed-123.ess';
 $event_page = 'http://your_website.com/events/event-page-123.html';
@@ -38,7 +39,7 @@ $essFeed = new FeedWriter( 'en', array(
 	'title'		=> 'ESS Feed',
 	'link'		=> $feed_url,
 	'published'	=> '2013-10-25T15:30:00-08:00',
-	'rights'	=> 'Copyright (c)'
+	'rights'	=> 'Madonna Copyright (c)'
 ));
 
 	// == Create an Event =====================
@@ -78,7 +79,7 @@ $essFeed = new FeedWriter( 'en', array(
 		));
 
 		// -- Define event's price(s) --
-		$newEvent->addPrice('standalone','free',null,null,null,null,null,array('name'=>'Madonna Club Card'));
+		$newEvent->addPrice('standalone','free',null,null,null,null,null,array('name'=>'Club Card'));
 		$newEvent->addPrice('standalone','fixed',null,null,null,null,null,array(
 			'name'		=> 'Normal entrance',
 			'value'		=> '90',
@@ -87,13 +88,13 @@ $essFeed = new FeedWriter( 'en', array(
 		));
 
 		// -- Define event's social platform and people involved --
-		$newEvent->addPeople('performer', array('name'=>'Madonna' ) );
-		$newEvent->addPeople('attendee',  array('name'=>'Conditions','maxpeople'=>5000,'restriction'=>'None'));
-		$newEvent->addPeople('social',    array('name'=>'Madonna', 'uri'=>'http://facebook.com/madonna'));
+		$newEvent->addPeople('performer',array('name'=>'Madonna' ) );
+		$newEvent->addPeople('attendee',array('name'=>'Conditions','maxpeople'=>5000));
+		$newEvent->addPeople('social',array('name'=>'Madonna','uri'=>'http://facebook.com/madonna'));
 
 		// -- Define event's media files (images, sounds, videos, websites) --
-		$newEvent->addMedia('image', array('name'=>'Foto of Madonna', 'uri'=>'http://madonna.com/image.png'));
-		$newEvent->addMedia('video', array('name'=>'Video of Madonna','uri'=>'http://madonna.com/video.ogg'));
+		$newEvent->addMedia('image',array('name'=>'Photo Madonna','uri'=>'http://madonna.com/i.png'));
+		$newEvent->addMedia('video',array('name'=>'Video Madonna','uri'=>'http://madonna.com/v.ogg'));
 
 	// == Add the event to the Feed
 	$essFeed->addItem( $newEvent );
@@ -107,8 +108,8 @@ $essFeed->genarateFeed();
 ```
 
 ## PHP Composer
-The library is available in [![PHP Composer]](http://getcomposer.org/) in the [![Packagist Repository]](http://packagist.org/)
-To install the PHP ESS Feed library, just add the following line in your composer.json file:
+The library is available in [PHP Composer](http://getcomposer.org/) in the [Packagist Repository](http://packagist.org/)
+To install the PHP ESS Feed library, just add the following line in your '''composer.json''' file:
 ```PHP
 {
 	"require": {
