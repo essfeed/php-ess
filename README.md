@@ -19,42 +19,92 @@ To use this Class complete samples are available in /samples/complex_events.php 
 
 ## Usage
 ```PHP
- 	include("FeedWriter.php");
-  	$feed_url   = 'http://your_website.com/feeds/event-feed-123.ess';
-  	$event_page = 'http://your_website.com/events/event-page-123.html';
+include("FeedWriter.php");
+$feed_url   = 'http://your_website.com/feeds/event-feed-123.ess';
+$event_page = 'http://your_website.com/events/event-page-123.html';
 
-	// Create the ESS Feed
-	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
+// == Create the ESS Feed ================
+$essFeed = new FeedWriter( 'en', array(
+	'title'		=> 'ESS Feed',
+	'link'		=> $feed_url,
+	'published'	=> '2013-10-25T15:30:00-08:00',
+	'rights'	=> 'Copyright (c)'
+));
 
-	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
-	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_page, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
-  		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));
-		$newEvent->addDate( 	'recurrent', 'year', 1, null,null,null,				array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:30:00Z', 'duration'=> '7200' ) );
-		$newEvent->addPlace( 	'fixed', null,										array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
-		$newEvent->addPrice(	'standalone', 'fixed', null,null,null,null,null,	array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
-		$newEvent->addPeople(	'performer',										array('name'=> 'Madonna' ) );
-		$newEvent->addMedia(	'image', 											array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));
+	// == Create an Event =====================
+	$newEvent = $essFeed->newEventFeed( array(
+		'title'			=> 'Madonna Concert',
+		'uri'			=> $event_page,
+		'published'		=> 'now',
+		'access'		=> 'PUBLIC',
+		'description' 	=> "This is the description of the Madonna concert.",
+		'tags'			=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )
+	));
+		// -- Define event's category(s) --
+		$newEvent->addCategory( 'concert', array(
+			'name'	=> 'Rock Music',
+			'id'	=> 'M22'
+		));
 
-	// Add the event to the Feed
+		// -- Define event's date(s) --
+		$newEvent->addDate( 'recurrent', 'year', 1, null,null,null,	array(
+			'name'		=> 'Yearly concert',
+			'start'		=> '2013-10-25T15:30:00Z',
+			'duration'	=> '7200'
+		));
+
+		// -- Define event's place(s) --
+		$newEvent->addPlace( 'fixed', null,	array(
+			'name'			=> 'Stadium',
+			'latitude'		=> '40.71675',
+			'longitude' 	=> '-74.00674',
+			'address' 		=> 'Ave of Americas, 871',
+			'city' 			=> 'New York',
+			'zip' 			=> '10001',
+			'state' 		=> 'New York',
+			'state_code'	=> 'NY',
+			'country' 		=> 'United States of America',
+			'country_code' 	=> 'US'
+		));
+
+		// -- Define event's price(s) --
+		$newEvent->addPrice(	'standalone', 'fixed', null,null,null,null,null, array(
+			'name'		=> 'Entrance with VIP access',
+			'value'		=> '90',
+			'currency'	=> 'USD',
+			'uri'		=> 'http://madonna.com/payment/api'
+		));
+
+		// -- Define event's social platform and people involved --
+		$newEvent->addPeople( 'performer', 	array('name'=> 'Madonna' ) );
+		$newEvent->addPeople( 'attendee', 	array('name'=> 'Concert conditions', 'maxpeople' => 5000, '', 'restriction' => 'No Smoking' ) );
+		$newEvent->addPeople( 'social', 	array('name'=> 'Madonna', 'uri' => 'http://facebook.com/madonna' ) );
+
+		// -- Define event's media files (images, sounds, videos, websites) --
+		$newEvent->addMedia( 'image', array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));
+		$newEvent->addMedia( 'video', array('name'=> 'Video of Madonna', 'uri' => 'http://madonna.com/video.ogg'));
+
+	// == Add the event to the Feed
 	$essFeed->addItem( $newEvent );
 
-	// Other event feed can be added here...
+	// == Other event feed can be added here...
 	// ...
 
-	// Display the ESS Feed generated.
-	$essFeed->genarateFeed();
+
+// == Display the ESS Feed generated.
+$essFeed->genarateFeed();
 ```
 
 ## PHP Composer
 The library is available in [![PHP Composer]](http://getcomposer.org/) in the [![Packagist Repository]](http://packagist.org/)
 To install the PHP ESS Feed library, just add the following line in your composer.json file:
 ```PHP
-	{
-    	"require": {
-        	...
-        	"essfeed/essfeed": "1.*"
-	    }
-	}
+{
+	"require": {
+    	...
+    	"essfeed/essfeed": "1.*"
+    }
+}
 ```
 
 # Diference between RSS and ESS
