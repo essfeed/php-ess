@@ -18,16 +18,16 @@ To use this Class complete samples are available in /samples/complex_events.php 
 ...
 
 ## Usage
-
+```PHP
  	include("FeedWriter.php");
-  	$new_feed_url  = 'http://sample.com/feed/sample.ess';
-  	$event_webpage = 'http://madonna.com/event/page.html';
+  	$feed_url   = 'http://your_website.com/feeds/event-feed-123.ess';
+  	$event_page = 'http://your_website.com/events/event-page-123.html';
 
 	// Create the ESS Feed
-	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $new_feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
+	$essFeed = new FeedWriter( 'en', array( 'title'=> 'ESS Feed','link'=> $feed_url,'published'=> '2013-10-25T15:30:00-08:00', 'rights'=> 'Copyright (c)'));
 
 	// Create an Event (several methods can be called to assign various categories, prices, places,.. to the same event).
-	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
+	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_page, 'published'=> 'now', 'access'=> 'PUBLIC', 'description' => "This is the description of the Madonna concert.", 'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));
 		$newEvent->addDate( 	'recurrent', 'year', 1, null,null,null,				array('name'=> 'Yearly concert', 'start'=> '2013-10-25T15:30:00Z', 'duration'=> '7200' ) );
 		$newEvent->addPlace( 	'fixed', null,										array('name'=> 'Stadium', 'latitude'=> '40.71675', 'longitude' => '-74.00674', 'address' => 'Ave of Americas, 871', 'city' => 'New York', 'zip' => '10001', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
@@ -43,17 +43,19 @@ To use this Class complete samples are available in /samples/complex_events.php 
 
 	// Display the ESS Feed generated.
 	$essFeed->genarateFeed();
+```
 
 ## PHP Composer
 The library is available in [![PHP Composer]](http://getcomposer.org/) in the [![Packagist Repository]](http://packagist.org/)
 To install the PHP ESS Feed library, just add the following line in your composer.json file:
+```PHP
 	{
     	"require": {
         	...
         	"essfeed/essfeed": "1.*"
 	    }
 	}
-
+```
 
 # Diference between RSS and ESS
 [![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
