@@ -19,6 +19,16 @@ To use this Class complete samples are available in /samples/complex_events.php 
 
 ## Usage
 ```PHP
+/**
+ *	This exemple create an event feed that describe:
+ *	- A 2 hours Madonna concert that happend every years for three years at 9:30PM the 25th of October.
+ *  - It happends in a stadium in New York.
+ * 	- This happening is defined with a category "concert" explained as "Rock music"
+ *  - Several specific TAGs are attached to improve SEO.
+ *  - The price is defined to $90 (with a URL for payment).
+ * 	- The event can be free with a specific card accreditation.
+ *	- An image and a video is define to give a face to the event.
+ */
 include("FeedWriter.php");
 $feed_url   = 'http://your_website.com/feeds/event-feed-123.ess';
 $event_page = 'http://your_website.com/events/event-page-123.html';
@@ -47,14 +57,14 @@ $essFeed = new FeedWriter( 'en', array(
 		));
 
 		// -- Define event's date(s) --
-		$newEvent->addDate( 'recurrent', 'year', 1, null,null,null,	array(
+		$newEvent->addDate('recurrent', 'year', 3, null,null,null,array(
 			'name'		=> 'Yearly concert',
-			'start'		=> '2013-10-25T15:30:00Z',
+			'start'		=> '2013-10-25T21:30:00Z',
 			'duration'	=> '7200'
 		));
 
 		// -- Define event's place(s) --
-		$newEvent->addPlace( 'fixed', null,	array(
+		$newEvent->addPlace( 'fixed', null,array(
 			'name'			=> 'Stadium',
 			'latitude'		=> '40.71675',
 			'longitude' 	=> '-74.00674',
@@ -68,21 +78,22 @@ $essFeed = new FeedWriter( 'en', array(
 		));
 
 		// -- Define event's price(s) --
-		$newEvent->addPrice(	'standalone', 'fixed', null,null,null,null,null, array(
-			'name'		=> 'Entrance with VIP access',
+		$newEvent->addPrice('standalone','free',null,null,null,null,null,array('name'=>'Madonna Club Card'));
+		$newEvent->addPrice('standalone','fixed',null,null,null,null,null,array(
+			'name'		=> 'Normal entrance',
 			'value'		=> '90',
 			'currency'	=> 'USD',
 			'uri'		=> 'http://madonna.com/payment/api'
 		));
 
 		// -- Define event's social platform and people involved --
-		$newEvent->addPeople( 'performer', 	array('name'=> 'Madonna' ) );
-		$newEvent->addPeople( 'attendee', 	array('name'=> 'Concert conditions', 'maxpeople' => 5000, '', 'restriction' => 'No Smoking' ) );
-		$newEvent->addPeople( 'social', 	array('name'=> 'Madonna', 'uri' => 'http://facebook.com/madonna' ) );
+		$newEvent->addPeople('performer', array('name'=>'Madonna' ) );
+		$newEvent->addPeople('attendee',  array('name'=>'Conditions','maxpeople'=>5000,'restriction'=>'None'));
+		$newEvent->addPeople('social',    array('name'=>'Madonna', 'uri'=>'http://facebook.com/madonna'));
 
 		// -- Define event's media files (images, sounds, videos, websites) --
-		$newEvent->addMedia( 'image', array('name'=> 'Foto of Madonna', 'uri' => 'http://madonna.com/image.png'));
-		$newEvent->addMedia( 'video', array('name'=> 'Video of Madonna', 'uri' => 'http://madonna.com/video.ogg'));
+		$newEvent->addMedia('image', array('name'=>'Foto of Madonna', 'uri'=>'http://madonna.com/image.png'));
+		$newEvent->addMedia('video', array('name'=>'Video of Madonna','uri'=>'http://madonna.com/video.ogg'));
 
 	// == Add the event to the Feed
 	$essFeed->addItem( $newEvent );
