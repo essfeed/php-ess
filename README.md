@@ -56,9 +56,9 @@ To install the PHP ESS Feed library, just add the following line in your compose
 
 
 # Diference between RSS and ESS
-[Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
+[![Publishing events with RSS](http://essfeed.org/images/6/64/Before_ess_with_rss.gif)](http://essfeed.org/)
 
-[Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
+[![Publishing events with ESS](http://essfeed.org/images/3/3b/After_with_ess.gif)](http://essfeed.org/)
 
 [![Play the video](http://essfeed.org/images/e/ea/ESS-play-video.png)](http://www.youtube.com/watch?v=OGi0U3Eqs6E)
 
