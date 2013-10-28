@@ -885,10 +885,39 @@ final class FeedWriter
 		return ( ( strlen( sys_get_temp_dir() ) >= 0 )? sys_get_temp_dir() : "/tmp" );
 	}
 
+	public static function get_geo()
+	{
+		// if the essfeed library is placed on a Google App Engine server
+		if ( isset( $_SERVER[ 'HTTP_X_APPENGINE_CITYLATLONG' ] ) )
+		{
+			$ll_ = explode( ',', @$_SERVER[ 'HTTP_X_APPENGINE_CITYLATLONG' ] );
+
+			$_lat = $ll_[0];
+			$_lng = $ll_[1];
+		}
+		// if mod_geoip is installed. (http://dev.maxmind.com/geoip/mod_geoip2)
+		else if ( isset( $_SERVER[ 'GEOIP_LATITUDE' ] ) ) // if mod_deoip installed on server
+		{
+			$_lat = @$_SERVER[ 'GEOIP_LATITUDE' ];
+			$_lng = @$_SERVER[ 'GEOIP_LONGITUDE' ];
+		}
+		else
+		{
+			$_lat = 0;
+			$_lng = 0;
+		}
+		return array(
+			'lat' => $_lat,
+			'lng' => $_lng
+		);
+	}
+
 	public function pushToAggregators( $feedURL='', $feedData=null )
 	{
 		if ( $this->AUTO_PUSH )
 		{
+			$geo_ = self::get_geo();
+
 			$post_data = array(
 				'LIBRARY_VERSION'	=> self::LIBRARY_VERSION,
 				'REMOTE_ADDR' 		=> @$_SERVER[ 'REMOTE_ADDR' ],
@@ -897,9 +926,8 @@ final class FeedWriter
 				'HTTP_HOST'			=> @$_SERVER[ 'HTTP_HOST' ],
 				'REQUEST_URI'		=> @$_SERVER[ 'REQUEST_URI' ],
 
-				// if mod_geoip is installed. (http://dev.maxmind.com/geoip/mod_geoip2) very useful, you should try :)
-				'GEOIP_LATITUDE' 	=> @$_SERVER[ 'GEOIP_LATITUDE' ],
-				'GEOIP_LONGITUDE'	=> @$_SERVER[ 'GEOIP_LONGITUDE' ]
+				'GEOIP_LATITUDE' 	=> @$geo_['lat'],
+				'GEOIP_LONGITUDE'	=> @$geo_['lng']
 			);
 
 			if ( $feedData == null && FeedValidator::isValidURL( $feedURL ) )
