@@ -880,10 +880,61 @@ final class FeedWriter
 		return ob_get_clean();
   	}
 
-	private static function get_tmp_path()
-	{
-		return ( ( strlen( sys_get_temp_dir() ) >= 0 )? sys_get_temp_dir() : "/tmp" );
-	}
+	/**
+     * Get a usable temp directory
+     *
+     * Adapted from Solar/Dir.php
+     * @author Paul M. Jones <pmjones@solarphp.com>
+     * @license http://opensource.org/licenses/bsd-license.php BSD
+     * @link http://solarphp.com/trac/core/browser/trunk/Solar/Dir.php
+     *
+     * @return string
+     */
+    public static function tmp()
+    {
+        static $tmp = null;
+
+        if ( !$tmp )
+        {
+            $tmp = function_exists( 'sys_get_temp_dir' )? sys_get_temp_dir() : self::_tmp();
+			$tmp = rtrim( $tmp, DIRECTORY_SEPARATOR );
+        }
+        return $tmp;
+    }
+
+    /**
+     * Returns the OS-specific directory for temporary files
+     *
+     * @author Paul M. Jones <pmjones@solarphp.com>
+     * @license http://opensource.org/licenses/bsd-license.php BSD
+     * @link http://solarphp.com/trac/core/browser/trunk/Solar/Dir.php
+     *
+     * @return string
+     */
+    protected static function _tmp()
+    {
+        // non-Windows system?
+        if ( strtolower( substr( PHP_OS, 0, 3 ) ) != 'win' )
+        {
+            $tmp = empty($_ENV['TMPDIR']) ? getenv( 'TMPDIR' ) : $_ENV['TMPDIR'];
+            return ($tmp)? $tmp : '/tmp';
+        }
+
+        // Windows 'TEMP'
+        $tmp = empty($_ENV['TEMP']) ? getenv('TEMP') : $_ENV['TEMP'];
+        if ($tmp) return $tmp;
+
+        // Windows 'TMP'
+        $tmp = empty($_ENV['TMP']) ? getenv('TMP') : $_ENV['TMP'];
+        if ($tmp) return $tmp;
+
+       	// Windows 'windir'
+        $tmp = empty($_ENV['windir']) ? getenv('windir') : $_ENV['windir'];
+        if ($tmp) return $tmp;
+
+        // final fallback for Windows
+        return getenv('SystemRoot') . '\\temp';
+    }
 
 	public static function get_geo()
 	{
@@ -947,7 +998,7 @@ final class FeedWriter
 				curl_setopt( $ch, CURLOPT_FAILONERROR, 		1 );
 				curl_setopt( $ch, CURLOPT_TIMEOUT, 			20 );
 				curl_setopt( $ch, CURLOPT_FOLLOWLOCATION, 	0 );
-				curl_setopt( $ch, CURLOPT_COOKIEJAR,  		self::get_tmp_path() . '/cookies' );
+				curl_setopt( $ch, CURLOPT_COOKIEJAR,  		self::tmp() . '/cookies' );
 				curl_setopt( $ch, CURLOPT_REFERER, 			@$_SERVER[ 'REQUEST_URI' ] );
 
 				$result = json_decode( curl_exec( $ch ), TRUE );
