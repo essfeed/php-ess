@@ -35,8 +35,8 @@ final class FeedWriter
 	const LN				= '
 ';										// Display breaklines (for humans).
 
-	public static $AGGREGATOR_WS = "http://api.hypecal.com/v1/ess/aggregator.json";
-	public static $VALIDATOR_WS  = 'http://api.hypecal.com/v1/ess/validator.json';
+	public static $AGGREGATOR_WS = "http://www.hypecal.com/api/v1/ess/aggregator.json";
+	public static $VALIDATOR_WS  = 'http://www.hypecal.com/api/v1/ess/validator.json';
 
 
 	/**
