@@ -1527,18 +1527,25 @@ final class FeedValidator
 	   return strtr( $text, $trans_tbl );
 	}
 
-	public static function xml_entities( $text )
+	public static function xml_entities( $text, $charset='UTF-8' )
 	{
-   		return strtr(
-	        $text,
-	        array(
-	            "<" => "&lt;",
-	            ">" => "&gt;",
-	            '"' => "&quot;",
-	            "'" => "&apos;",
-	            "&" => "&amp;",
-	        )
-	    );
+   		try
+		{
+			return htmlspecialchars( $text, ENT_QUOTES | ENT_XML1, $charset ); // ENT_XML1 const only available for PHP > 5.4
+   		}
+   		catch( Error $e )
+   		{
+	   		return strtr(
+		        $text,
+		        array(
+		            "<" => "&lt;",
+		            ">" => "&gt;",
+		            '"' => "&quot;",
+		            "'" => "&apos;",
+		            "&" => "&amp;",
+		        )
+		    );
+		}
 	}
 
 	private static function resolveUnicode( $text )

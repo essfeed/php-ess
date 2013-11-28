@@ -18,7 +18,7 @@ require_once( 'EventFeed.php' );
   */
 final class FeedWriter
 {
-	const LIBRARY_VERSION	= '1.2';	// GitHub library versioning control.
+	const LIBRARY_VERSION	= '1.3';	// GitHub library versioning control.
 	const ESS_VERSION		= '0.9'; 	// ESS Feed version.
 	const CHARSET			= 'UTF-8';	// Defines the encoding Chartset for the whole document and the value inserted.
 	public $lang			= 'en';		// Default 2 chars language (ISO 3166-1).
@@ -121,7 +121,7 @@ final class FeedWriter
 	private function setChannelElement( $elementName, $content )
 	{
 		if ( is_string( $content ) )
-			$content = FeedValidator::xml_entities( $content );
+			$content = FeedValidator::xml_entities( $content, self::CHARSET );
 
 		$this->channel[ $elementName ] = $content;
 	}
@@ -709,7 +709,8 @@ final class FeedWriter
 					$nodeText .= $this->t(4) . $this->makeNode( $key,
 						( ( self::REPLACE_ACCENT )?
 							FeedValidator::xml_entities(
-								FeedValidator::noAccent( $value, $this->CHARSET )
+								FeedValidator::noAccent( $value, self::CHARSET ),
+								self::CHARSET
 							)
 							:
 							$value
@@ -730,7 +731,8 @@ final class FeedWriter
 			else
 			{
 				$nodeText .= FeedValidator::xml_entities(
-					FeedValidator::noAccent( $tagContent )
+					FeedValidator::noAccent( $tagContent, self::CHARSET ),
+					self::CHARSET
 				);
 			}
 		}
@@ -786,7 +788,7 @@ final class FeedWriter
 							$out .= $this->t(3) . "<tags>" . self::LN;
 
 							foreach( $val as $tag )
-								$out .= $this->t(2) . $this->makeNode( 'tag', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $tag, $this->CHARSET ) : $tag );
+								$out .= $this->t(2) . $this->makeNode( 'tag', ( self::REPLACE_ACCENT )? FeedValidator::noAccent( $tag, self::CHARSET ) : $tag );
 
 							$out .= $this->t(3) . "</tags>" . self::LN;
 						}

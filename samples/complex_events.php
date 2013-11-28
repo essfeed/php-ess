@@ -18,13 +18,13 @@
 
 
   	// ESS Generated On-The-Fly by PHP
-	$new_feed_url = FeedWriter::getCurrentURL(); 					// if the feed have to be regenerated at each request define here the PHP file that return the ESS XML content (generate extra load of the Database and PHP resources)
-
-	// OR Specify where will be accessible the feed on server-side.
+	$new_feed_url = FeedWriter::getCurrentURL();
+	// OR
+	// Specify where will be accessible the feed on server side.
 	//$new_feed_url = 'http://example.com/feed/complex_events.ess'; // The feed have to be generated and written in server harddrive (to limit PHP and DataBase load request), seed at the end of this document the file generation options.
 
 
-	$essFeed->setTitle( 'ESS Feed sample & with åççéñts.' );						// Defines the Feed name (not the event).
+	$essFeed->setTitle( 'ESS Feed sample & with åççéñts.' );					// Defines the Feed name (not the event).
   	$essFeed->setLink( $new_feed_url );											// Define the URL of the Feed (must be unic and specific to this feed).
   	$essFeed->setPublished( 'now' );											// Current date (according to server time).
   	//$essFeed->setPublished( 1361791459 ); 									// OR date in seconds.
@@ -46,7 +46,7 @@
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
 		$newEvent->setUpdated( 		"2013-10-31T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
 		$newEvent->setAccess( 		EssDTD::ACCESS_PUBLIC );			// Defines if the event is 'PUBLIC' or 'PRIVATE'
-		$newEvent->setTags(	array( 'Sport', 'Football', 'match & <other>' ) );	// Defines an array of keywords or tags to Help search engine to find your event.
+		$newEvent->setTags(	array( 'Sport', 'Football', 'match' ) );	// Defines an array of keywords or tags to Help search engine to find your event.
 
 		// -- Add some complex HTML event description content.
 		$description_HTML ="<h1>Welcome to my first football match event.<h1><br/>
@@ -149,7 +149,7 @@
 		// ====== PRICES == (add one or more prices) =======
 		// =========
 		// == /!\ == 	EVEN IF THE PRICE ELEMENT IS NOT MANDATORY,
-		// =========	ESS PROCESSORS CAN UNDERSTAND THE EVENT AS FREE IF IT IS NOT DENINE.
+		// =========	ESS PROCESSORS CAN UNDERSTAND THE EVENT AS FREE IF IT IS NOT DEFINED.
 		// =========
 		// ----------- Define a free entrance for the event.
 		$newEvent->addPrice( 'standalone', 'free', null,null,null,null,null, array('name'=> 'Free Entrance', 'value'=> 0 ) );
@@ -201,7 +201,7 @@
 		// --------------------------------------------------------
 		//	YOU CAN ALSO:
 		// 	Parse the description to extract media files URL from an HTML content. (image, sound, youtube...)
-		//	Some CMS only allow to publish event's images in the description body.
+		//	Some CMS like Wordpress, only allow to publish event's images in the description body.
 		//
 		// --------------------------------------------------------
 		foreach ( FeedWriter::getMediaURLfromHTML( $description_HTML ) as $m )
@@ -265,8 +265,8 @@
 	// OR
 
 
-	// Generate the ESS Feed file on server (to limit the load of PHP and DataBase).
-	// you have to configure the folder on the server with the same owner then the Apache user
+	// Generate the ESS Feed file on server (to limit extra loads of PHP and DataBase).
+	// You have to configure the folder on the server with the same owner then the Apache user
 	// #> chown www-data:www-data /var/local/www/site/feeds
 	// #> chmod 0755 /var/local/www/site/feeds
 	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.xml' );

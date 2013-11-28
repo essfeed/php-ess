@@ -91,7 +91,7 @@ final class EventFeed
 		$CDATA = array('description');
 
 		if ( is_string( $content ) && !in_array( $elementName, $CDATA ) )
-			$content = FeedValidator::xml_entities( $content );
+			$content = FeedValidator::xml_entities( $content, $this->CHARSET );
 
 		$this->roots[ $elementName ] = $content ;
 	}
