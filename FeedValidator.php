@@ -1542,7 +1542,7 @@ final class FeedValidator
 		            ">" => "&gt;",
 		            '"' => "&quot;",
 		            "'" => "&apos;",
-		            "&" => "&amp;",
+		            "&" => "&amp;"
 		        )
 		    );
 		}
