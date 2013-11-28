@@ -811,7 +811,7 @@ final class FeedValidator
 	 *
 	 * @access	public
 	 * @param	String	String Media URL to check
-	 * @return	String	Return the media type: 'image', 'video' or 'sound' or null if not found
+	 * @return	String	Return the media type: 'image', 'video', 'sound' or 'website' or NULL if not found
 	 */
 	public static function getMediaType( $url )
 	{
@@ -850,7 +850,7 @@ final class FeedValidator
 			if ( in_array( strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), $MEDIA_VIDEO ) ) { return 'video'; }
 			if ( in_array( strtoupper( substr( $ex_[ @count( $ex_ )-1 ],0,3) ), $MEDIA_SOUND ) ) { return 'sound'; }
 		}
-		return ( self::isValidURL( $url ) )? 'image' : null;
+		return ( self::isValidURL( $url ) )? 'website' : NULL;
 	}
 
 	/**
@@ -1138,12 +1138,14 @@ final class FeedValidator
 	 */
 	public static function charsetString( $text, $charset='UTF-8' )
 	{
+		$QUOTE_STYLE = ( !defined( 'ENT_DISALLOWED' )? ENT_IGNORE : ENT_DISALLOWED );
+
 		$text_charset_detected = self::resolveUnicode(
-			mb_convert_encoding(
-				self::unhtmlentities(
-					htmlspecialchars(
-						self::simplifyText( $text )
-					,ENT_DISALLOWED, $charset )
+			@mb_convert_encoding(
+				@self::unhtmlentities(
+					@htmlspecialchars(
+						@self::simplifyText( $text )
+					,$QUOTE_STYLE, $charset )
 				)
 			,$charset, "auto" )
 		);
