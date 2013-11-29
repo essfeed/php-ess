@@ -779,7 +779,7 @@ final class FeedWriter
 			{
 				foreach ( $thisRoots as $elm => $val )
 				{
-					if ( strlen( $elm ) > 0 && ( @strlen( $val ) > 0 || @count( $val ) > 0 ) )
+					if ( @strlen( $elm ) > 0 && ( @strlen( $val ) > 0 || @count( $val ) > 0 ) )
 					{
 						if ( $elm != 'tags' )
 							$out .= $this->t(1) .$this->makeNode( $elm, $val );
