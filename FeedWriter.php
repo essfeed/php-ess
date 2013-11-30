@@ -139,8 +139,10 @@ final class FeedWriter
 
 		if ( $this->DEBUG == FALSE && $displayResult == TRUE )
 		{
-			ob_end_clean();
-			header_remove();
+			@ob_end_clean();
+
+			if ( function_exists( 'header_remove' ) )
+				@header_remove();
 
 			header( "Expires: Mon, 26 Jul 1997 05:00:00 GMT" );
 			header( "Cache-Control: no-cache" );
