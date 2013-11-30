@@ -727,7 +727,7 @@ final class FeedWriter
 				 $tagName == 'value' )			{ $nodeText .= $tagContent; }
 			else if ( $tagName == 'start' ) 	{ $nodeText .= self::getISODate( $tagContent ); }
 			else if ( $tagName == 'link' ||
-					  $tagName == 'uri' )		{ $nodeText .= htmlentities( $tagContent ); }
+					  $tagName == 'uri' )		{ $nodeText .= htmlspecialchars( $tagContent, ENT_NOQUOTES ); }
 			else
 			{
 				$nodeText .= FeedValidator::xml_entities(

@@ -41,7 +41,7 @@
     	// ======================================================================
     	$newEvent = $essFeed->newEventFeed();
 		$newEvent->setTitle( 		'Football match every saturdays, text & with åççéñts and 汉语/漢語 Hànyǔ.' );	// Defines the title of the Event.
-		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=param&additional' );	// Defines the URL of the event page
+		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=汉语/漢語&param&additional' );	// Defines the URL of the event page
 		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unic ID, otherwise the event URL will be used to generate a unic ID.
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
 		$newEvent->setUpdated( 		"2013-10-31T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
@@ -195,7 +195,7 @@
 		$newEvent->addMedia( 'image',   array('name' => 'The image 02', 'uri' => 'http://example.com/image_02.png'));
 		$newEvent->addMedia( 'image',   array('name' => 'The image 03', 'uri' => 'http://example.com/image_03.png'));
 		$newEvent->addMedia( 'sound',   array('name' => 'The sound',  	'uri' => 'http://example.com/sound.mp3'));
-		$newEvent->addMedia( 'video',   array('name' => 'The video',    'uri' => 'http://example.com/video.mp4'));
+		$newEvent->addMedia( 'video',   array('name' => 'The video',    'uri' => 'http://example.com/video_汉语語.mp4'));
 		$newEvent->addMedia( 'website', array('name' => 'The website',  'uri' => 'http://example.com/'));
 
 		// --------------------------------------------------------

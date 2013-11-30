@@ -152,13 +152,13 @@ final class EventFeed
 	{
 		if ( $el != NULL )
 		{
-			if ( $this->controlRoot( 'uri', $el ) == false )
+			if ( $this->controlRoot( 'uri', htmlspecialchars( $el, ENT_NOQUOTES ) ) == FALSE )
 			{
 				throw new Exception( "Error: '< uri >' element is mandatory." );
 				return;
 			}
 
-			$this->setRootElement( 'uri', FeedValidator::charsetString( $el, $this->CHARSET ) );
+			$this->setRootElement( 'uri', $el );
 
 			// Set a tempory Feed ID from the Feed URI
 			if ( !isset( $this->roots[ 'id' ] ) || FeedValidator::isNull( $this->roots[ 'id' ] ) )
