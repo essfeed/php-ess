@@ -21,15 +21,15 @@
 	$new_feed_url = FeedWriter::getCurrentURL();
 	// OR
 	// Specify where will be accessible the feed on server side.
-	//$new_feed_url = 'http://example.com/feed/complex_events.ess'; // The feed have to be generated and written in server harddrive (to limit PHP and DataBase load request), seed at the end of this document the file generation options.
+	//$new_feed_url = 'http://example.com/feed/complex_events.ess'; // The feed have to be generated and written in server hard drive (to limit PHP and DataBase load request), seed at the end of this document the file generation options.
 
 
 	$essFeed->setTitle( 'ESS Feed sample & with åççéñts.' );					// Defines the Feed name (not the event).
-  	$essFeed->setLink( $new_feed_url );											// Define the URL of the Feed (must be unic and specific to this feed).
+  	$essFeed->setLink( $new_feed_url );											// Define the URL of the Feed (must be unique and specific to this feed).
   	$essFeed->setPublished( 'now' );											// Current date (according to server time).
   	//$essFeed->setPublished( 1361791459 ); 									// OR date in seconds.
 	$essFeed->setUpdated( 'Jun 10, 2012, 6pm PST' );							// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
-	$essFeed->setUpdated( '2013-10-31T15:30:59Z' );								// OR ISO 8601 Date (recommanded)
+	$essFeed->setUpdated( '2013-10-31T15:30:59Z' );								// OR ISO 8601 Date (recommended)
 	$essFeed->setRights( 'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );	// Specified the Copyright of this Feed.
 
 
@@ -42,7 +42,7 @@
     	$newEvent = $essFeed->newEventFeed();
 		$newEvent->setTitle( 		'Football match every saturdays, text & with åççéñts and 汉语/漢語 Hànyǔ.' );	// Defines the title of the Event.
 		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=汉语/漢語&param&additional' );	// Defines the URL of the event page
-		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unic ID, otherwise the event URL will be used to generate a unic ID.
+		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unique ID, otherwise the event URL will be used to generate a unic ID.
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
 		$newEvent->setUpdated( 		"2013-10-31T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
 		$newEvent->setAccess( 		EssDTD::ACCESS_PUBLIC );			// Defines if the event is 'PUBLIC' or 'PRIVATE'
