@@ -18,7 +18,7 @@
 	// ###	display on screen the result and explain the errors.
 	// ###	Have to be switch to false for production.
 	// ###
-  			$essFeed->DEBUG = false;
+  			$essFeed->DEBUG = FALSE;
 	// ####################################################################
 
 	// Defines the first feed event's URL (the URL where will be forwarded the feed users)
@@ -27,7 +27,7 @@
 	// Create an Event
 	$newEvent = $essFeed->newEventFeed( array( 'title'=> 'Madonna Concert', 'uri'=> $event_webpage, 'published'=> 'now', 'access'=> EssDTD::ACCESS_PUBLIC, 'description' => "This is the description of the Madonna concert. Plus some HTML: <br><br><img src='http://3432-stoollala.voxcdn.com/wp-content/uploads/2010/09/madonna_old.jpg' alt='The text of the image comming from the description!'>",'tags'=> array( 'music', 'pop', '80s', 'Madonna', 'concert' )));
   		$newEvent->addCategory( 'concert', 											array('name'=> 'Rock Music', 'id'=> 'M22'));
-		$newEvent->addDate( 	'standalone', 'month', 6, 1, 'saturday', 'last',	array('name'=> 'Every last saturday of every months for 6 months', 'start'=> 1316898400, 'duration'=> '7200' ) );
+		$newEvent->addDate( 	'standalone', null, null, null, null, null,			array('name'=> 'This Saturday', 'start'=> '2013-12-10T20:30:00', 'duration'=> '7200' ) );
 		$newEvent->addPlace( 	'fixed', null,										array('name'=> 'Yankee Stadium', 'address' => '1 East, 161street, Bronx', 'city' => 'New York', 'zip' => '10451', 'state' => 'New York', 'state_code' => 'NY', 'country' => 'United States of America', 'country_code' => 'US' ) );
 		$newEvent->addPrice(	'standalone', 'fixed', null,null,null,null,null,	array('name'=> 'Entrance with VIP access', 'value'=> '90', 'currency'=> 'USD', 'uri'=> 'http://madonna.com/payment/api'));
 		$newEvent->addPeople(	'performer',										array('name'=> 'Madonna' ) );
@@ -51,5 +51,5 @@
 	//$essFeed->genarateFeed( $feed_on_server );
 
 	// OR Generate the ESS XML feed dynamicaly through PHP (can load PHP and the DataBase if a lot of robots access to this dynamic file).
-	$essFeed->genarateFeed();
-	//$essFeed->genarateFeed( '/home/bibi/www/ess.hypecal.com/php-ess/samples/simple_event.ess' );
+	//$essFeed->genarateFeed();
+	$essFeed->genarateFeed( '/home/bibi/www/ess.hypecal.com/php-ess/samples/simple_event.ess' );

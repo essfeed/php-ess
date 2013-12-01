@@ -4,8 +4,8 @@
    ESS Feed (Event Standard Syndication)
 
    Your events are now available to any software that read ESS format, example:
-      http://hypecal.com              (Events search engine)
-      http://wp-events-plugin.com     (Wordpress plugin)
+      http://hypecal.com              (Events Search Engine)
+      http://wp-events-plugin.com     (Wordpress Event Plugin)
 
    Standard info:       http://essfeed.org/
    Other libraries:     https://github.com/essfeed/
@@ -13,7 +13,7 @@
 -->
 <ess xmlns="http://essfeed.org/history/0.9/" version="0.9" lang="en">
    <channel>
-      <generator>ess:php:generator:version:1.2</generator>
+      <generator>ess:php:generator:version:1.4</generator>
       <title>ESS Feed</title>
       <id>ESSID:e4960e4f-9a7a-ac63-e283-25ee5d0dd002</id>
       <link>http://ess.hypecal.com/php-ess/samples/simple_event.ess</link>
@@ -23,7 +23,7 @@
          <title>Madonna Concert</title>
          <id>EVENTID:c79c902c-f958-d7ab-8f2f-a1f443ea07ca</id>
          <uri>http://madonna.com/events/concert.html</uri>
-         <published>2013-09-05T18:04:33+02:00</published>
+         <published>2013-12-01T21:47:27+01:00</published>
          <access>PUBLIC</access>
          <description>
          <![CDATA[
@@ -44,9 +44,9 @@ This is the description of the Madonna concert. Plus some HTML: <br><br><img src
             </item>
          </categories>
          <dates>
-            <item type='standalone' unit='month' selected_day='saturday' selected_week='last' limit='6' priority='1'>
-               <name>Every last saturday of every months for 6 months</name>
-               <start>2011-09-24T23:06:40+02:00</start>
+            <item type='standalone' priority='1'>
+               <name>This Saturday</name>
+               <start>2013-12-10T20:30:00+01:00</start>
                <duration>7200</duration>
             </item>
          </dates>

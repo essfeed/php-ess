@@ -28,8 +28,8 @@
   	$essFeed->setLink( $new_feed_url );											// Define the URL of the Feed (must be unique and specific to this feed).
   	$essFeed->setPublished( 'now' );											// Current date (according to server time).
   	//$essFeed->setPublished( 1361791459 ); 									// OR date in seconds.
-	$essFeed->setUpdated( 'Jun 10, 2012, 6pm PST' );							// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
-	$essFeed->setUpdated( '2013-10-31T15:30:59Z' );								// OR ISO 8601 Date (recommended)
+	//$essFeed->setUpdated( 'Jun 10, 2012, 6pm PST' );							// OR date in convertible String format (http://php.net/manual/en/function.strtotime.php)
+	$essFeed->setUpdated( '2013-12-31T15:30:59Z' );								// OR ISO 8601 Date (recommended)
 	$essFeed->setRights( 'Copyright (c) ' . date( 'Y' ) . ', ESS Generator' );	// Specified the Copyright of this Feed.
 
 
@@ -44,7 +44,7 @@
 		$newEvent->setUri( 			'http://sample.com/events/unique-event-page/index.html?with=汉语/漢語&param&additional' );	// Defines the URL of the event page
 		// $newEvent->setId(		'YOUR_EVENT_UNIC_ID' );				// You can define your event unique ID, otherwise the event URL will be used to generate a unic ID.
 		$newEvent->setPublished( 	'now' );							// check strtotime() to see all the format supported.
-		$newEvent->setUpdated( 		"2013-10-31T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
+		$newEvent->setUpdated( 		"2013-11-30T19:90:99-08:00" ); 		// A valid date is at the format ISO 8601 (e.g. 2013-10-31T15:30:59Z or 2013-10-31T15:30:59+02:00), if the format is not reconized it is set at the current date.
 		$newEvent->setAccess( 		EssDTD::ACCESS_PUBLIC );			// Defines if the event is 'PUBLIC' or 'PRIVATE'
 		$newEvent->setTags(	array( 'Sport', 'Football', 'match' ) );	// Defines an array of keywords or tags to Help search engine to find your event.
 
