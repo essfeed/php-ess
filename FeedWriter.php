@@ -48,7 +48,7 @@ final class FeedWriter
 	function __construct( $lang='en', $data_=NULL )
 	{
 		if ( function_exists( 'set_error_handler' ) )
-			set_error_handler( "FeedValidator::error_handler" );
+			set_error_handler( array( 'FeedWriter', 'error_handler' ) );
 
 		$channelDTD = EssDTD::getChannelDTD(); // DTD Array of Channel first XML child elements.
 
@@ -1125,6 +1125,42 @@ final class FeedWriter
 				"<p style='background:#000;color:#FFF;padding:6px;'>".$_SERVER['DOCUMENT_ROOT'] . "</p>" .
 				"You can upload the lastest version in <a href='https://github.com/essfeed/php-ess/'>https://github.com/essfeed/php-ess/</a>"
 			);
+		}
+	}
+
+	public static function error_submit( $error_blob )
+	{
+		if ( is_string( $error_blob ) )
+		{
+			if ( function_exists( 'mail' ) && strlen( $error_blob ) > 10 )
+			{
+				$protocol = ( ( isset( $_SERVER['HTTPS'] ) )? ( ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' )? 'https://' : 'http://' ) : 'http://' );
+
+				$headers  = 'MIME-Version: 1.0' . "\r\n";
+	    		$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+	    		$error_url = "<h4><a href='".$protocol . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."' target='_blank'>".$protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."</a></h4>\n";
+				mail('esserrorcontroller@peach.fr','### ESS-ERROR '.FeedWriter::LIBRARY_VERSION.' ###', $error_url . $error_blob, $headers );
+			}
+		}
+	}
+
+	public static function error_handler( $errno, $errstr, $errfile, $errline )
+	{
+		$err = "<b>ERROR ".$errno."</b>: ". $errstr ."<br/>\n" .
+    	"<p>Error in " . $errfile .":". $errline ."</p><br/>\n" .
+   		"<i>PHP " . PHP_VERSION . " (" . PHP_OS . ")</i><br/>\n";
+
+		switch ( $errno )
+		{
+			case E_ERROR:
+			case E_PARSE:
+  	       		FeedWriter::error_submit(
+					$err .
+					FeedWriter::htmlvardump( $_SERVER  ) .
+					"<br/>=================<br/>" .
+					FeedWriter::htmlvardump( $_REQUEST )
+				);
+			break;
 		}
 	}
 }

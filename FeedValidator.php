@@ -1472,7 +1472,6 @@ final class FeedValidator
 	 * 	@param 	int 	(optional) -1 lowercase only, +1 uppercase only, 1 both cases
 	 * 	@param 	String 	UTF-8 with accented characters replaced by ASCII chars
 	 * 	@return String 	accented chars replaced with ascii equivalents
-
 	 */
 	private static function utf8_accents_to_ascii( $str, $case=0 )
 	{
@@ -1568,7 +1567,23 @@ final class FeedValidator
 	{
    		try
 		{
-			return htmlspecialchars( $text, ENT_QUOTES | ENT_XML1, $charset ); // ENT_XML1 const only available for PHP > 5.4
+			if ( defined( 'ENT_XML1' ) )
+				return htmlspecialchars( $text, ENT_QUOTES | ENT_XML1, $charset ); // ENT_XML1 const only available for PHP > 5.4
+			else
+			{
+				return htmlspecialchars(
+					strtr(
+						$text,
+				        array(
+				            "<" => "&lt;",
+				            ">" => "&gt;",
+				            '"' => "&quot;",
+				            "'" => "&apos;",
+				            "&" => "&amp;"
+				        )
+				    ), ENT_QUOTES, $charset
+				);
+			}
    		}
    		catch( Error $e )
    		{
@@ -1690,43 +1705,4 @@ final class FeedValidator
 		return $text;
 	}
 
-	public static function error_submit( $error_blob )
-	{
-		if ( is_string( $error_blob ) )
-		{
-			if ( function_exists( 'mail' ) && strlen( $error_blob ) > 10 )
-			{
-				$protocol = ( ( isset( $_SERVER['HTTPS'] ) )? ( ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' )? 'https://' : 'http://' ) : 'http://' );
-
-				$headers  = 'MIME-Version: 1.0' . "\r\n";
-	    		$headers .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-	    		$error_url = "<h4><a href='".$protocol . $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."' target='_blank'>".$protocol.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']."</a></h4>\n";
-				mail('esserrorcontroller@peach.fr','### ESS-ERROR '.FeedWriter::LIBRARY_VERSION.' ###', $error_url . $error_blob, $headers );
-			}
-		}
-	}
-
-	public static function error_handler( $errno, $errstr, $errfile, $errline )
-	{
-		$err = "<b>ERROR ".$errno."</b>: ". $errstr ."<br/>\n" .
-    	"<p>Error in " . $errfile .":". $errline ."</p><br/>\n" .
-   		"<i>PHP " . PHP_VERSION . " (" . PHP_OS . ")</i><br/>\n";
-
-		switch ( $errno )
-		{
-			default: //echo $err;
-				return TRUE;
-				break;
-
-			case E_ERROR:
-			case E_PARSE:
-  	       		FeedValidator::error_submit(
-					$err .
-					FeedWriter::htmlvardump( $_SERVER  ) .
-					"<br/>=================<br/>" .
-					FeedWriter::htmlvardump( $_REQUEST )
-				);
-			break;
-		}
-	}
 }
