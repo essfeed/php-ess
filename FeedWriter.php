@@ -988,12 +988,17 @@ final class FeedWriter
 
 			$_lat = $ll_[0];
 			$_lng = $ll_[1];
+
+			$city 			= @$_SERVER[ 'HTTP_X_APPENGINE_CITY' ];
+			$country_code 	= @$_SERVER[ 'HTTP_X_APPENGINE_COUNTRY' ];
 		}
 		// if mod_geoip is installed. (http://dev.maxmind.com/geoip/mod_geoip2)
 		else if ( isset( $_SERVER[ 'GEOIP_LATITUDE' ] ) ) // if mod_deoip installed on server
 		{
-			$_lat = $_SERVER[ 'GEOIP_LATITUDE' ];
-			$_lng = $_SERVER[ 'GEOIP_LONGITUDE' ];
+			$_lat 			= $_SERVER[ 'GEOIP_LATITUDE' ];
+			$_lng 			= $_SERVER[ 'GEOIP_LONGITUDE' ];
+			$city 			= $_SERVER[ 'GEOIP_CITY' ];
+			$country_code 	= $_SERVER[ 'GEOIP_COUNTRY_CODE' ];
 		}
 		else
 		{
@@ -1001,8 +1006,10 @@ final class FeedWriter
 			$_lng = 0;
 		}
 		return array(
-			'lat' => $_lat,
-			'lng' => $_lng
+			'lat' 			=> $_lat,
+			'lng' 			=> $_lng,
+			'city'			=> $city,
+			'country_code' 	=> $country_code
 		);
 	}
 

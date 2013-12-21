@@ -726,7 +726,7 @@ final class FeedValidator
 	{
 		if ( self::isNull( $stringDate ) ) return FALSE;
 
-		$matcher = preg_match( "/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|(\+|-)\d{2}(:?\d{2})?)$/", str_replace( ' ', 'T', $stringDate ) );
+		$matcher = preg_match( "/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(Z|((\+|-)\d{2}(:?\d{2})?))?$/", str_replace( ' ', 'T', $stringDate ) );
 		$t_sep 	 = explode( 'T', strtoupper( $stringDate ) );
 
 		if ( @count( $t_sep ) > 1 )
@@ -979,8 +979,11 @@ final class FeedValidator
 	 * 	@param	Float	Value of the Latitude to evaluate.
 	 * 	@return Boolean	Return TRUE is the Latitude is valide, FALSE else.
 	 */
-	public static function isValidLatitude( $latitude=null )
+	public static function isValidLatitude( $latitude=NULL )
 	{
+		if ( is_float( $latitude ) )
+			$latitude = floor( $latitude * 10000000 ) / 10000000;
+
 		$match_latitude = preg_match( "/^-?([0-8]?[0-9]|90)\.[0-9]{1,7}$/", $latitude );
 
 		return ( $match_latitude == 1 )? TRUE : FALSE;
@@ -993,8 +996,11 @@ final class FeedValidator
 	 * 	@param	Float	Value of the Longitude to evaluate.
 	 * 	@return Boolean	Return TRUE is the Longitude is valide, FALSE else.
 	 */
-	public static function isValidLongitude( $longitude=null )
+	public static function isValidLongitude( $longitude=NULL )
 	{
+		if ( is_float( $longitude ) )
+			$longitude = floor( $longitude * 10000000 ) / 10000000;
+
 		$match_longitude = preg_match( "/^-?((1?[0-7]?|[0-9]?)[0-9]|180)\.[0-9]{1,7}$/", $longitude );
 
 		return ( $match_longitude == 1 )? TRUE : FALSE;
