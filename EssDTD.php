@@ -12,12 +12,12 @@ final class EssDTD
 	// -- Event Privacity
 	const ACCESS_PRIVATE	= 'PRIVATE';
 	const ACCESS_PUBLIC		= 'PUBLIC';
-	
+
 	public function __construct() {}
-	
+
 	/**
 	 *  Get ESS XML element attributes
-	 * 
+	 *
 	 * 	@access public
 	 * 	@return Array	Return an Array of the <ess> XML element attributes with mandatory Boolean value DTD
 	 */
@@ -27,12 +27,12 @@ final class EssDTD
 			'xmlns' 	=> true,
 			'version'	=> true,
 			'lang'		=> true
-		);	
+		);
 	}
-	
+
 	/**
 	 *  Get Channel's first available XML child
-	 * 
+	 *
 	 * 	@access public
 	 * 	@return Array	Return an Array of the <channel> first XML childs with mandatory Boolean value DTD
 	 */
@@ -46,13 +46,13 @@ final class EssDTD
 			'updated'		=> false,
 			'generator'		=> false,
 			'rights'		=> false,
-			'feed'			=> true  
+			'feed'			=> true
 		);
 	}
-	
+
 	/**
 	 *  Get Feed first XML element DTD
-	 * 
+	 *
 	 * 	@access public
 	 * 	@return Array	Return an Array of the DTD
 	 */
@@ -65,20 +65,20 @@ final class EssDTD
 		    'description'	=> true,
 		    'published'		=> true,
 		    'uri'			=> false,
-		    'updated'		=> false, 
+		    'updated'		=> false,
 		    'tags'			=> false
 		);
 	}
-	
+
 	/**
 	 *  Get Feed Complex XML child element DTD
-	 * 
+	 *
 	 * 	@access public
 	 * 	@return Array	Return an Array of the DTD
-	 */	
+	 */
 	public static function getFeedDTD()
 	{
-		return array( 
+		return array(
 			'categories' => array(
 				'mandatory' => true,
 				'types' 	=> array( 	'award',
@@ -86,14 +86,15 @@ final class EssDTD
 										'commemoration',
 										'conference',
 										'concert',
-										'diner',
-										'entertainment',
 										'cocktail',
 										'course',
+										'diner',
+										'entertainment',
 										'exhibition',
 										'family',
 										'friends',
 										'festival',
+										'lecture',
 										'meeting',
 										'networking',
 										'party',
@@ -102,7 +103,7 @@ final class EssDTD
 									),
 				'tags' 		=> array(
 					'name' 			=> true,
-					'id' 			=> false 
+					'id' 			=> false
 				)
 			),
 			'dates' => array(
@@ -134,10 +135,10 @@ final class EssDTD
 					'medium_name' 	=> false,
 					'medium_type'	=> false,
 					'kml' 			=> false
-				)	
+				)
 			),
 			'prices' => array(
-				'mandatory' 		=> false, 
+				'mandatory' 		=> false,
 				'types' 			=> array('standalone','recurrent'),
 				'modes'				=> array('fixed','free','invitation','renumerated','prepaid'),
 				'units'				=> array('hour','day','week','month','year'),
