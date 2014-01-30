@@ -508,10 +508,12 @@ final class EventFeed
 	 * 						'family',
 	 * 						'friends',
 	 * 						'festival',
+	 * 						'lecture',
 	 * 						'meeting',
 	 * 						'networking',
 	 * 						'party',
-	 * 						'seminar'
+	 * 						'seminar',
+	 * 						'trade show',
 	 * 						'general'
 	 *
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.

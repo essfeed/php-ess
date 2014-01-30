@@ -99,6 +99,7 @@ final class EssDTD
 										'networking',
 										'party',
 										'seminar',
+										'trade show',
 										'general'
 									),
 				'tags' 		=> array(

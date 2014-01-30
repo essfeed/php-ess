@@ -973,7 +973,8 @@ final class FeedValidator
 	}
 
 	/**
-	 * 	Check if the parameter submited is a valid decimal Latitude
+	 * 	Check if the parameter is a valid decimal Latitude
+	 * 	Latitude decimal degrees: -90.XXXXXX to 90.XXXXXX (ISO 6709)
 	 *
 	 * 	@access	public
 	 * 	@param	Float	Value of the Latitude to evaluate.
@@ -990,7 +991,8 @@ final class FeedValidator
 	}
 
 	/**
-	 * 	Check if the parameter submited is a valid decimal Longitude
+	 * 	Check if the parameter is a valid decimal Longitude
+	 * 	Longitude decimal degrees: -180.XXXXXX to 180.XXXXXX (ISO 6709)
 	 *
 	 * 	@access	public
 	 * 	@param	Float	Value of the Longitude to evaluate.
@@ -1007,7 +1009,7 @@ final class FeedValidator
 	}
 
 	/**
-	 * 	Check if the parameter submited contain both numbers and alpha characters.
+	 * 	Check if the parameter contain both numbers and alpha characters.
 	 *
 	 * 	@access	public
 	 * 	@param	Object	Value of the String to evaluate.
