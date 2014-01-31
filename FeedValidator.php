@@ -1577,7 +1577,7 @@ final class FeedValidator
    		try
 		{
 			if ( defined( 'ENT_XML1' ) )
-				return htmlspecialchars( $text, ENT_QUOTES | ENT_XML1, $charset ); // ENT_XML1 const only available for PHP > 5.4
+				return htmlspecialchars( $text, ENT_QUOTES | ENT_XML1, $charset, FALSE ); // ENT_XML1 const only available for PHP > 5.4
 			else
 			{
 				return htmlspecialchars(
@@ -1590,7 +1590,7 @@ final class FeedValidator
 				            "'" => "&apos;",
 				            "&" => "&amp;"
 				        )
-				    ), ENT_QUOTES, $charset
+				    ), ENT_QUOTES, $charset, FALSE
 				);
 			}
    		}
