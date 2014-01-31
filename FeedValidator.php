@@ -1124,8 +1124,8 @@ final class FeedValidator
 				'@<noscript[^>]*?>.*?</noscript>@si',
 				'@<iframe[^>]*?>.*?</iframe>@si',
 				'@<script[^>]*?>.*?</script>@si',
-				'@<style[^>]*?>.*?</style>@siU',
-				'@<![\s\S]*?--[ \t\n\r]*>@' // Strip multi-line comments including CDATA
+				'@<style[^>]*?>.*?</style>@siU'
+				// , '@<![\s\S]*?--[ \t\n\r]*>@' // Strip multi-line comments including CDATA
 			),
 			'',
 			// Remove extra HTML whitespaces
@@ -1246,8 +1246,8 @@ final class FeedValidator
 	 */
 	public static function getDateDiff( $interval_type='d', $datefrom=null, $dateto=null )
 	{
-		$datefrom 	= ( ( is_string( $datefrom 	) )? strtotime( $datefrom,  0 ) : intval( $datefrom ) );
-	    $dateto 	= ( ( is_string( $dateto	) )? strtotime( $dateto, 	0 ) : intval( $dateto 	) );
+		$datefrom 	= ( ( is_string( $datefrom 	) )? strtotime( $datefrom,  0 ) : floatval( $datefrom ) );
+	    $dateto 	= ( ( is_string( $dateto	) )? strtotime( $dateto, 	0 ) : floatval( $dateto   ) );
 
 	    $difference = $dateto - $datefrom; // Difference in seconds
 
@@ -1344,16 +1344,17 @@ final class FeedValidator
 	        break;
 
 	    case "ww": // Number of full weeks
-
 	        $datediff = floor($difference / 604800);
 	        break;
 
-	    case "h": // Number of full hours
-	        $datediff = floor($difference / 3600);
+	    case "h": // Number of full hours OR decimal if < 1 hour
+	    	$diff_h = $difference / 3600;
+	    	$datediff = ( $diff_h > 0 && $diff_h < 1 )? ( round( $diff_h * 100 ) / 100 ) : floor( $diff_h );
 	        break;
 
-	    case "n": // Number of full minutes
-	        $datediff = floor($difference / 60);
+	    case "n": // Number of full minutes OR decimal if < 1 minute
+	    	$diff_m = $difference / 60;
+			$datediff = ( $diff_m > 0 && $diff_m < 1 )? ( round( $diff_m * 100 ) / 100 ) : floor( $diff_m );
 	        break;
 
 	    default: // Number of full seconds (default)
