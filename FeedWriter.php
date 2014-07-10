@@ -20,7 +20,7 @@ require_once( 'EventFeed.php' );
   */
 final class FeedWriter
 {
-	const LIBRARY_VERSION	= '1.4';	// GitHub library versioning control.
+	const LIBRARY_VERSION	= '1.5';	// GitHub library versioning control.
 	const ESS_VERSION		= '0.9'; 	// ESS Feed version.
 	const CHARSET			= 'UTF-8';	// Defines the encoding Chartset for the whole document and the value inserted.
 	public $lang			= 'en';		// Default 2 chars language (ISO 3166-1).
