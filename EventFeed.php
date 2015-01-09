@@ -496,25 +496,34 @@ final class EventFeed
 	 * @param	String	Define the purpose ot the event.
 	 * 					Can take the values:
 	 * 						'award',
+	 * 						'carnival',
+	 * 						'cocktail',
 	 * 						'commemoration',
 	 * 						'competition',
-	 * 						'conference',
 	 * 						'concert',
+	 * 						'conference',
+	 * 						'congress',
+	 * 						'course',
 	 * 						'diner',
 	 * 						'entertainment',
-	 * 						'cocktail',
-	 * 						'course',
 	 * 						'exhibition',
 	 * 						'family',
 	 * 						'friends',
 	 * 						'festival',
 	 * 						'lecture',
+	 * 						'market',
 	 * 						'meeting',
 	 * 						'networking',
+	 * 						'outdoor',
+	 * 						'parade',
 	 * 						'party',
+	 * 						'peregrination',
 	 * 						'seminar',
+	 * 						'spectacle',
+	 * 						'talk',
 	 * 						'trade show',
-	 * 						'general'
+	 * 						'general',
+	 * 						'visite'
 	 *
 	 * @param 	Array	Array of element to create the XML structure of the current tag where the index of the array represent the name of the tag.
 	 * 					The structure the Array must be:

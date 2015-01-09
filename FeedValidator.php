@@ -802,6 +802,7 @@ final class FeedValidator
 			case 'sound' : $MEDIA_FORMAT = array('M4A','MP3','M4P','MPC','OGG','AMR','GSM','WAV','WMA','VOX','RAW','MPC'); break;
 		}
 
+		$url = strtok( $url, '?' );
 		$ex_ = explode( '.', $url );
 
 		return ( strlen( $url ) > 0 &&
