@@ -1,4 +1,3 @@
-<?php
 //error_reporting(E_ALL); // DEBUG
 if ( function_exists( 'mb_detect_order' ) )
 	mb_detect_order( "UTF-8,eucjp-win,sjis-win" );
@@ -736,7 +735,7 @@ final class FeedWriter
 			if ( in_array( $tagName, $CDATA ) ||
 				 $tagName == 'published' ||
 				 $tagName == 'updated' ||
-				 $tagName == 'value' )			{ $nodeText .= $tagContent; }
+				 $tagName == 'value' )			{ $nodeText .= self::utf8_for_xml( $tagContent ); }
 			else if ( $tagName == 'start' ) 	{ $nodeText .= self::getISODate( $tagContent ); }
 			else if ( $tagName == 'link' ||
 					  $tagName == 'uri' )		{ $nodeText .= htmlspecialchars( $tagContent, ENT_QUOTES, self::CHARSET, FALSE ); }
@@ -753,6 +752,25 @@ final class FeedWriter
 
 		return $nodeText . self::LN;
 	}
+
+    /**
+     * convert unsuported UTF-8 chars within XML <[CDATA[...]]>.
+     *
+     * @access   private
+     * @return   String
+     */
+    private static function utf8_for_xml($string)
+    {
+        if ( function_exists( 'mb_convert_encoding' ) )
+        {
+            $textORG = $string;
+            $string = mb_convert_encoding( $string, self::CHARSET, "auto" );
+
+            if ( strlen( $string ) <= 0 )
+                $string = $textORG;
+        }
+        return preg_replace ('/[^\x{0009}\x{000a}\x{000d}\x{0020}-\x{D7FF}\x{E000}-\x{FFFD}]+/u', ' ', $string);
+    }
 
 	/**
 	 * Get Channel XML content in String format
