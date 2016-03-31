@@ -1,3 +1,4 @@
+<?php
 //error_reporting(E_ALL); // DEBUG
 if ( function_exists( 'mb_detect_order' ) )
 	mb_detect_order( "UTF-8,eucjp-win,sjis-win" );
