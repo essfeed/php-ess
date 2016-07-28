@@ -666,7 +666,7 @@ final class FeedWriter
 			$this->t(1) . 'ESS Feed (Event Standard Syndication)' . self::LN .
 			self::LN .
 			$this->t(1) . 'Your events are now available to any software that read ESS format, example:' . self::LN .
-			$this->t(2) . 'http://hypecal.com          '.$this->t(1).' (Events Search Engine)' . self::LN .
+			$this->t(2) . 'http://robby.ai             '.$this->t(1).' (AI Calendar Assistant)'  . self::LN .
 			$this->t(2) . 'http://wp-events-plugin.com '.$this->t(1).' (Wordpress Event Plugin)' . self::LN .
 			self::LN .
 			$this->t(1) . 'Standard info:   '.$this->t(1).' http://essfeed.org/' . self::LN .
@@ -1021,8 +1021,10 @@ final class FeedWriter
 		}
 		else
 		{
-			$_lat = 0;
-			$_lng = 0;
+			$_lat         = 0;
+			$_lng         = 0;
+            $city         = "";
+            $country_code = "";
 		}
 		return array(
 			'lat' 			=> $_lat,
@@ -1033,8 +1035,8 @@ final class FeedWriter
 	}
 
 
-	public static $AGGREGATOR_WS = "http://www.hypecal.com/api/v1/ess/aggregator.json";
-	public static $VALIDATOR_WS  = 'http://www.hypecal.com/api/v1/ess/validator.json';
+	public static $AGGREGATOR_WS = "http://www.robby.ai/api/v1/ess/aggregator.json";
+	public static $VALIDATOR_WS  = 'http://www.robby.ai/api/v1/ess/validator.json';
 
 	public function pushToAggregators( $feedURL='', $feedData=NULL )
 	{

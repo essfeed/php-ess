@@ -270,4 +270,4 @@
 	// #> chown www-data:www-data /var/local/www/site/feeds
 	// #> chmod 0755 /var/local/www/site/feeds
 	//$essFeed->genarateFeed( '/var/local/www/site/feeds/complex_events.xml' );
-	$essFeed->genarateFeed( '/home/bibi/www/ess.hypecal.com/php-ess/samples/complex_events.ess' );
+	$essFeed->genarateFeed( '/home/bibi/www/ess.robby.ai/php-ess/samples/complex_events.ess' );

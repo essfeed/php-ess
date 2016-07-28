@@ -2,7 +2,7 @@
 	include("../FeedWriter.php");
 
 	// Define the absolute location of the ESS feed. if generated and written on server-side (to limit PHP and DataBase access).
-  	$new_feed_url 	= 'http://ess.hypecal.com/php-ess/samples/simple_event.ess';
+  	$new_feed_url 	= 'http://ess.robby.ai/php-ess/samples/simple_event.ess';
 	$feed_on_server = '/var/local/www/site/feeds/simple_event.ess';
 
   	// OR Define the PHP dynamic script (the ESS feed will be generated on-the-fly at each request and are not witten on the server-side)
@@ -49,7 +49,9 @@
 
 	// Generate the feed the server-side server file (to reduce the load of PHP and the DataBase).
 	//$essFeed->genarateFeed( $feed_on_server );
+	//ex:
+	//$essFeed->genarateFeed( '/home/www/ess.robby.ai/php-ess/samples/simple_event.ess' );
 
-	// OR Generate the ESS XML feed dynamicaly through PHP (can load PHP and the DataBase if a lot of robots access to this dynamic file).
-	//$essFeed->genarateFeed();
-	$essFeed->genarateFeed( '/home/bibi/www/ess.hypecal.com/php-ess/samples/simple_event.ess' );
+	// OR Generate the ESS XML feed dynamically through PHP (can load PHP and the DataBase if a lot of robots access to this dynamic file).
+	$essFeed->genarateFeed();
+
